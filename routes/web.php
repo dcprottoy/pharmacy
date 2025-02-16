@@ -24,7 +24,6 @@ use App\Http\Controllers\Backend\InvestigationEquiSetController;
 use App\Http\Controllers\Backend\ExaminationController;
 use App\Http\Controllers\Backend\ReferredController;
 use App\Http\Controllers\Backend\DueController;
-
 use App\Http\Controllers\Backend\UsageController;
 use App\Http\Controllers\Backend\DoseController;
 use App\Http\Controllers\Backend\DoseDurationController;
@@ -36,9 +35,6 @@ use App\Http\Controllers\Backend\BillingController;
 use App\Http\Controllers\Backend\BillingDetailsController;
 use App\Http\Controllers\Backend\MedecineController;
 use App\Http\Controllers\Backend\MedecineStockController;
-
-
-
 
 
 
@@ -355,6 +351,12 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'update'=>'medecine.update',
         'destroy'=>'medecine.delete'
     ]);
+    Route::get('/todaysummary',[MedecineStockController::class,'todaySummary'])->name('todaystock.home');
+    Route::get('/stockentrysummary',[MedecineStockController::class,'stockEntrySummary'])->name('stockentry.home');
+    Route::post('/stockentrysummary',[MedecineStockController::class,'stockEntrySummaryDate'])->name('stockentry.details');
+
+
+    Route::put('/medecinestock',[MedecineStockController::class,'search']);
 
     Route::resource('/medecinestock',MedecineStockController::class)->names([
         'index'=>'medecinestock.home',

@@ -41,7 +41,7 @@ class MedecineController extends Controller
             // return $request->input();
             $advice = new Medecine();
             $advice->fill($request->all())->save();
-            return back()->with('success','New Advice Created Successfully');
+            return back()->with('success','New Medecine Created Successfully');
 
         }
     }
@@ -84,7 +84,7 @@ class MedecineController extends Controller
             'category']
                                 );
             $advice->fill($data)->save();
-            return back()->with('success','Advice '.$advice->name_eng.' Updated Successfully');
+            return back()->with('success','Medecine '.$advice->name_eng.' Updated Successfully');
         }
     }
 
@@ -96,9 +96,9 @@ class MedecineController extends Controller
         if(Medecine::find($id)){
             $createObject = Medecine::find($id);
             $createObject->delete();
-            return back()->with('success','Diagnosis Remove Successfully');
+            return back()->with('success','Medecine Remove Successfully');
         }else{
-            return back()->with('danger','Diagnosis Not Found');
+            return back()->with('danger','Medecine Not Found');
         }
     }
 }

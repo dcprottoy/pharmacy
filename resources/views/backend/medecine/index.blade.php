@@ -100,6 +100,9 @@
                             </th><th style="width: 10%" class="text-center">
                                Use For
                             </th>
+                            </th><th style="width: 10%" class="text-center">
+                               Category
+                            </th>
                             <th class="text-center" style="width: 25%">
                                 Action
                             </th>
@@ -124,6 +127,9 @@
                                     {!! $item->type !!}
                                 </td><td class="text-center" style="font-weight:bold;">
                                     {!! $item->use_for !!}
+                                </td>
+                                </td><td class="text-center" style="font-weight:bold;">
+                                    {!! $item->category=='alo'?"Allopathy":"" !!}
                                 </td>
                                 <td class="project-actions text-center">
                                     <a class="btn btn-info btn-sm update" data-id="{{$item->id}}">

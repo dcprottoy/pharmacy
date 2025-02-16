@@ -10,13 +10,18 @@ use App\Models\Backend\Patients;
 use App\Models\Backend\InvestigationEquipment;
 use App\Models\Backend\InvestigationEquipSetup;
 use App\Models\Backend\BillItems;
-use App\Models\Backend\Medecine;
 use App\Models\Backend\BillMain;
 use App\Models\Backend\BillDetails;
 use App\Models\Backend\ServiceCategory;
+
+
+
+use App\Models\Backend\MedecineStock;
+use App\Models\Backend\StockEntryLog;
+use App\Models\Backend\Medecine;
+
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use PDF;
 
 class MedecineStockController extends Controller
 {
@@ -48,35 +53,68 @@ class MedecineStockController extends Controller
     public function store(Request $request)
     {
 
+        $date = Carbon::now()->format('Y-m-d');
+
         $validated = Validator::make($request->all(),[
-            'patient_id' => 'required',
+            'medecineID' => 'required',
         ]);
+        // return response()->json($request->all());
+
         if($validated->fails()){
-            // return back()->with('error','Something went wrong !!')->withInput();
             return back()->withErrors($validated)->withInput();
         }
-        $patient = Patients::where('patient_id','=',$request->patient_id)->first();
 
-        $date = Carbon::now();
-        $checkingID = (int)strval($date->year).str_pad(strval($date->month),2,'0',STR_PAD_LEFT).'0000';
-        $lastid = BillMain::where('bill_id','>',$checkingID)->orderBy('bill_id', 'desc')->first();
+        $medecine_id = (int)$request->medecineID;
+        $store_qty = (int)$request->storeQty;
+        $stock_id = $request->stockID;
+        if($stock_id == 'null'){
 
-        if($lastid){
-            $bill_id = $lastid->bill_id+1;
+            $medecine = Medecine::find($medecine_id);
+
+            $stock = new MedecineStock();
+            $stock->manufacturer = $medecine->manufacturer;
+            $stock->name = $medecine->name;
+            $stock->generic = $medecine->generic;
+            $stock->strength = $medecine->strength;
+            $stock->type = $medecine->type;
+            $stock->use_for = $medecine->use_for;
+            $stock->category = $medecine->category;
+            $stock->medecine_id = $medecine->id;
+            $stock->last_stock = $store_qty;
+            $stock->current_stock = $store_qty;
+            $stock->stock_per = 100;
+
+            $stock->save();
+
+            $medecine->stock_id =  $stock->id;
+            $medecine->save();
+
+            $stock_log = new StockEntryLog();
+            $stock_log->medecine_id = $stock->id;
+            $stock_log->stock_date = $date;
+            $stock_log->stock_qty = $store_qty;
+            $stock_log->save();
+            return response()->json(['success'=>$stock]);
         }else{
-            $bill_id = strval($date->year).str_pad(strval($date->month),2,'0',STR_PAD_LEFT).'0001';
-        }
-        $patient_id = $patient->patient_id;
-        $patient_name = $patient->name;
 
-        $bill = new BillMain();
-        $bill->bill_id = (int)$bill_id;
-        $bill->patient_id = (int)$patient_id;
-        $bill->patient_name = $patient_name;
-        $bill->referrence_id = 1;
-        $bill->bill_date = $date->format('Y-m-d');
-        $bill->save();
-        return response()->json($bill);
+            $stock = MedecineStock::find((int)$stock_id);
+
+            $stock->last_stock = $store_qty + $stock->current_stock;
+            $stock->current_stock = $store_qty + $stock->current_stock;
+            $stock->stock_per = 100;
+            $stock->save();
+
+            $stock_log = new StockEntryLog();
+            $stock_log->medecine_id = $stock->id;
+            $stock_log->stock_date = $date;
+            $stock_log->stock_qty = $store_qty;
+            $stock_log->save();
+
+            return response()->json(['success'=>$stock]);
+
+        }
+
+
     }
 
     /**
@@ -91,6 +129,61 @@ class MedecineStockController extends Controller
         ->get();
 
         return response()->json(["main"=>$main,"details"=>$details]);
+    }
+
+    public function todaySummary()
+    {
+
+        $date = Carbon::now()->format('Y-m-d');
+
+
+        $data['todaystock'] = StockEntryLog::leftJoin('medecine_stocks','stock_entry_logs.medecine_id','=','medecine_stocks.id')
+        ->select('stock_entry_logs.stock_qty','stock_entry_logs.stock_date','medecine_stocks.manufacturer','medecine_stocks.name','medecine_stocks.generic','medecine_stocks.strength','medecine_stocks.type','medecine_stocks.use_for','medecine_stocks.category','medecine_stocks.current_stock' )
+        ->where('stock_entry_logs.stock_date','=',$date)
+        ->get();
+        // return $data;
+        return view('backend.billing.todaystocksummary',$data);
+
+    }
+
+    public function stockEntrySummary()
+    {
+
+        $date = Carbon::now()->format('Y-m-d');
+
+
+        $data['todaystock'] = StockEntryLog::leftJoin('medecine_stocks','stock_entry_logs.medecine_id','=','medecine_stocks.id')
+        ->select('stock_entry_logs.stock_qty','stock_entry_logs.stock_date','medecine_stocks.manufacturer','medecine_stocks.name','medecine_stocks.generic','medecine_stocks.strength','medecine_stocks.type','medecine_stocks.use_for','medecine_stocks.category','medecine_stocks.current_stock' )
+        ->where('stock_entry_logs.stock_date','=',$date)
+        ->get();
+        // return $data;
+        return view('backend.billing.stocksummary',$data);
+
+    }
+
+    public function stockEntrySummaryDate(Request $request)
+    {
+
+
+        $validated = Validator::make($request->all(),[
+            'from_date' => 'required',
+            'to_date' => 'required',
+        ]);
+
+        if($validated->fails()){
+            return back()->withErrors($validated)->withInput();
+        }
+        $date = Carbon::now()->format('Y-m-d');
+        $date1 = $request->from_date;
+        $date2 = $request->to_date;
+
+        $data['todaystock'] = StockEntryLog::leftJoin('medecine_stocks','stock_entry_logs.medecine_id','=','medecine_stocks.id')
+        ->select('stock_entry_logs.stock_qty','stock_entry_logs.stock_date','medecine_stocks.manufacturer','medecine_stocks.name','medecine_stocks.generic','medecine_stocks.strength','medecine_stocks.type','medecine_stocks.use_for','medecine_stocks.category','medecine_stocks.current_stock' )
+        ->whereBetween('stock_entry_logs.stock_date',[$date1,$date2])
+        ->get();
+        // return $data;
+        return view('backend.billing.stocksummary',$data);
+
     }
 
     /**
@@ -124,90 +217,14 @@ class MedecineStockController extends Controller
         return response()->json(["equipments"=>$equip,"item"=>$lastid]);
     }
 
-    public function pdf(string $id){
 
-        $main = BillMain::with('patient')->where('bill_id',$id)->first();
-        $details = BillDetails::join('bill_items','bill_details.item_id','=','bill_items.id')
-        ->where('bill_main_id',$id)
-        ->select('bill_details.*','bill_items.item_name','bill_items.price as item_rate')
-        ->get();
-
-        // return response()->json(["main"=>$main,"details"=>$details]);
-
-        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-        $billImg = $generator->getBarcode($main->bill_id, $generator::TYPE_CODE_128);
-        $patientImg = $generator->getBarcode($main->patient->patient_id, $generator::TYPE_CODE_128);
-        $data = ["main"=>$main,"details"=>$details,'billImg'=>$billImg,'patientImg'=>$patientImg];
-        // $data = ['title' => 'domPDF in Laravel 10','img'=>$image];
-
-        // $customPaper = array(0,0,650,1100);
-        // $pdf = PDF::setPaper($customPaper,'potrait')->loadView('pdf.document', $data);
-        // return view('pdf.document', $data);
-        $pdf = PDF::setPaper('A5','potrait')->loadView('pdf.document', $data);
-
-        return $pdf->stream('document.pdf');
-
-    }
 
     public function search(Request $request)
     {
-        $lastid = Medecine::where('name', 'like', '%'.$request->search.'%')->get();
+        $lastid = Medecine::leftJoin('medecine_stocks','medecines.stock_id','=','medecine_stocks.id')
+                ->where('medecines.name', 'like', '%'.$request->search.'%')
+                ->select('medecines.id','medecines.manufacturer','medecines.name','medecines.generic','medecines.strength','medecines.type','medecines.use_for','medecines.category','medecines.stock_id','medecine_stocks.current_stock')
+                ->get();
         return $lastid;
-    }
-}{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

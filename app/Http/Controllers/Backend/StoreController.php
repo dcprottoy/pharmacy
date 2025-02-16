@@ -38,9 +38,14 @@ class StoreController extends Controller
             // return back()->withErrors($validated)->withInput();
         }else{
             // return $request->input();
-            $advice = new Store();
-            $advice->fill($request->all())->save();
-            return back()->with('success','New Advice Created Successfully');
+            for($i=1;$i<61;$i++){
+                $advice = new Store();
+                $advice->name_eng = $i;
+                $advice->save();
+            }
+            // $advice = new Store();
+            // $advice->fill($request->all())->save();
+            return back()->with('success','New Cell Created Successfully');
 
         }
     }
@@ -78,7 +83,7 @@ class StoreController extends Controller
                                     'status']
                                 );
             $advice->fill($data)->save();
-            return back()->with('success','Advice '.$advice->name_eng.' Updated Successfully');
+            return back()->with('success','Cell '.$advice->name_eng.' Updated Successfully');
         }
     }
 
@@ -90,9 +95,9 @@ class StoreController extends Controller
         if(Store::find($id)){
             $createObject = Store::find($id);
             $createObject->delete();
-            return back()->with('success','Diagnosis Remove Successfully');
+            return back()->with('success','Cell Remove Successfully');
         }else{
-            return back()->with('danger','Diagnosis Not Found');
+            return back()->with('danger','Cell Not Found');
         }
     }
 }

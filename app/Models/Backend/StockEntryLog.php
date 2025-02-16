@@ -5,19 +5,14 @@ namespace App\Models\Backend;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Medecine extends Model
+class StockEntryLog extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'manufacturer',
-        'name',
-        'generic',
-        'strength',
-        'type',
-        'use_for',
-        'category',
-        'stock_id'
+        'medecine_id',
+        'stock_qty',
+        'stock_date'
     ];
 
 }

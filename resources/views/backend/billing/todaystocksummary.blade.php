@@ -84,22 +84,12 @@ body * { visibility: hidden; }
         }
 </style>
 <div class="content-wrapper">
-    <x-breadcumb title="Stock Entry"/>
+    <x-breadcumb title="Stock History"/>
     <div class="content">
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header p-2">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control form-control-sm" id="medecinelist" name="medecine_list" placeholder="Search">
-                        </div>
-                        <div class="col-sm-4">
-                            <button class="btn btn-sm btn-warning float-left" id="medecine-search-btn">search</button>
-                        </div>
-                        <div class="col-sm-4">
-                            <a class="btn btn-sm btn-primary float-right" href="{!! route('todaystock.home') !!}" target="_blank" id="print-bill-top">Today Stock Entry</a>
-                        </div>
-                    </div>
+
                 </div>
                 <div class="card-body">
                     <div class="col-sm-12 search-list" style="font-size:14px;height:550px;">
@@ -113,14 +103,21 @@ body * { visibility: hidden; }
                                 <th style="width:10%;">Use For</th>
                                 <th style="width:7%;">Current Stock</th>
                                 <th style="width:7%;">Entry Qty</th>
-                                <th style="width:6%;">Action</th>
+                                <th style="width:7%;">Entry Date</th>
                             </thead>
-                            <tbody class="bill-item-list-cl" id="medecine-item-list">
-                            @foreach($bill_items as $item)
-                                <tr class="bill-item-add" data-id="{!! $item->id !!}">
-                                    <td>{!! $item->id !!}</td>
-                                    <td>{!! $item->item_name !!}</td>
-                                    <td>{!! $item->price !!}</td>
+                            <tbody class="bill-item-list-cl" >
+                            @foreach($todaystock as $item)
+                                <tr data-id="{!! $item->id !!}">
+                                    <td>{!! $item->name	 !!}</td>
+                                    <td>{!! $item->type !!}</td>
+                                    <td>{!! $item->manufacturer !!}</td>
+                                    <td>{!! $item->generic !!}</td>
+                                    <td>{!! $item->strength !!}</td>
+                                    <td>{!! $item->use_for !!}</td>
+                                    <td>{!! $item->current_stock !!}</td>
+                                    <td>{!! $item->stock_qty !!}</td>
+                                    <td>{!! $item->stock_date !!}</td>
+
                                 </tr>
                             @endforeach
                             </tbody>
@@ -769,7 +766,6 @@ body * { visibility: hidden; }
                         if('success' in response){
                             $('#storeqty'+id).val(0);
                             $('#current-stock'+id).text(response.success.current_stock);
-                            $('#storeqty'+id).attr('data-stock-id',response.success.id);
                             toastr.success('Stock Updated Successfully for '+response.success.name);
 
                         }

@@ -1,8 +1,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="#" class="brand-link">
-      <img src="{{asset('backend/adminlte/dist/img/AdminLTELogo.jpg')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Pharma Aid</span>
+      <img src="{{asset('backend/adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image" style="background:white">
+      <span class="brand-text font-weight-light">PHARMA-AID</span>
     </a>
     <div class="sidebar">
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -85,6 +85,12 @@
                         <a href="{{route('medecinestock.home')}}" class="nav-link {{ Route::currentRouteName() == 'medecinestock.home'||Route::currentRouteName() == 'medecinestock.create'||Route::currentRouteName() == 'medecinestock.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Stock Entry</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
+                        <a href="{{route('stockentry.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockentry.home'||Route::currentRouteName() == 'stockentry.create'||Route::currentRouteName() == 'stockentry.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Stock Entry Report</p>
                         </a>
                     </li>
                 </ul>

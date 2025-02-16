@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stocks', function (Blueprint $table) {
+        Schema::create('stock_entry_logs', function (Blueprint $table) {
             $table->id();
+            $table->integer('medecine_id');
+            $table->decimal('stock_qty',18,2)->nullable();
+            $table->date('stock_date');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stocks');
+        Schema::dropIfExists('stock_entry_logs');
     }
 };

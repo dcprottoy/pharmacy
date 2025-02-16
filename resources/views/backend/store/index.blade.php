@@ -1,12 +1,12 @@
 @extends('backend.layout.main')
 @section('body-part')
 <div class="content-wrapper">
-    <x-breadcumb title="Store"/>
+    <x-breadcumb title="Cell"/>
     <div class="content">
         <div class="container-fluid">
             <div class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title">Store</h3>
+                    <h3 class="card-title">Cell</h3>
                 </div>
                 <form action="{{route('store.save')}}" method="post" enctype="multipart/form-data">
                     @csrf
@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label> Store Name</label>
+                                    <label> Cell Name</label>
                                     <input type="text" class="form-control form-control-sm" name='name_eng' placeholder="Service Category Name">
                                 </div>
                             </div>
@@ -28,7 +28,7 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Store</h3>
+                    <h3 class="card-title">Cell</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
@@ -46,7 +46,7 @@
                                 SL
                             </th>
                             <th style="width: 30%" class="text-center">
-                                Store Name
+                                Cell Name
                             </th>
                             <th class="text-center" style="width: 25%">
                                 Action
@@ -57,7 +57,7 @@
                         @foreach($stores as $item)
                             <tr>
                                 <td>
-                                   #
+                                {!! $item->id !!}
                                 </td>
                                 <td class="text-center" style="font-weight:bold;">
                                 {!! $item->name_eng !!}
@@ -90,7 +90,7 @@
                             @csrf
                             @method('DELETE')
                             <div class="modal-header">
-                                <h4 class="modal-title">Delete Store</h4>
+                                <h4 class="modal-title">Delete Cell</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -113,7 +113,7 @@
                             @csrf
                             @method('PUT')
                             <div class="modal-header">
-                                <h4 class="modal-title">Update Store Information</h4>
+                                <h4 class="modal-title">Update Cell Information</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -124,7 +124,7 @@
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label>Store Name</label>
+                                                <label>Cell Name</label>
                                                 <input type="text" class="form-control form-control-sm" id='u-name_eng' name='name_eng' placeholder="Service Category Name" required>
                                             </div>
                                         </div>

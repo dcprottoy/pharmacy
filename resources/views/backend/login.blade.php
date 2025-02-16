@@ -18,9 +18,9 @@
 <div class="login-box">
   <div class="login-logo">
     <div class="image">
-        {{-- <img src="{{asset('backend/adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="img-square" style="opacity: .8;height:200px;width:200px;"> --}}
+        <img src="{{asset('backend/adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="img-square" style="opacity: .8;height:200px;width:200px;">
     </div>
-    <!-- <a href="/"><b>Alif Medical Center</a> -->
+    <!-- <a href="/"><b>PHARMA-AID</a> -->
   </div>
   <!-- /.login-logo -->
   <div class="card">

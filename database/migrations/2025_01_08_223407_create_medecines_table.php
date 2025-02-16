@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('manufacturer')->nullable();
             $table->string('name')->nullable();
             $table->text('generic')->nullable();
-            $table->string('strength')->nullable();
-            $table->string('type')->nullable();
+            $table->text('strength')->nullable();
+            $table->text('type')->nullable();
             $table->string('use_for')->nullable();
             $table->string('category',3)->nullable();
-
+            $table->integer('stock_id')->nullable();
             $table->timestamps();
         });
     }

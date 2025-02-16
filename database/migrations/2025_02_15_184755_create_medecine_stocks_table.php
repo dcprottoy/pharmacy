@@ -13,6 +13,17 @@ return new class extends Migration
     {
         Schema::create('medecine_stocks', function (Blueprint $table) {
             $table->id();
+            $table->string('manufacturer')->nullable();
+            $table->string('name')->nullable();
+            $table->text('generic')->nullable();
+            $table->text('strength')->nullable();
+            $table->text('type')->nullable();
+            $table->string('use_for')->nullable();
+            $table->string('category',3)->nullable();
+            $table->integer('medecine_id')->nullable();
+            $table->decimal('last_stock',18,2)->nullable()->default(0);
+            $table->decimal('current_stock',18,2)->nullable()->default(0);
+            $table->decimal('stock_per',18,2)->nullable()->default(0);
             $table->timestamps();
         });
     }
