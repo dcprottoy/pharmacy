@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Alif Medical Center</title>
+  <title>Pharma Aid</title>
   <link rel="icon" type="image/x-icon" href="{{asset('backend/adminlte/dist/img/favicon.ico')}}">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -18,7 +18,7 @@
 <div class="login-box">
   <div class="login-logo">
     <div class="image">
-        <img src="{{asset('backend/adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="img-square" style="opacity: .8;height:200px;width:200px;">
+        {{-- <img src="{{asset('backend/adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="img-square" style="opacity: .8;height:200px;width:200px;"> --}}
     </div>
     <!-- <a href="/"><b>Alif Medical Center</a> -->
   </div>
