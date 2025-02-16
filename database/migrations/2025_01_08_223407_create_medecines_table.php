@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('medecines', function (Blueprint $table) {
             $table->id();
+            $table->string('manufacturer')->nullable();
+            $table->string('name')->nullable();
+            $table->text('generic')->nullable();
+            $table->string('strength')->nullable();
+            $table->string('type')->nullable();
+            $table->string('use_for')->nullable();
+            $table->string('category',3)->nullable();
+
             $table->timestamps();
         });
     }

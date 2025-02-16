@@ -2,12 +2,12 @@
     <!-- Brand Logo -->
     <a href="#" class="brand-link">
       <img src="{{asset('backend/adminlte/dist/img/AdminLTELogo.jpg')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Alif Medical Centre</span>
+      <span class="brand-text font-weight-light">Pharma Aid</span>
     </a>
     <div class="sidebar">
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{asset('backend/adminlte/dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
+          {{-- <img src="{{asset('backend/adminlte/dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image"> --}}
         </div>
         <div class="info">
           <a href="#" class="d-block">{{Auth::user()->name}}</a>
@@ -53,21 +53,44 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item " >
-                        <a href="{{route('servicecategory.home')}}" class="nav-link {{ Route::currentRouteName() == 'servicecategory.home'||Route::currentRouteName() == 'servicecategory.create'||Route::currentRouteName() == 'servicecategory.edit' ? 'active' : ''}}" >
+                        <a href="{{route('store.home')}}" class="nav-link {{ Route::currentRouteName() == 'store.home'||Route::currentRouteName() == 'store.create'||Route::currentRouteName() == 'store.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Service Category</p>
+                            <p>Stores</p>
                         </a>
                     </li>
                     <li class="nav-item " >
+                        <a href="{{route('medecine.home')}}" class="nav-link {{ Route::currentRouteName() == 'medecine.home'||Route::currentRouteName() == 'medecine.create'||Route::currentRouteName() == 'medecine.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Medecines</p>
+                        </a>
+                    </li>
+                    {{-- <li class="nav-item " >
                         <a href="{{route('investigationequipments.home')}}" class="nav-link {{ Route::currentRouteName() == 'investigationequipments.home'||Route::currentRouteName() == 'investigationequipments.create'||Route::currentRouteName() == 'investigationequipments.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Equipment</p>
+                        </a>
+                    </li> --}}
+                </ul>
+            </li>
+             <!-- Stock Management Setup -->
+             <li class="nav-item">
+                <a href="#" class="nav-link">
+                <i class="nav-icon far fa-sticky-note"></i>
+                <p>Stock Management
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item " >
+                        <a href="{{route('medecinestock.home')}}" class="nav-link {{ Route::currentRouteName() == 'medecinestock.home'||Route::currentRouteName() == 'medecinestock.create'||Route::currentRouteName() == 'medecinestock.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Stock Entry</p>
                         </a>
                     </li>
                 </ul>
             </li>
             <!-- Appointment Setup -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="#" class="nav-link">
                 <i class="nav-icon far fa-sticky-note"></i>
                 <p>Appointment Setup
@@ -88,9 +111,9 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
              <!-- Investigation Setup -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-search-location"></i>
                 <p>Investigation Setup
@@ -117,9 +140,9 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
              <!-- Service Setup -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-user-nurse"></i>
                 <p>Service Setup
@@ -140,9 +163,9 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
              <!-- Prescription Setup -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="#" class="nav-link">
                 <i class="nav-icon far fa-file-word"></i>
                 <p>Prescription Setup
@@ -203,9 +226,9 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
              <!-- Hospital Management -->
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-h-square"></i>
                 <p>Hospital Management
@@ -246,9 +269,9 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
             <!-- Billing Setup -->
-            <li class="nav-item ">
+            {{-- <li class="nav-item ">
                 <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-cash-register"></i>
                 <p>Billing Setup
@@ -269,9 +292,9 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
           <!-- Log Out Button Start -->
-          <li class="nav-item">
+          {{-- <li class="nav-item">
 
             <a href="{{route('logout.get')}}" class="nav-link">
             <i class="nav-icon fas fa-sign-in-alt"></i>
@@ -279,7 +302,7 @@
                 Logout
               </p>
             </a>
-          </li>
+          </li> --}}
           <!-- Log Out Button End -->
 
         </ul>

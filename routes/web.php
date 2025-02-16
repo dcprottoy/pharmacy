@@ -29,10 +29,15 @@ use App\Http\Controllers\Backend\UsageController;
 use App\Http\Controllers\Backend\DoseController;
 use App\Http\Controllers\Backend\DoseDurationController;
 use App\Http\Controllers\Backend\ServiceCategoryController;
+use App\Http\Controllers\Backend\StoreController;
 use App\Http\Controllers\Backend\ServiceTypeController;
 use App\Http\Controllers\Backend\ServiceController;
 use App\Http\Controllers\Backend\BillingController;
 use App\Http\Controllers\Backend\BillingDetailsController;
+use App\Http\Controllers\Backend\MedecineController;
+use App\Http\Controllers\Backend\MedecineStockController;
+
+
 
 
 
@@ -333,6 +338,32 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
 
     Route::get('billing-pdf/{id}',[BillingController::class,'pdf'])->name('billing.pdf');
 
+    Route::resource('/store',StoreController::class)->names([
+        'index'=>'store.home',
+        'create'=>'store.create',
+        'store'=>'store.save',
+        'edit'=>'store.edit',
+        'update'=>'store.update',
+        'destroy'=>'store.delete'
+    ]);
+
+    Route::resource('/medecine',MedecineController::class)->names([
+        'index'=>'medecine.home',
+        'create'=>'medecine.create',
+        'store'=>'medecine.save',
+        'edit'=>'medecine.edit',
+        'update'=>'medecine.update',
+        'destroy'=>'medecine.delete'
+    ]);
+
+    Route::resource('/medecinestock',MedecineStockController::class)->names([
+        'index'=>'medecinestock.home',
+        'create'=>'medecinestock.create',
+        'store'=>'medecinestock.save',
+        'edit'=>'medecinestock.edit',
+        'update'=>'medecinestock.update',
+        'destroy'=>'medecinestock.delete'
+    ]);
 
 
 
