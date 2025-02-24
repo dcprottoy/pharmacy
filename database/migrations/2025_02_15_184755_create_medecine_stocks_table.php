@@ -23,6 +23,9 @@ return new class extends Migration
             $table->integer('medecine_id')->nullable();
             $table->decimal('last_stock',18,2)->nullable()->default(0);
             $table->decimal('current_stock',18,2)->nullable()->default(0);
+            $table->decimal('mrp_rate',18,2)->nullable()->default(0);
+            $table->decimal('tp_rate',18,2)->nullable()->default(0);
+            $table->decimal('stock_cell',18,2)->nullable()->default(0);
             $table->decimal('stock_per',18,2)->nullable()->default(0);
             $table->timestamps();
         });

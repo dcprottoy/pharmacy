@@ -20,6 +20,9 @@ class MedecineStock extends Model
         'medecine_id',
         'last_stock',
         'current_stock',
-        'stock_per'
+        'stock_per',
+        'mrp_rate',
+        'tp_rate',
+        'stock_cell'
     ];
 }

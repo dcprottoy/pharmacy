@@ -35,6 +35,8 @@ use App\Http\Controllers\Backend\BillingController;
 use App\Http\Controllers\Backend\BillingDetailsController;
 use App\Http\Controllers\Backend\MedecineController;
 use App\Http\Controllers\Backend\MedecineStockController;
+use App\Http\Controllers\Backend\StockMedecineController;
+
 
 
 
@@ -365,6 +367,18 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'edit'=>'medecinestock.edit',
         'update'=>'medecinestock.update',
         'destroy'=>'medecinestock.delete'
+    ]);
+
+
+    Route::put('/stockmedecine',[StockMedecineController::class,'search']);
+
+    Route::resource('/stockmedecine',StockMedecineController::class)->names([
+        'index'=>'stockmedecine.home',
+        'create'=>'stockmedecine.create',
+        'store'=>'stockmedecine.save',
+        'edit'=>'stockmedecine.edit',
+        'update'=>'stockmedecine.update',
+        'destroy'=>'stockmedecine.delete'
     ]);
 
 
