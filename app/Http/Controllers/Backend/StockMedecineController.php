@@ -19,8 +19,8 @@ class StockMedecineController extends Controller
      */
     public function index()
     {
-
-        return view('backend.stockmedecine.index');
+        $data['medecineList'] = MedecineStock::orderBy('name','asc')->get();
+        return view('backend.stockmedecine.index',$data);
     }
 
     /**

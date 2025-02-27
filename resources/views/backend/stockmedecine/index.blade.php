@@ -41,17 +41,38 @@ overflow-y: scroll;
                     <div class="col-sm-12 search-list" style="font-size:14px;height:550px;">
                         <table class="table table-sm">
                             <thead>
-                                <th style="width:20%;">Name</th>
-                                <th style="width:10%;">Type</th>
-                                <th style="width:20%;">Manufacturer</th>
-                                <th style="width:10%;">Generic</th>
-                                <th style="width:10%;">Strength</th>
-                                <th style="width:10%;">Use For</th>
-                                <th style="width:7%;">Current Stock</th>
-                                <th style="width:7%;">Entry Qty</th>
+                                <th style="width:16%;">Name</th>
+                                <th style="width:8%;">Type</th>
+                                <th style="width:16%;">Manufacturer</th>
+                                <th style="width:8%;">Generic</th>
+                                <th style="width:8%;">Cell</th>
+                                <th style="width:8%;">Trade Price</th>
+                                <th style="width:8%;">MRP Price</th>
+                                <th style="width:8%;">Stock Percentage</th>
+                                <th style="width:8%;">Last Stock</th>
+                                <th style="width:8%;">Current Stock</th>
                                 <th style="width:6%;">Action</th>
                             </thead>
                             <tbody class="bill-item-list-cl" id="medecine-item-list">
+                                @foreach ($medecineList as $item)
+                                    <tr>
+                                        <td>{{$item->name}}</td>
+                                        <td>{{$item->type}}</td>
+                                        <td>{{$item->manufacturer}}</td>
+                                        <td>{{$item->generic}}</td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->stock_cell}}"></td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->tp_rate}}"></td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->mrp_rate}}"></td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->stock_per}}"></td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->last_stock}}"></td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="storeqty${x.id}" name="qty[${x.current_stock}]" value="{{$item->current_stock}}"></td>
+                                        <td class="text-center">
+                                            <a class="btn btn-xs btn-info stock-medecine" data-id="${x.id}" data-bill-id="${x.bill_id}" >Update
+                                                {{-- <i class="fas fa-edit edit-delete-icon pb-1" style="color:#eef4f7;" data-id="${x.id}"></i> --}}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
 
                             </tbody>
                         </table>

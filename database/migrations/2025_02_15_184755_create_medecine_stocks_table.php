@@ -26,7 +26,7 @@ return new class extends Migration
             $table->decimal('mrp_rate',18,2)->nullable()->default(0);
             $table->decimal('tp_rate',18,2)->nullable()->default(0);
             $table->decimal('stock_cell',18,2)->nullable()->default(0);
-            $table->decimal('stock_per',18,2)->nullable()->default(0);
+            $table->string('stock_per')->nullable();
             $table->timestamps();
         });
     }

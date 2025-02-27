@@ -81,7 +81,7 @@
             </li>
 
           <!-- Log Out Button Start -->
-          {{-- <li class="nav-item">
+          <li class="nav-item">
 
             <a href="{{route('logout.get')}}" class="nav-link">
             <i class="nav-icon fas fa-sign-in-alt"></i>
@@ -89,7 +89,7 @@
                 Logout
               </p>
             </a>
-          </li> --}}
+          </li>
           <!-- Log Out Button End -->
 
         </ul>
