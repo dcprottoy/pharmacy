@@ -25,13 +25,8 @@ class BillingController extends Controller
      */
     public function index()
     {
-        $data['patients'] = Patients::orderBy('id','DESC')->limit(20)->get();
-        $data['bill_items'] = BillItems::all();
-        $data['bill_mains'] = BillMain::orderBy('id','DESC')->limit(50)->get();
-        $data['service_category'] = ServiceCategory::whereNotIn('id',[1])->get();
 
-
-        return view('backend.billing.index',$data);
+        return view('backend.billing.index');
     }
 
     /**

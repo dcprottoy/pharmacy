@@ -15,18 +15,6 @@
       </div>
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <li class="nav-item menu-open">
-                <ul class="nav nav-treeview">
-                    <li class="nav-item " >
-                        <a href="{{route('doctors.home')}}" class="nav-link {{ Route::currentRouteName() == 'doctors.home'||Route::currentRouteName() == 'doctors.create'||Route::currentRouteName() == 'doctors.edit' ? 'active' : ''}}" >
-                            <i class="nav-icon fas fa-user"></i>
-                        <p>
-                            Profile
-                        </p>
-                        </a>
-                    </li>
-                </ul>
-            </li>
             <!-- Application Setup -->
             <li class="nav-item ">
                 <a href="#" class="nav-link">
@@ -79,7 +67,37 @@
                     </li>
                 </ul>
             </li>
+            <!-- Stock Management Setup -->
+            <li class="nav-item">
+                            <a href="#" class="nav-link">
+                            <!-- <i class="nav-icon far fa-sticky-note"></i> -->
+                            <i class="nav-icon fas fa-cash-register"></i>
+                            <p>Sales Management
+                                <i class="fas fa-angle-left right"></i>
 
+                            </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item " >
+                                    <a href="{{route('medecinestock.home')}}" class="nav-link {{ Route::currentRouteName() == 'medecinestock.home'||Route::currentRouteName() == 'medecinestock.create'||Route::currentRouteName() == 'medecinestock.edit' ? 'active' : ''}}" >
+                                        <i class="nav-icon fas fa-angle-double-right"></i>
+                                        <p>Sale Entry</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item " >
+                                    <a href="{{route('stockmedecine.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockmedecine.home'||Route::currentRouteName() == 'stockmedecine.create'||Route::currentRouteName() == 'stockmedecine.edit' ? 'active' : ''}}" >
+                                        <i class="nav-icon fas fa-angle-double-right"></i>
+                                        <p>Store</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item " >
+                                    <a href="{{route('stockentry.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockentry.home'||Route::currentRouteName() == 'stockentry.create'||Route::currentRouteName() == 'stockentry.edit' ? 'active' : ''}}" >
+                                        <i class="nav-icon fas fa-angle-double-right"></i>
+                                        <p>Stock Entry Report</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
           <!-- Log Out Button Start -->
           <li class="nav-item">
 

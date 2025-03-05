@@ -46,8 +46,8 @@ overflow-y: scroll;
                                 <th style="width:16%;">Manufacturer</th>
                                 <th style="width:8%;">Generic</th>
                                 <th style="width:8%;">Cell</th>
-                                <th style="width:8%;">Trade Price</th>
                                 <th style="width:8%;">MRP Price</th>
+                                <th style="width:8%;">Trade Price</th>
                                 <th style="width:8%;">Stock Percentage</th>
                                 <th style="width:8%;">Last Stock</th>
                                 <th style="width:8%;">Current Stock</th>
@@ -61,19 +61,18 @@ overflow-y: scroll;
                                         <td>{{$item->manufacturer}}</td>
                                         <td>{{$item->generic}}</td>
                                         <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->stock_cell}}"></td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->tp_rate}}"></td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->mrp_rate}}"></td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->stock_per}}"></td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->last_stock}}"></td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="storeqty${x.id}" name="qty[${x.current_stock}]" value="{{$item->current_stock}}"></td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="mrp-rate{{$item->id}}" name="mrp_rate" value="{{$item->mrp_rate}}"></td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="tp-rate{{$item->id}}" name="tp_rate" value="{{$item->tp_rate}}"></td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock_per{{$item->id}}" name="stock_per" value="{{$item->stock_per}}"></td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="last-stock{{$item->id}}" name="last_stock" value="{{$item->last_stock}}"></td>
+                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="current-stock${x.id}" name="qty[${x.current_stock}]" value="{{$item->current_stock}}"></td>
                                         <td class="text-center">
-                                            <a class="btn btn-xs btn-info stock-medecine" data-id="${x.id}" data-bill-id="${x.bill_id}" >Update
+                                            <a class="btn btn-xs btn-info store-medecine" data-id="{{$item->id}}" >Update
                                                 {{-- <i class="fas fa-edit edit-delete-icon pb-1" style="color:#eef4f7;" data-id="${x.id}"></i> --}}
                                             </a>
                                         </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>
@@ -216,6 +215,10 @@ overflow-y: scroll;
 
         });
 
+        $(".store-medecine").on('click',function(e){
+            let id = $(this).attr('data-id');
+            console.log(id);
+        });
 
     });
 

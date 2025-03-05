@@ -5,17 +5,6 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Models\Backend\Service;
-use App\Models\Backend\Patients;
-use App\Models\Backend\InvestigationEquipment;
-use App\Models\Backend\InvestigationEquipSetup;
-use App\Models\Backend\BillItems;
-use App\Models\Backend\BillMain;
-use App\Models\Backend\BillDetails;
-use App\Models\Backend\ServiceCategory;
-
-
-
 use App\Models\Backend\MedecineStock;
 use App\Models\Backend\StockEntryLog;
 use App\Models\Backend\Medecine;
@@ -30,13 +19,7 @@ class MedecineStockController extends Controller
      */
     public function index()
     {
-        $data['patients'] = Patients::orderBy('id','DESC')->limit(20)->get();
-        $data['bill_items'] = BillItems::all();
-        $data['bill_mains'] = BillMain::orderBy('id','DESC')->limit(50)->get();
-        $data['service_category'] = ServiceCategory::whereNotIn('id',[1])->get();
-
-
-        return view('backend.billing.index',$data);
+        return view('backend.medecinestock.index');
     }
 
     /**
@@ -122,13 +105,7 @@ class MedecineStockController extends Controller
      */
     public function show(string $id)
     {
-        $main = BillMain::with('patient')->where('bill_id',$id)->first();
-        $details = BillDetails::join('bill_items','bill_details.item_id','=','bill_items.id')
-        ->where('bill_main_id',$id)
-        ->select('bill_details.*','bill_items.item_name','bill_items.price as item_rate' )
-        ->get();
 
-        return response()->json(["main"=>$main,"details"=>$details]);
     }
 
     public function todaySummary()
@@ -142,7 +119,7 @@ class MedecineStockController extends Controller
         ->where('stock_entry_logs.stock_date','=',$date)
         ->get();
         // return $data;
-        return view('backend.billing.todaystocksummary',$data);
+        return view('backend.medecinestock.todaystocksummary',$data);
 
     }
 
@@ -157,7 +134,7 @@ class MedecineStockController extends Controller
         ->where('stock_entry_logs.stock_date','=',$date)
         ->get();
         // return $data;
-        return view('backend.billing.stocksummary',$data);
+        return view('backend.medecinestock.stocksummary',$data);
 
     }
 
@@ -182,7 +159,7 @@ class MedecineStockController extends Controller
         ->whereBetween('stock_entry_logs.stock_date',[$date1,$date2])
         ->get();
         // return $data;
-        return view('backend.billing.stocksummary',$data);
+        return view('backend.medecinestock.stocksummary',$data);
 
     }
 
@@ -210,12 +187,7 @@ class MedecineStockController extends Controller
         //
     }
 
-    public function billingitems(string $id){
-        $lastid = BillItems::findOrFail($id);
-        $equip = InvestigationEquipSetup::with('equip')->where('investigation_main_id','=',$id)->get();
 
-        return response()->json(["equipments"=>$equip,"item"=>$lastid]);
-    }
 
 
 
