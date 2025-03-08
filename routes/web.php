@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\StoreController;
 use App\Http\Controllers\Backend\MedecineController;
 use App\Http\Controllers\Backend\MedecineStockController;
 use App\Http\Controllers\Backend\StockMedecineController;
+use App\Http\Controllers\Backend\SalesController;
 use App\Http\Controllers\Auth\AuthenticationController;
 
 /*
@@ -81,6 +82,15 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'edit'=>'stockmedecine.edit',
         'update'=>'stockmedecine.update',
         'destroy'=>'stockmedecine.delete'
+    ]);
+
+    Route::resource('/sales',SalesController::class)->names([
+        'index'=>'sales.home',
+        'create'=>'sales.create',
+        'store'=>'sales.save',
+        'edit'=>'sales.edit',
+        'update'=>'sales.update',
+        'destroy'=>'sales.delete'
     ]);
 
 

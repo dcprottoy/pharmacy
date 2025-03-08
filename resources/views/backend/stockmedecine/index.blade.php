@@ -187,20 +187,22 @@ overflow-y: scroll;
                         let element = "";
                         result.forEach(x =>{
                                 element += `<tr>
-                                <td id="name${x.id}">${x.name}</td>
-                                <td id="type${x.id}">${x.type}</td>
-                                <td id="manufacturer${x.id}">${x.manufacturer}</td>
-                                <td id="generic${x.id}">${x.generic}</td>
-                                <td id="strength${x.id}">${x.strength}</td>
-                                <td id="use-for${x.id}">${x.use_for}</td>
-                                <td id="current-stock${x.id}">${x.current_stock==null? 0 : x.current_stock}</td>
-                                <td><input class="form-control form-control-sm w-100 text-center" data-id="${x.id}" data-stock-id="${x.stock_id}" type="text" id="storeqty${x.id}" name="qty[${x.item_id}]" value="0"></td>
-                                <td class="text-center">
-                                    <a class="btn btn-xs btn-success stock-medecine" data-id="${x.id}" data-bill-id="${x.bill_id}" >Save
-                                        <i class="fas fa-edit edit-delete-icon pb-1" style="color:#eef4f7;" data-id="${x.id}"></i>
-                                    </a>
-                                </td>
-                            </tr>`
+                                    <td>${x.name}</td>
+                                    <td>${x.type}</td>
+                                    <td>${x.manufacturer}</td>
+                                    <td>${x.generic}</td>
+                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="stock-cell${x.id}" name="stock_cell" value="${x.stock_cell}"></td>
+                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="mrp-rate${x.id}" name="mrp_rate" value="${x.mrp_rate}"></td>
+                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="tp-rate${x.id}" name="tp_rate" value="${x.tp_rate}"></td>
+                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="stock_per${x.id}" name="stock_per" value="${x.stock_per}"></td>
+                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="last-stock${x.id}" name="last_stock" value="${x.last_stock}"></td>
+                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="current-stock${x.id}" name="current_stock" value="${x.current_stock}"></td>
+                                    <td class="text-center">
+                                        <a class="btn btn-xs btn-info store-medecine" data-id="${x.id}" >Update
+                                            {{-- <i class="fas fa-edit edit-delete-icon pb-1" style="color:#eef4f7;" data-id="${x.id}"></i> --}}
+                                        </a>
+                                    </td>
+                                </tr>`
                         });
                         $("#medecine-item-list").empty();
                         $("#medecine-item-list").append(element);

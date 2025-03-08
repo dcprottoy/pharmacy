@@ -79,7 +79,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item " >
-                                    <a href="{{route('medecinestock.home')}}" class="nav-link {{ Route::currentRouteName() == 'medecinestock.home'||Route::currentRouteName() == 'medecinestock.create'||Route::currentRouteName() == 'medecinestock.edit' ? 'active' : ''}}" >
+                                    <a href="{{route('sales.home')}}" class="nav-link {{ Route::currentRouteName() == 'sales.home'||Route::currentRouteName() == 'sales.create'||Route::currentRouteName() == 'sales.edit' ? 'active' : ''}}" >
                                         <i class="nav-icon fas fa-angle-double-right"></i>
                                         <p>Sale Entry</p>
                                     </a>
