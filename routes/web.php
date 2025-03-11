@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\StoreController;
+use App\Http\Controllers\Backend\ManufacturerController;
 use App\Http\Controllers\Backend\MedecineController;
 use App\Http\Controllers\Backend\MedecineStockController;
 use App\Http\Controllers\Backend\StockMedecineController;
@@ -91,6 +92,16 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'edit'=>'sales.edit',
         'update'=>'sales.update',
         'destroy'=>'sales.delete'
+    ]);
+
+
+    Route::resource('/manufacturer',ManufacturerController::class)->names([
+        'index'=>'manufacturer.home',
+        'create'=>'manufacturer.create',
+        'store'=>'manufacturer.save',
+        'edit'=>'manufacturer.edit',
+        'update'=>'manufacturer.update',
+        'destroy'=>'manufacturer.delete'
     ]);
 
 

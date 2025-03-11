@@ -1,21 +1,21 @@
 @extends('backend.layout.main')
 @section('body-part')
 <div class="content-wrapper">
-    <x-breadcumb title="Cell"/>
+    <x-breadcumb title="Manufacturer"/>
     <div class="content">
         <div class="container-fluid">
             <div class="card card-info">
                 <div class="card-header">
                     <h3 class="card-title">Cell</h3>
                 </div>
-                <form action="{{route('store.save')}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('manufacturer.save')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label> Cell Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='name_eng' placeholder="Cell Name">
+                                    <label> Manufacturer Name</label>
+                                    <input type="text" class="form-control form-control-sm" name='name_eng' placeholder="Manufacturer Name">
                                 </div>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                                 SL
                             </th>
                             <th style="width: 30%" class="text-center">
-                                Manufacturer Name
+                                Cell Name
                             </th>
                             <th class="text-center" style="width: 25%">
                                 Action
@@ -54,7 +54,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach($stores as $item)
+                        @foreach($manufacturer as $item)
                             <tr>
                                 <td>
                                 {!! $item->id !!}
@@ -111,7 +111,7 @@
                             @csrf
                             @method('PUT')
                             <div class="modal-header">
-                                <h4 class="modal-title">Update Manufacturer Information</h4>
+                                <h4 class="modal-title">Update Cell Information</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -122,8 +122,8 @@
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label>Manufacturer Name</label>
-                                                <input type="text" class="form-control form-control-sm" id='u-name_eng' name='name_eng' placeholder="Manufacturer Name" required>
+                                                <label>Cell Name</label>
+                                                <input type="text" class="form-control form-control-sm" id='u-name_eng' name='name_eng' placeholder="Service Category Name" required>
                                             </div>
                                         </div>
                                     </div>
@@ -146,21 +146,21 @@
     $(document).ready(function(){
         $(".delete").on('click',function(e){
             let id = $(this).attr("data-id");
-            let link = "{{url('store/')}}/"+id;
+            let link = "{{url('manufacturer/')}}/"+id;
             $('#modal-default-delete').modal('show');
             $('#delete-modal').attr('action',link);
         });
         $(".update").on('click',function(e){
             let id = $(this).attr("data-id");
                 $.ajax({
-                    url: "{{url('store/')}}/"+id,
+                    url: "{{url('manufacturer/')}}/"+id,
                     success: function (result) {
                         console.log(result);
                         $('#u-name_eng').val(result.name_eng);
 
                     }
                 });
-            let link = "{{url('store/')}}/"+id;
+            let link = "{{url('manufacturer/')}}/"+id;
             $('#update-modal').attr('action',link);
             $('#modal-default-update').modal('show');
 

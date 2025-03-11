@@ -31,6 +31,12 @@
                         </a>
                     </li>
                     <li class="nav-item " >
+                        <a href="{{route('manufacturer.home')}}" class="nav-link {{ Route::currentRouteName() == 'manufacturer.home'||Route::currentRouteName() == 'manufacturer.create'||Route::currentRouteName() == 'manufacturer.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Manufacturer</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
                         <a href="{{route('medecine.home')}}" class="nav-link {{ Route::currentRouteName() == 'medecine.home'||Route::currentRouteName() == 'medecine.create'||Route::currentRouteName() == 'medecine.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Medecines</p>

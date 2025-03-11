@@ -5,16 +5,16 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Models\Backend\Store;
-class StoreController extends Controller
+use App\Models\Backend\Manufacturer;
+class ManufacturerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data['stores'] = Store::all();
-        return view('backend.store.index',$data);
+        $data['manufacturer'] = Manufacturer::all();
+        return view('backend.manufacturer.index',$data);
     }
 
     /**
@@ -39,13 +39,13 @@ class StoreController extends Controller
         }else{
             // return $request->input();
             for($i=1;$i<61;$i++){
-                $advice = new Store();
-                $advice->name_eng = $i;
-                $advice->save();
+                $manufacturer = new Manufacturer();
+                $manufacturer->name_eng = $i;
+                $manufacturer->save();
             }
-            // $advice = new Store();
-            // $advice->fill($request->all())->save();
-            return back()->with('success','New Cell Created Successfully');
+            // $manufacturer = new Manufacturer();
+            // $manufacturer->fill($request->all())->save();
+            return back()->with('success','New Manufacturer Created Successfully');
 
         }
     }
@@ -55,7 +55,7 @@ class StoreController extends Controller
      */
     public function show(string $id)
     {
-        $lastid = Store::findOrFail($id);
+        $lastid = Manufacturer::findOrFail($id);
         return $lastid;
     }
 
@@ -78,12 +78,12 @@ class StoreController extends Controller
         if($validated->fails()){
             return back()->with('error','Something went wrong !!')->withInput();
         }else{
-            $advice = Store::findOrFail($id);
+            $manufacturer = Manufacturer::findOrFail($id);
             $data = $request->only(['name_eng',
                                     'status']
                                 );
-            $advice->fill($data)->save();
-            return back()->with('success','Cell '.$advice->name_eng.' Updated Successfully');
+            $manufacturer->fill($data)->save();
+            return back()->with('success','Manufacturer '.$manufacturer->name_eng.' Updated Successfully');
         }
     }
 
@@ -92,12 +92,12 @@ class StoreController extends Controller
      */
     public function destroy(string $id)
     {
-        if(Store::find($id)){
-            $createObject = Store::find($id);
+        if(Manufacturer::find($id)){
+            $createObject = Manufacturer::find($id);
             $createObject->delete();
-            return back()->with('success','Cell Remove Successfully');
+            return back()->with('success','Manufacturer Remove Successfully');
         }else{
-            return back()->with('danger','Cell Not Found');
+            return back()->with('danger','Manufacturer Not Found');
         }
     }
 }

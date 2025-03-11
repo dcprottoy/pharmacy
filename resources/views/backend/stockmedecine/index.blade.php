@@ -31,51 +31,105 @@ overflow-y: scroll;
                         </div>
                         <div class="col-sm-4">
                             <button class="btn btn-sm btn-warning float-left" id="medecine-search-btn">search</button>
+
                         </div>
+
                         <div class="col-sm-4">
-                            <a class="btn btn-sm btn-primary float-right" href="{!! route('todaystock.home') !!}" target="_blank" id="print-bill-top">Today Stock Entry</a>
+                            <a class="btn btn-sm btn-primary float-right" id="add-new-item">
+                                <i class="fas fa-plus mr-2"></i>
+                                ADD NEW
+                            </a>
+                            <div class="modal fade" id="modal-default-add">
+                                <div class="modal-dialog modal-xl m-10">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">ADD NEW ITEM</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="card">
+                                                <div class="card-header p-2">
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control form-control-sm" id="medecinelistnew" name="medecine_list_new" placeholder="Search">
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <button class="btn btn-sm btn-warning float-left" id="medecine-search-btn-new">search</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="col-sm-12 search-list" style="font-size:14px;height:550px;">
+                                                        <table class="table table-sm">
+                                                            <thead>
+                                                                <th style="width:20%;">Name</th>
+                                                                <th style="width:10%;">Type</th>
+                                                                <th style="width:20%;">Manufacturer</th>
+                                                                <th style="width:10%;">Generic</th>
+                                                                <th style="width:10%;">Strength</th>
+                                                                <th style="width:10%;">Use For</th>
+                                                                <th style="width:6%;">Action</th>
+                                                            </thead>
+                                                            <tbody class="bill-item-list-cl" id="medecine-item-list-new">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-between" id="up-pl">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-warning">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="col-sm-12 search-list" style="font-size:14px;height:550px;">
-                        <table class="table table-sm">
-                            <thead>
-                                <th style="width:16%;">Name</th>
-                                <th style="width:8%;">Type</th>
-                                <th style="width:16%;">Manufacturer</th>
-                                <th style="width:8%;">Generic</th>
-                                <th style="width:8%;">Cell</th>
-                                <th style="width:8%;">MRP Price</th>
-                                <th style="width:8%;">Trade Price</th>
-                                <th style="width:8%;">Stock Percentage</th>
-                                <th style="width:8%;">Last Stock</th>
-                                <th style="width:8%;">Current Stock</th>
-                                <th style="width:6%;">Action</th>
-                            </thead>
-                            <tbody class="bill-item-list-cl" id="medecine-item-list">
-                                @foreach ($medecineList as $item)
-                                    <tr>
-                                        <td>{{$item->name}}</td>
-                                        <td>{{$item->type}}</td>
-                                        <td>{{$item->manufacturer}}</td>
-                                        <td>{{$item->generic}}</td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->stock_cell}}"></td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="mrp-rate{{$item->id}}" name="mrp_rate" value="{{$item->mrp_rate}}"></td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="tp-rate{{$item->id}}" name="tp_rate" value="{{$item->tp_rate}}"></td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock_per{{$item->id}}" name="stock_per" value="{{$item->stock_per}}"></td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="last-stock{{$item->id}}" name="last_stock" value="{{$item->last_stock}}"></td>
-                                        <td><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="current-stock${x.id}" name="qty[${x.current_stock}]" value="{{$item->current_stock}}"></td>
-                                        <td class="text-center">
-                                            <a class="btn btn-xs btn-info store-medecine" data-id="{{$item->id}}" >Update
-                                                {{-- <i class="fas fa-edit edit-delete-icon pb-1" style="color:#eef4f7;" data-id="${x.id}"></i> --}}
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-sm-8 search-list" style="font-size:14px;height:550px;">
+                            <table class="table table-sm">
+                                <thead>
+                                    <th style="width:16%;">Name</th>
+                                    <th style="width:8%;">Type</th>
+                                    <th style="width:16%;">Manufacturer</th>
+                                    <th style="width:8%;">Generic</th>
+                                </thead>
+                                <tbody class="bill-item-list-cl" id="medecine-item-list">
+                                    @foreach ($medecineList as $item)
+                                        <tr>
+                                            <td>{{$item->name}}</td>
+                                            <td>{{$item->type}}</td>
+                                            <td>{{$item->manufacturer}}</td>
+                                            <td>{{$item->generic}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-sm-4">
+                            <table>
+                                <thead>
+                                    <th style="width:50%;">Attribute</th>
+                                    <th style="width:50%;">Value</th>
+                                </thead>
+                                <tbody>
+                                    <tr><td style="width:50%;">Name</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->stock_cell}}"></td></tr>
+                                    <tr><td style="width:50%;">Cell</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->stock_cell}}"></td></tr>
+                                    <tr><td style="width:50%;">MRP Price</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="mrp-rate{{$item->id}}" name="mrp_rate" value="{{$item->mrp_rate}}"></td></tr>
+                                    <tr><td style="width:50%;">Trade Price</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="tp-rate{{$item->id}}" name="tp_rate" value="{{$item->tp_rate}}"></td></tr>
+                                    <tr><td style="width:50%;">Stock Percentage</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock_per{{$item->id}}" name="stock_per" value="{{$item->stock_per}}"></td></tr>
+                                    <tr><td style="width:50%;">Last Stock</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="last-stock{{$item->id}}" name="last_stock" value="{{$item->last_stock}}"></td></tr>
+                                    <tr><td style="width:50%;">Current Stock</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="current-stock${x.id}" name="qty[${x.current_stock}]" value="{{$item->current_stock}}"></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -191,17 +245,6 @@ overflow-y: scroll;
                                     <td>${x.type}</td>
                                     <td>${x.manufacturer}</td>
                                     <td>${x.generic}</td>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="stock-cell${x.id}" name="stock_cell" value="${x.stock_cell}"></td>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="mrp-rate${x.id}" name="mrp_rate" value="${x.mrp_rate}"></td>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="tp-rate${x.id}" name="tp_rate" value="${x.tp_rate}"></td>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="stock_per${x.id}" name="stock_per" value="${x.stock_per}"></td>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="last-stock${x.id}" name="last_stock" value="${x.last_stock}"></td>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="current-stock${x.id}" name="current_stock" value="${x.current_stock}"></td>
-                                    <td class="text-center">
-                                        <a class="btn btn-xs btn-info store-medecine" data-id="${x.id}" >Update
-                                            {{-- <i class="fas fa-edit edit-delete-icon pb-1" style="color:#eef4f7;" data-id="${x.id}"></i> --}}
-                                        </a>
-                                    </td>
                                 </tr>`
                         });
                         $("#medecine-item-list").empty();
@@ -220,6 +263,95 @@ overflow-y: scroll;
         $(".store-medecine").on('click',function(e){
             let id = $(this).attr('data-id');
             console.log(id);
+        });
+
+
+        $("#add-new-item").on('click',function(){
+            $('#modal-default-add').modal('show');
+        })
+
+        function NewItemAdd(id){
+            let name = $("#name"+id).val();
+            let type = $("#type"+id).val();
+            let manufacturer = $("#manufacturer"+id).val();
+            let generic = $("#generic"+id).val();
+            let strength = $("#strength"+id).val();
+            let use_for = $("#use_for"+id).val();
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                url: "{{url('medecinestock')}}",
+                data:{
+                    'name':name,
+                    'type':type,
+                    'manufacturer':manufacturer,
+                    'generic':generic,
+                    'strength':strength,
+                    'use_for':use_for,
+                    '_token': '{{ csrf_token() }}',
+                },
+                success: function (response) {
+                    console.log(response);
+                }
+            });
+
+
+
+        }
+
+
+
+
+
+
+
+        $("#medecine-search-btn-new").on('click',function(e){
+            let ch_data = $("#medecinelistnew").val();
+            console.log(ch_data);
+            if((ch_data != '') &&( ch_data.length >= 3)){
+            $.ajax({
+                    type: 'put',
+                    dataType: "json",
+                    url: "{{url('medecinestock')}}/",
+                    data:{
+                        'search':ch_data,
+                        '_token': '{{ csrf_token() }}',
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        let element = "";
+                        result.forEach(x =>{
+                                element += `<tr>
+                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="name${x.id}" name="name" value="${x.name}"></td>
+                                    <td>
+                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="type${x.id}" name="type" value="${x.type}">
+                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="use_for${x.id}" name="use_for" value="${x.use_for}">
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="manufacturer${x.id}" name="manufacturer" value="${x.manufacturer}">
+                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="generic${x.id}" name="generic" value="${x.generic}">
+                                    </td>
+                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="generic${x.id}" name="generic" value="${x.generic}"></td>
+                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="strength${x.id}" name="strength" value="${x.strength}"></td>
+                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="use_for${x.id}" name="use_for" value="${x.use_for}"></td>
+                                    <td class="text-center">
+                                        <a class="btn btn-xs btn-info add-new" data-id="${x.id}" >ADD
+                                            {{-- <i class="fas fa-edit edit-delete-icon pb-1" style="color:#eef4f7;" data-id="${x.id}"></i> --}}
+                                        </a>
+                                    </td>
+                                </tr>`
+                        });
+                        $("#medecine-item-list-new").empty();
+                        $("#medecine-item-list-new").append(element);
+
+                        $(".add-new").on('click',function(e){
+                            let id = $(this).attr('data-id');
+                            NewItemAdd(id);
+                        })
+                    }
+                });
+            }
+
         });
 
     });

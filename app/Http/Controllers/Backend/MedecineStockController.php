@@ -39,7 +39,12 @@ class MedecineStockController extends Controller
         $date = Carbon::now()->format('Y-m-d');
 
         $validated = Validator::make($request->all(),[
-            'medecineID' => 'required',
+            "name"=>'required',
+            "type"=>'required',
+            "manufacturer"=>'required',
+            "generic"=>'required',
+            "strength"=>'required',
+            "use_for"=>'required'
         ]);
         // return response()->json($request->all());
 
@@ -47,55 +52,17 @@ class MedecineStockController extends Controller
             return back()->withErrors($validated)->withInput();
         }
 
-        $medecine_id = (int)$request->medecineID;
-        $store_qty = (int)$request->storeQty;
-        $stock_id = $request->stockID;
-        if($stock_id == 'null'){
-
-            $medecine = Medecine::find($medecine_id);
-
             $stock = new MedecineStock();
-            $stock->manufacturer = $medecine->manufacturer;
-            $stock->name = $medecine->name;
-            $stock->generic = $medecine->generic;
-            $stock->strength = $medecine->strength;
-            $stock->type = $medecine->type;
-            $stock->use_for = $medecine->use_for;
-            $stock->category = $medecine->category;
-            $stock->medecine_id = $medecine->id;
-            $stock->last_stock = $store_qty;
-            $stock->current_stock = $store_qty;
-            $stock->stock_per = 100;
-
+            $stock->manufacturer = $request->manufacturer;
+            $stock->name = $request->name;
+            $stock->generic = $request->generic;
+            $stock->strength = $request->strength;
+            $stock->type = $request->type;
+            $stock->use_for = $request->use_for;
+            $stock->category = $request->category;
             $stock->save();
-
-            $medecine->stock_id =  $stock->id;
-            $medecine->save();
-
-            $stock_log = new StockEntryLog();
-            $stock_log->medecine_id = $stock->id;
-            $stock_log->stock_date = $date;
-            $stock_log->stock_qty = $store_qty;
-            $stock_log->save();
-            return response()->json(['success'=>$stock]);
-        }else{
-
-            $stock = MedecineStock::find((int)$stock_id);
-
-            $stock->last_stock = $store_qty + $stock->current_stock;
-            $stock->current_stock = $store_qty + $stock->current_stock;
-            $stock->stock_per = 100;
-            $stock->save();
-
-            $stock_log = new StockEntryLog();
-            $stock_log->medecine_id = $stock->id;
-            $stock_log->stock_date = $date;
-            $stock_log->stock_qty = $store_qty;
-            $stock_log->save();
-
             return response()->json(['success'=>$stock]);
 
-        }
 
 
     }
