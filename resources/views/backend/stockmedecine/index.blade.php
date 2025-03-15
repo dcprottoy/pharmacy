@@ -41,7 +41,7 @@ overflow-y: scroll;
                             </a>
                             <div class="modal fade" id="modal-default-add">
                                 <div class="modal-dialog modal-xl m-10">
-                                    <div class="modal-content">
+                                    <div class="modal-content" style="width: 1300px;">
                                         <div class="modal-header">
                                             <h4 class="modal-title">ADD NEW ITEM</h4>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -79,10 +79,6 @@ overflow-y: scroll;
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-footer justify-content-between" id="up-pl">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-warning">Update</button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -91,13 +87,13 @@ overflow-y: scroll;
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-8 search-list" style="font-size:14px;height:550px;">
+                        <div class="col-sm-9 search-list" style="font-size:14px;height:400px;">
                             <table class="table table-sm">
                                 <thead>
-                                    <th style="width:16%;">Name</th>
-                                    <th style="width:8%;">Type</th>
-                                    <th style="width:16%;">Manufacturer</th>
-                                    <th style="width:8%;">Generic</th>
+                                    <th style="width:20%;">Name</th>
+                                    <th style="width:20%;">Type</th>
+                                    <th style="width:25%;">Manufacturer</th>
+                                    <th style="width:35%;">Generic</th>
                                 </thead>
                                 <tbody class="bill-item-list-cl" id="medecine-item-list">
                                     @foreach ($medecineList as $item)
@@ -111,22 +107,38 @@ overflow-y: scroll;
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-sm-4">
-                            <table>
+                        <div class="col-sm-3">
+                            <table  class="table table-sm" class="w-100">
                                 <thead>
-                                    <th style="width:50%;">Attribute</th>
-                                    <th style="width:50%;">Value</th>
+                                    <th style="width:30%;padding:5px;">Attribute</th>
+                                    <th style="width:70%;padding:5px;">Value</th>
                                 </thead>
                                 <tbody>
-                                    <tr><td style="width:50%;">Name</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->stock_cell}}"></td></tr>
-                                    <tr><td style="width:50%;">Cell</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock-cell{{$item->id}}" name="stock_cell" value="{{$item->stock_cell}}"></td></tr>
-                                    <tr><td style="width:50%;">MRP Price</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="mrp-rate{{$item->id}}" name="mrp_rate" value="{{$item->mrp_rate}}"></td></tr>
-                                    <tr><td style="width:50%;">Trade Price</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="tp-rate{{$item->id}}" name="tp_rate" value="{{$item->tp_rate}}"></td></tr>
-                                    <tr><td style="width:50%;">Stock Percentage</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="stock_per{{$item->id}}" name="stock_per" value="{{$item->stock_per}}"></td></tr>
-                                    <tr><td style="width:50%;">Last Stock</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="last-stock{{$item->id}}" name="last_stock" value="{{$item->last_stock}}"></td></tr>
-                                    <tr><td style="width:50%;">Current Stock</td><td style="width:50%;"><input class="form-control form-control-sm w-100" data-id="{{$item->id}}" type="text" id="current-stock${x.id}" name="qty[${x.current_stock}]" value="{{$item->current_stock}}"></td></tr>
+                                    <tr><td style="width:30%;">Name</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock-cell" name="stock_cell" value="" readonly></td></tr>
+                                    <tr><td style="width:30%;">Cell</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock-cell" name="stock_cell" value=""></td></tr>
+                                    <tr><td style="width:30%;">MRP Price</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="mrp-rate" name="mrp_rate" value=""></td></tr>
+                                    <tr><td style="width:30%;">Trade Price</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="tp-rate" name="tp_rate" value=""></td></tr>
+                                    <tr><td style="width:30%;">Stock Percentage</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock_per" name="stock_per" value=""  readonly></td></tr>
+                                    <tr><td style="width:30%;">Current Stock</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="current-stock" name="current-stock" value=""  readonly></td></tr>
+                                    <tr><td style="width:30%;">Stock Quantity</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock-quantity" name="stock-quantity" value=""></td></tr>
+                                    <tr><td style="width:30%;">Expire Date</td>
+                                        <td style="width:70%;">
+                                            <div class="input-group date" id="birth_date" data-target-input="nearest">
+                                                <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#birth_date" name="birth_date" id="date"/>
+                                                <div class="input-group-append" data-target="#birth_date" data-toggle="datetimepicker">
+                                                    <div class="input-group-text">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
+                            <div class="card-footer text-right pl-0 pr-0">
+                                <button type="reset" class="btn btn-sm btn-danger float-left">&nbsp;Clear&nbsp;</button>
+                                <button type="submit" class="btn btn-sm btn-success">&nbsp;Save&nbsp;</button>
+                            </div>
                         </div>
                     </div>
 
@@ -292,6 +304,27 @@ overflow-y: scroll;
                 },
                 success: function (response) {
                     console.log(response);
+                    let x;
+                    if('success' in response){
+                        toastr.success('Item Added Successfully for '+response.success.name);
+                        x = response.success;
+                    }else if('existed' in response){
+                        toastr.warning('Item Already Exists In store '+response.existed.name);
+                        x = response.existed;
+                    }
+
+                    $("#medecine-item-list").empty();
+                    let element = `
+                        <tr>
+                            <td>${x.name}</td>
+                                    <td>${x.type}</td>
+                                    <td>${x.manufacturer}</td>
+                                    <td>${x.generic}</td>
+                                </tr>
+                    `;
+                    $("#medecine-item-list").append(element);
+                    $('#modal-default-add').modal('hide');
+
                 }
             });
 
