@@ -97,7 +97,7 @@ overflow-y: scroll;
                                 </thead>
                                 <tbody class="bill-item-list-cl" id="medecine-item-list">
                                     @foreach ($medecineList as $item)
-                                        <tr>
+                                        <tr class="item-select" data-id="{{$item->id}}">
                                             <td>{{$item->name}}</td>
                                             <td>{{$item->type}}</td>
                                             <td>{{$item->manufacturer}}</td>
@@ -114,17 +114,17 @@ overflow-y: scroll;
                                     <th style="width:70%;padding:5px;">Value</th>
                                 </thead>
                                 <tbody>
-                                    <tr><td style="width:30%;">Name</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock-cell" name="stock_cell" value="" readonly></td></tr>
+                                    <tr><td style="width:30%;">Name</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="name" name="name" value="" readonly></td></tr>
                                     <tr><td style="width:30%;">Cell</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock-cell" name="stock_cell" value=""></td></tr>
                                     <tr><td style="width:30%;">MRP Price</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="mrp-rate" name="mrp_rate" value=""></td></tr>
                                     <tr><td style="width:30%;">Trade Price</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="tp-rate" name="tp_rate" value=""></td></tr>
                                     <tr><td style="width:30%;">Stock Percentage</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock_per" name="stock_per" value=""  readonly></td></tr>
-                                    <tr><td style="width:30%;">Current Stock</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="current-stock" name="current-stock" value=""  readonly></td></tr>
-                                    <tr><td style="width:30%;">Stock Quantity</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock-quantity" name="stock-quantity" value=""></td></tr>
+                                    <tr><td style="width:30%;">Current Stock</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="current-stock" name="current_stock" value=""></td></tr>
+                                    <tr><td style="width:30%;">Stock Quantity</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock-quantity" name="stock_quantity" value=""></td></tr>
                                     <tr><td style="width:30%;">Expire Date</td>
                                         <td style="width:70%;">
                                             <div class="input-group date" id="birth_date" data-target-input="nearest">
-                                                <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#birth_date" name="birth_date" id="date"/>
+                                                <input type="text" class="form-control form-control-sm datetimepicker-input" data-target="#birth_date" name="expire_date" id="expire-date"/>
                                                 <div class="input-group-append" data-target="#birth_date" data-toggle="datetimepicker">
                                                     <div class="input-group-text">
                                                         <i class="fa fa-calendar"></i>
@@ -160,17 +160,40 @@ overflow-y: scroll;
                 format: 'YYYY-MM-DD',
             });
         });
+        function setItem(id){
+            console.log(id);
+            $.ajax({
+                    type: 'get',
+                    dataType: "json",
+                    url: "{{url('medecinestock')}}/"+id,
+                    success: function (result) {
+                        console.log(result);
+                        $("#name").val(result.name);
+                        $("#stock-cell").val(result.stock_cell);
+                        $("#mrp-rate").val(result.mrp_rate);
+                        $("#tp-rate").val(result.tp_rate);
+                        $("#stock_per").val(result.stock_per);
+                        $("#current-stock").val(result.current_stock);
+                    }
+                });
 
+
+        }
+
+        $(".item-select").on('click',function(e){
+            let id = $(this).attr('data-id');
+            setItem(id);
+        });
 
         function stockEntry(id){
-              let storeQty = $('#storeqty'+id).val();
-              let medecineID = $('#storeqty'+id).attr('data-id');
-              let stockID = $('#storeqty'+id).attr('data-stock-id');
+              let storeQty = 5;
+              let medecineID = 5;
+              let stockID = 5;
             console.log(id);
             $.ajax({
                     type: 'post',
                     dataType: "json",
-                    url: "{{url('medecinestock')}}",
+                    url: "{{url('stockmedecine')}}",
                     data:{
                         'storeQty':storeQty,
                         'medecineID':medecineID,
@@ -189,52 +212,7 @@ overflow-y: scroll;
 
                     }
                 });
-
         }
-
-        // $("#medecinelist").on('keyup',function(e){
-        //     let ch_data = $("#medecinelist").val();
-        //     console.log(ch_data);
-        //     if((ch_data != '') &&( ch_data.length >= 3)){
-        //     $.ajax({
-        //             type: 'PUT',
-        //             dataType: "json",
-        //             url: "{{url('medecinestock')}}/",
-        //             data:{
-        //                 'search':ch_data,
-        //                 '_token': '{{ csrf_token() }}',
-        //             },
-        //             success: function (result) {
-        //                 console.log(result);
-        //                 let element = "";
-        //                 result.forEach(x =>{
-        //                         element += `<tr>
-        //                         <td id="main-bill-id${x.id}">${x.bill_id}</td>
-        //                         <td id="main-patient-id${x.id}">${x.patient_id}</td>
-        //                         <td id="main-patient-name${x.id}">${x.patient_name}</td>
-        //                         <td id="main-bill-date${x.id}">${x.bill_date}</td>
-        //                         <td class="text-center">
-        //                             <a class="btn btn-sm btn-primary bill-edit" data-id="${x.id}" data-bill-id="${x.bill_id}" >Edit
-        //                                 <i class="fas fa-edit edit-delete-icon" style="color:#eef4f7;" data-id="${x.id}"></i>
-        //                             </a>
-        //                             <a class="btn btn-sm btn-secondary" href="{{url('billing-pdf')}}/${x.bill_id}" target="_blank" data-id="${x.id}">Print
-        //                                 <i class="fas fa-print edit-delete-icon" style="color:#ecf3f7;" data-id="${x.id}"></i>
-        //                             </a>
-        //                         </td>
-        //                     </tr>`
-        //                 });
-        //                 $("#bill_search_list").empty();
-        //                 $("#bill_search_list").append(element);
-
-        //                 $(".bill-edit").on('click',function(e){
-        //                     let id = $(this).attr('data-bill-id');
-        //                     editBill(id);
-        //                 });
-        //             }
-        //         });
-        //     }
-
-        // });
 
         $("#medecine-search-btn").on('click',function(e){
             let ch_data = $("#medecinelist").val();
@@ -252,7 +230,7 @@ overflow-y: scroll;
                         console.log(result);
                         let element = "";
                         result.forEach(x =>{
-                                element += `<tr>
+                                element += `<tr class="item-select" data-id="${x.id}">
                                     <td>${x.name}</td>
                                     <td>${x.type}</td>
                                     <td>${x.manufacturer}</td>
@@ -262,9 +240,9 @@ overflow-y: scroll;
                         $("#medecine-item-list").empty();
                         $("#medecine-item-list").append(element);
 
-                        $(".stock-medecine").on('click',function(e){
+                      $(".item-select").on('click',function(e){
                             let id = $(this).attr('data-id');
-                            stockEntry(id);
+                            setItem(id);
                         });
                     }
                 });
@@ -315,7 +293,7 @@ overflow-y: scroll;
 
                     $("#medecine-item-list").empty();
                     let element = `
-                        <tr>
+                        <tr class="item-select" data-id="${x.id}">
                             <td>${x.name}</td>
                                     <td>${x.type}</td>
                                     <td>${x.manufacturer}</td>
@@ -325,17 +303,17 @@ overflow-y: scroll;
                     $("#medecine-item-list").append(element);
                     $('#modal-default-add').modal('hide');
 
+                    $(".item-select").on('click',function(e){
+                        let id = $(this).attr('data-id');
+                        setItem(id);
+                    });
+
                 }
             });
 
 
 
         }
-
-
-
-
-
 
 
         $("#medecine-search-btn-new").on('click',function(e){

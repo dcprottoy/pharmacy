@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('medecine_id');
             $table->decimal('stock_qty',18,2)->nullable();
             $table->date('stock_date');
+            $table->date('expiry_date');
             $table->timestamps();
         });
     }

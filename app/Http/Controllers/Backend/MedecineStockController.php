@@ -78,7 +78,9 @@ class MedecineStockController extends Controller
      */
     public function show(string $id)
     {
+        $stock = MedecineStock::find((int)$id);
 
+        return response()->json($stock);
     }
 
     public function todaySummary()
