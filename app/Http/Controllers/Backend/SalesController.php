@@ -22,7 +22,7 @@ class SalesController extends Controller
     public function index()
     {
         $data['medecineList'] = MedecineStock::orderBy('name','asc')->get();
-        return view('backend.billing.index',$data);
+        return view('backend.sales.index',$data);
     }
 
     /**

@@ -49,10 +49,10 @@ class StockMedecineController extends Controller
         }
 
         $medecine_id = (int)$request->item_id;
-        
+
         $medecine = MedecineStock::find($medecine_id);
         // return $medecine;
-       
+
         $medecine->last_stock = $request->current_stock;
         $medecine->current_stock = $request->current_stock;
         $medecine->mrp_rate = $request->mrp_rate;
@@ -75,14 +75,14 @@ class StockMedecineController extends Controller
         //     "expire_date": null,
         //     "_token": "YpjkIFL7vVadow526OuIauFEMTF2qShHLFTq3nZR"
         //   }
-        
+
         $expiry_wise = new ExpireDateMedecines();
         $expiry_wise->medecine_id = $medecine->id;
         $expiry_wise->stock_date = $date;
         $expiry_wise->expiry_date = $request->expire_date;
         $expiry_wise->stock_qty = $request->stock_quantity;
+        $expiry_wise->current_qty = $request->stock_quantity;
         $expiry_wise->save();
-
 
         $stock_log = new StockEntryLog();
         $stock_log->medecine_id = $medecine->id;
@@ -100,8 +100,13 @@ class StockMedecineController extends Controller
     public function show(string $id)
     {
         $stock = MedecineStock::find((int)$id);
+        $expiryDate = ExpireDateMedecines::where('medecine_id','=',(int)$id)
+                        ->where('medecine_id','=',(int)$id)
+                        ->where('current_qty','>',0)
+                        ->select('expiry_date','current_qty')
+                        ->get();
 
-        return response()->json($stock);
+        return response()->json(['item'=>$stock,'expiryDates'=>$expiryDate]);
     }
 
     public function todaySummary()

@@ -52,22 +52,20 @@ class MedecineStockController extends Controller
             return back()->withErrors($validated)->withInput();
         }
 
-
-
-            $isExists = MedecineStock::where('name','=',$request->name)->first();
-            if($isExists){
-                return response()->json(['existed'=>$isExists]);
-            }
-            $stock = new MedecineStock();
-            $stock->manufacturer = $request->manufacturer;
-            $stock->name = $request->name;
-            $stock->generic = $request->generic;
-            $stock->strength = $request->strength;
-            $stock->type = $request->type;
-            $stock->use_for = $request->use_for;
-            $stock->category = $request->category;
-            $stock->save();
-            return response()->json(['success'=>$stock]);
+        $isExists = MedecineStock::where('name','=',$request->name)->first();
+        if($isExists){
+            return response()->json(['existed'=>$isExists]);
+        }
+        $stock = new MedecineStock();
+        $stock->manufacturer = $request->manufacturer;
+        $stock->name = $request->name;
+        $stock->generic = $request->generic;
+        $stock->strength = $request->strength;
+        $stock->type = $request->type;
+        $stock->use_for = $request->use_for;
+        $stock->category = $request->category;
+        $stock->save();
+        return response()->json(['success'=>$stock]);
 
 
 
