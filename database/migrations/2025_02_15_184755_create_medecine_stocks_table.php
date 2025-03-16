@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('tp_rate',18,2)->nullable()->default(0);
             $table->decimal('stock_cell',18,2)->nullable()->default(0);
             $table->string('stock_per')->nullable();
+            $table->date('stock_date')->nullable();
             $table->decimal('total_stock',18,2)->nullable()->default(0);
             $table->decimal('total_sale',18,2)->nullable()->default(0);
             $table->timestamps();

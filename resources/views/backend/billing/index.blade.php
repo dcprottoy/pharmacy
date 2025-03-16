@@ -165,8 +165,8 @@ overflow-y: scroll;
                             <td><input class="form-control form-control-sm w-100" data-id="${id}" type="text" id="s-amount${id}" name="amount" value="${amount}"></td>
                             <td class="text-center">
                                  <button type="button" class="btn btn-danger btn-xs remove-btn" title="Remove">
-                                                <i class="fas fa-times p-1"></i>
-                                            </button>
+                                    <i class="fas fa-times p-1"></i>
+                                </button>
                             </td>
                         </tr>`
                 $("#medecine-final-list").append(element);
@@ -294,10 +294,9 @@ overflow-y: scroll;
         })
 
         $('.remove-btn').on('click',function(e){
-                                    console.log("Prottoy");
-                                    $(this).closest("tr").remove();
-
-                                });
+            console.log("Prottoy");
+            $(this).closest("tr").remove();
+        });
     });
 
 </script>

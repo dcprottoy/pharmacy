@@ -114,13 +114,49 @@ overflow-y: scroll;
                                     <th style="width:70%;padding:5px;">Value</th>
                                 </thead>
                                 <tbody>
-                                    <tr><td style="width:30%;">Name</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="name" name="name" value="" readonly></td></tr>
-                                    <tr><td style="width:30%;">Cell</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock-cell" name="stock_cell" value=""></td></tr>
-                                    <tr><td style="width:30%;">MRP Price</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="mrp-rate" name="mrp_rate" value=""></td></tr>
-                                    <tr><td style="width:30%;">Trade Price</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="tp-rate" name="tp_rate" value=""></td></tr>
-                                    <tr><td style="width:30%;">Stock Percentage</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock_per" name="stock_per" value=""  readonly></td></tr>
-                                    <tr><td style="width:30%;">Current Stock</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="current-stock" name="current_stock" value=""></td></tr>
-                                    <tr><td style="width:30%;">Stock Quantity</td><td style="width:70%;"><input class="form-control form-control-md w-100" type="text" id="stock-quantity" name="stock_quantity" value=""></td></tr>
+                                    <tr>
+                                        <td style="width:30%;">Name</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="name" name="name" value="" readonly>
+                                            <input type="hidden" id="item-id" name="item_id" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Cell</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="stock-cell" name="stock_cell" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">MRP Price</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="mrp-rate" name="mrp_rate" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Trade Price</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="tp-rate" name="tp_rate" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Stock Percentage</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="stock_per" name="stock_per" value=""  readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Current Stock</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="current-stock" data-current-stock="" name="current_stock" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Stock Quantity</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="stock-quantity" name="stock_quantity" value="">
+                                        </td>
+                                    </tr>
                                     <tr><td style="width:30%;">Expire Date</td>
                                         <td style="width:70%;">
                                             <div class="input-group date" id="birth_date" data-target-input="nearest">
@@ -137,7 +173,7 @@ overflow-y: scroll;
                             </table>
                             <div class="card-footer text-right pl-0 pr-0">
                                 <button type="reset" class="btn btn-sm btn-danger float-left">&nbsp;Clear&nbsp;</button>
-                                <button type="submit" class="btn btn-sm btn-success">&nbsp;Save&nbsp;</button>
+                                <button type="submit" class="btn btn-sm btn-success" id="save-btn">&nbsp;Save&nbsp;</button>
                             </div>
                         </div>
                     </div>
@@ -160,6 +196,50 @@ overflow-y: scroll;
                 format: 'YYYY-MM-DD',
             });
         });
+
+
+        $('#stock-quantity').on('keyup',function(e){
+            let currentStock =  $("#current-stock").attr("data-current-stock");
+            let stockQuantity = $("#stock-quantity").val();
+            $("#current-stock").val((Number(currentStock)+Number(stockQuantity)));
+        });
+
+        $("#save-btn").on("click",function(e){
+            
+            let itemId = $("#item-id").val();
+            let name = $("#name").val();
+            let stockCell = $("#stock-cell").val();
+            let mrpRate = $("#mrp-rate").val();
+            let tpRate = $("#tp-rate").val();
+            let stockPer = $("#stock_per").val();
+            let currentStock = $("#current-stock").val();
+            let stockQuantity = $("#stock-quantity").val();
+            let expireDate = $("#expire-date").val();
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                url: "{{url('stockmedecine')}}",
+                data:{
+                    'item_id':itemId,
+                    'name':name,
+                    'stock_cell':stockCell,
+                    'mrp_rate':mrpRate,
+                    'tp_rate':tpRate,
+                    'stock_per':stockPer,
+                    'current_stock':currentStock,
+                    'stock_quantity':stockQuantity,
+                    'expire_date':expireDate,
+                    '_token': '{{ csrf_token() }}',
+                },
+                success: function (response) {
+                    console.log(response);
+                    
+
+                }
+            });
+            
+        });
+
         function setItem(id){
             console.log(id);
             $.ajax({
@@ -168,15 +248,18 @@ overflow-y: scroll;
                     url: "{{url('medecinestock')}}/"+id,
                     success: function (result) {
                         console.log(result);
+                        $("#item-id").val(result.id);
                         $("#name").val(result.name);
                         $("#stock-cell").val(result.stock_cell);
                         $("#mrp-rate").val(result.mrp_rate);
                         $("#tp-rate").val(result.tp_rate);
                         $("#stock_per").val(result.stock_per);
                         $("#current-stock").val(result.current_stock);
+                        $("#current-stock").attr("data-current-stock",result.current_stock);
+                        $("#stock-quantity").val(0);
+                        $("#expire-date").val("");
                     }
                 });
-
 
         }
 

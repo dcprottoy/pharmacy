@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Backend\MedecineStock;
+use App\Models\Backend\ExpireDateMedecines;
 use App\Models\Backend\StockEntryLog;
 use App\Models\Backend\Medecine;
 
@@ -38,9 +39,8 @@ class StockMedecineController extends Controller
     {
 
         $date = Carbon::now()->format('Y-m-d');
-
         $validated = Validator::make($request->all(),[
-            'medecineID' => 'required',
+            'item_id' => 'required',
         ]);
         // return response()->json($request->all());
 
@@ -48,57 +48,50 @@ class StockMedecineController extends Controller
             return back()->withErrors($validated)->withInput();
         }
 
-        $medecine_id = (int)$request->medecineID;
-        $store_qty = (int)$request->storeQty;
-        $stock_id = $request->stockID;
-        if($stock_id == 'null'){
+        $medecine_id = (int)$request->item_id;
+        
+        $medecine = MedecineStock::find($medecine_id);
+        // return $medecine;
+       
+        $medecine->last_stock = $request->current_stock;
+        $medecine->current_stock = $request->current_stock;
+        $medecine->mrp_rate = $request->mrp_rate;
+        $medecine->tp_rate = $request->tp_rate;
+        $medecine->stock_cell = $request->stock_cell;
+        $medecine->stock_per = 100;
+        $medecine->stock_date = $date;
+        $medecine->total_stock = $medecine->total_stock + $request->stock_quantity;
+        $medecine->save();
 
-            $medecine = Medecine::find($medecine_id);
-
-            $stock = new MedecineStock();
-            $stock->manufacturer = $medecine->manufacturer;
-            $stock->name = $medecine->name;
-            $stock->generic = $medecine->generic;
-            $stock->strength = $medecine->strength;
-            $stock->type = $medecine->type;
-            $stock->use_for = $medecine->use_for;
-            $stock->category = $medecine->category;
-            $stock->medecine_id = $medecine->id;
-            $stock->last_stock = $store_qty;
-            $stock->current_stock = $store_qty;
-            $stock->stock_per = 100;
-
-            $stock->save();
-
-            $medecine->stock_id =  $stock->id;
-            $medecine->save();
-
-            $stock_log = new StockEntryLog();
-            $stock_log->medecine_id = $stock->id;
-            $stock_log->stock_date = $date;
-            $stock_log->stock_qty = $store_qty;
-            $stock_log->save();
-            return response()->json(['success'=>$stock]);
-        }else{
-
-            $stock = MedecineStock::find((int)$stock_id);
-
-            $stock->last_stock = $store_qty + $stock->current_stock;
-            $stock->current_stock = $store_qty + $stock->current_stock;
-            $stock->stock_per = 100;
-            $stock->save();
-
-            $stock_log = new StockEntryLog();
-            $stock_log->medecine_id = $stock->id;
-            $stock_log->stock_date = $date;
-            $stock_log->stock_qty = $store_qty;
-            $stock_log->save();
-
-            return response()->json(['success'=>$stock]);
-
-        }
+             // {
+        //     "item_id": "1",
+        //     "name": "Napa 125",
+        //     "stock_cell": "0.00",
+        //     "mrp_rate": "0.00",
+        //     "tp_rate": "0.00",
+        //     "stock_per": null,
+        //     "current_stock": "0.00",
+        //     "stock_quantity": "0",
+        //     "expire_date": null,
+        //     "_token": "YpjkIFL7vVadow526OuIauFEMTF2qShHLFTq3nZR"
+        //   }
+        
+        $expiry_wise = new ExpireDateMedecines();
+        $expiry_wise->medecine_id = $medecine->id;
+        $expiry_wise->stock_date = $date;
+        $expiry_wise->expiry_date = $request->expire_date;
+        $expiry_wise->stock_qty = $request->stock_quantity;
+        $expiry_wise->save();
 
 
+        $stock_log = new StockEntryLog();
+        $stock_log->medecine_id = $medecine->id;
+        $stock_log->stock_date = $date;
+        $stock_log->expiry_date = $request->expire_date;
+        $stock_log->stock_qty = $request->stock_quantity;
+        $stock_log->save();
+
+        return response()->json(['success'=>$stock]);
     }
 
     /**
