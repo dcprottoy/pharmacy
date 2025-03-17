@@ -233,7 +233,17 @@ overflow-y: scroll;
                 },
                 success: function (response) {
                     console.log(response);
-                    
+                    toastr.success('Item Updated Successfully for '+response.success.name);
+                    $("#item-id").val(response.success.id);
+                        $("#name").val(response.success.name);
+                        $("#stock-cell").val(response.success.stock_cell);
+                        $("#mrp-rate").val(response.success.mrp_rate);
+                        $("#tp-rate").val(response.success.tp_rate);
+                        $("#stock_per").val(response.success.stock_per);
+                        $("#current-stock").val(response.success.current_stock);
+                        $("#current-stock").attr("data-current-stock",response.success.current_stock);
+                        $("#stock-quantity").val(0);
+                        $("#expire-date").val("");
 
                 }
             });

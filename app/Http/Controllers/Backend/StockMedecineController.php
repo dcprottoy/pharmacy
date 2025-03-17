@@ -75,23 +75,28 @@ class StockMedecineController extends Controller
         //     "expire_date": null,
         //     "_token": "YpjkIFL7vVadow526OuIauFEMTF2qShHLFTq3nZR"
         //   }
+        if($request->expire_date != ""){
 
-        $expiry_wise = new ExpireDateMedecines();
-        $expiry_wise->medecine_id = $medecine->id;
-        $expiry_wise->stock_date = $date;
-        $expiry_wise->expiry_date = $request->expire_date;
-        $expiry_wise->stock_qty = $request->stock_quantity;
-        $expiry_wise->current_qty = $request->stock_quantity;
-        $expiry_wise->save();
+            $expiry_wise = new ExpireDateMedecines();
+            $expiry_wise->medecine_id = $medecine->id;
+            $expiry_wise->stock_date = $date;
+            $expiry_wise->expiry_date = $request->expire_date;
+            $expiry_wise->stock_qty = $request->stock_quantity;
+            $expiry_wise->current_qty = $request->stock_quantity;
+            $expiry_wise->save();
 
-        $stock_log = new StockEntryLog();
-        $stock_log->medecine_id = $medecine->id;
-        $stock_log->stock_date = $date;
-        $stock_log->expiry_date = $request->expire_date;
-        $stock_log->stock_qty = $request->stock_quantity;
-        $stock_log->save();
+            $stock_log = new StockEntryLog();
+            $stock_log->medecine_id = $medecine->id;
+            $stock_log->stock_date = $date;
+            $stock_log->expiry_date = $request->expire_date;
+            $stock_log->stock_qty = $request->stock_quantity;
+            $stock_log->save();
+            
+        }
 
-        return response()->json(['success'=>$stock]);
+        
+
+        return response()->json(['success'=>$medecine]);
     }
 
     /**
