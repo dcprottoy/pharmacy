@@ -40,7 +40,7 @@ class SalesController extends Controller
     {
 
         $date = Carbon::now()->format('Y-m-d');
-
+        dd($request->all());
         $validated = Validator::make($request->all(),[
             'medecineID' => 'required',
         ]);

@@ -37,25 +37,71 @@ overflow-y: scroll;
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-9 search-list" style="font-size:14px;height:400px;">
-                            <table class="table table-sm">
-                                <thead>
-                                    <th style="width:20%;">Name</th>
-                                    <th style="width:20%;">Type</th>
-                                    <th style="width:25%;">Manufacturer</th>
-                                    <th style="width:35%;">Generic</th>
-                                </thead>
-                                <tbody class="bill-item-list-cl" id="medecine-item-list">
-                                    @foreach ($medecineList as $item)
-                                        <tr class="item-select" data-id="{{$item->id}}">
-                                            <td>{{$item->name}}</td>
-                                            <td>{{$item->type}}</td>
-                                            <td>{{$item->manufacturer}}</td>
-                                            <td>{{$item->generic}}</td>
+                        <div  class="col-sm-9">
+                            <div class="search-list" style="font-size:14px;height:350px;">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <th style="width:20%;">Name</th>
+                                        <th style="width:20%;">Type</th>
+                                        <th style="width:25%;">Manufacturer</th>
+                                        <th style="width:35%;">Generic</th>
+                                    </thead>
+                                    <tbody class="bill-item-list-cl" id="medecine-item-list">
+                                        @foreach ($medecineList as $item)
+                                            <tr class="item-select" data-id="{{$item->id}}">
+                                                <td>{{$item->name}}</td>
+                                                <td>{{$item->type}}</td>
+                                                <td>{{$item->manufacturer}}</td>
+                                                <td>{{$item->generic}}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="search-list" style="font-size:14px;height:350px;">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <th style="width:30%;">Name</th>
+                                        <th style="width:8%;">Expire Date</th>
+                                        <th style="width:8%;">TP Rate</th>
+                                        <th style="width:8%;">MRP Rate</th>
+                                        <th style="width:8%;">Quantity</th>
+                                        <th style="width:8%;">Total Amount</th>
+                                        <th style="width:8%;">Discount Per</th>
+                                        <th style="width:8%;">Discount Amt</th>
+                                        <th style="width:8%;">Payble Amount</th>
+                                        <th style="width:6%;">Action</th>
+                                    </thead>
+                                    <tbody class="bill-item-list-cl" id="bill-item-list">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive" style="font-size:14px;">
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <th style="text-align: right;">Discount in Amount :</th>
+                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_dis_amt" id="bill-dis-amt" /></td>
+                                            <th style="text-align: right;">Total Amount :</th>
+                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_amount" id="bill-amount" /></td>
+                                            <th style="text-align: right;">Total Paid :</th>
+                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_paid_amount" id="bill-paid-amount"/></td>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                        <tr>
+                                            <th style="text-align: right;">Discount in Percentage :</th>
+                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_in_per" id="bill-in-per"/></td>
+                                            <th style="text-align: right;">Net Payable Amount :</th>
+                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_total_amount" id="bill-total-amount"/></td>
+                                            <th style="text-align: right;">Total Due :</th>
+                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_due_amount" id="bill-due-amount"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="card-footer text-right">
+                                    <button type="reset" class="btn btn-sm btn-danger float-left">&nbsp;Clear&nbsp;</button>
+                                    <button type="submit" class="btn btn-sm btn-success">&nbsp;Save&nbsp;</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-sm-3">
                             <table  class="table table-sm" class="w-100">
@@ -114,7 +160,25 @@ overflow-y: scroll;
                                     <tr>
                                         <td style="width:30%;">Sale Quantity</td>
                                         <td style="width:70%;">
-                                            <input class="form-control form-control-md w-100" type="text" id="stock-quantity" name="stock_quantity" value="">
+                                            <input class="form-control form-control-md w-100" type="text" id="sale-quantity" name="sale_quantity" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Total Amount</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="sale-quantity" name="sale_quantity" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Discount Per</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="sale-quantity" name="sale_quantity" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Discount Amount</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="sale-quantity" name="sale_quantity" value="">
                                         </td>
                                     </tr>
                                     <tr>
@@ -123,7 +187,6 @@ overflow-y: scroll;
                                             <input class="form-control form-control-md w-100" type="text" id="payable-amount" name="payable_amount" value="">
                                         </td>
                                     </tr>
-
                                 </tbody>
                             </table>
                             <div class="card-footer text-right pl-0 pr-0">
@@ -132,9 +195,9 @@ overflow-y: scroll;
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -154,15 +217,15 @@ overflow-y: scroll;
 
         $('#mrp-rate').on('keyup',function(e){
             let currentStock =  $("#current-stock").attr("data-current-stock");
-            let stockQuantity = $("#stock-quantity").val();
+            let stockQuantity = $("#sale-quantity").val();
             let mrpRate = $("#mrp-rate").val();
             $("#current-stock").val((Number(currentStock)-Number(stockQuantity)));
             $("#payable-amount").val((Number(mrpRate)*Number(stockQuantity)));
         });
 
-        $('#stock-quantity').on('keyup',function(e){
+        $('#sale-quantity').on('keyup',function(e){
             let currentStock =  $("#current-stock").attr("data-current-stock");
-            let stockQuantity = $("#stock-quantity").val();
+            let stockQuantity = $("#sale-quantity").val();
             let mrpRate = $("#mrp-rate").val();
             $("#current-stock").val((Number(currentStock)-Number(stockQuantity)));
             $("#payable-amount").val((Number(mrpRate)*Number(stockQuantity)));
@@ -177,7 +240,7 @@ overflow-y: scroll;
             let tpRate = $("#tp-rate").val();
             let stockPer = $("#stock_per").val();
             let currentStock = $("#current-stock").val();
-            let stockQuantity = $("#stock-quantity").val();
+            let stockQuantity = $("#sale-quantity").val();
             let expireDate = $("#expire-date").val();
             $.ajax({
                 type: 'post',
@@ -221,7 +284,7 @@ overflow-y: scroll;
                         $("#stock_per").val(result.item.stock_per);
                         $("#current-stock").val(result.item.current_stock);
                         $("#current-stock").attr("data-current-stock",result.item.current_stock);
-                        $("#stock-quantity").val(0);
+                        $("#sale-quantity").val(0);
                         $("#payable-amount").val(0);
                         if(result.expiryDates){
                             let element=`<option value="" disabled selected>Please select</option>`;
@@ -235,6 +298,8 @@ overflow-y: scroll;
                                 let currentStock = $('#expire-date option:selected').attr('data-current-qty');
                                 $("#current-stock").val(Number(currentStock).toFixed(2));
                                 $("#current-stock").attr("data-current-stock",Number(currentStock).toFixed(2));
+                                $("#sale-quantity").val(0);
+                                $("#payable-amount").val(0);
                             });
                         }
 
@@ -428,6 +493,18 @@ overflow-y: scroll;
 
         });
 
+
+        function calculateBill(){
+            let amtResult = 0;
+            $(".payable").each(function(){
+                    amtResult += Number($(this).val());
+                });
+            console.log(amtResult);
+
+        }
+
+
+
         $("#add-btn").on("click",function(e){
             let itemId = $("#item-id").val();
             let name = $("#name").val();
@@ -436,11 +513,48 @@ overflow-y: scroll;
             let tpRate = $("#tp-rate").val();
             let stockPer = $("#stock_per").val();
             let currentStock = $("#current-stock").val();
-            let stockQuantity = $("#stock-quantity").val();
-           
+            let saleQuantity = $("#sale-quantity").val();
+            let payableAmount = $("#payable-amount").val();
+            let expiryDate = $("#expire-date").val();
 
+
+            let element = `<tr>
+                <td>
+                    ${name}
+
+                </td>
+                <td>
+                    <input class="form-control form-control-sm w-100" data-id="${itemId+expiryDate}" type="text" id="expire-date${itemId+expiryDate}" name="expire_date[]" value="${expiryDate}" readonly>
+                </td>
+                <td>
+                    ${tpRate}
+
+                </td>
+                <td>
+                    <input class="form-control form-control-sm w-100" data-id="${itemId+expiryDate}" type="text" id="mrp-rate${itemId+expiryDate}" name="mrp_rate[]" value="${mrpRate}">
+                </td>
+                 <td>
+                    <input class="form-control form-control-sm w-100" data-id="${itemId+expiryDate}" type="text" id="sale-quantity${itemId+expiryDate}" name="sale_quantity[]" value="${saleQuantity}">
+                </td>
+                <td>
+                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="payable-amount${itemId+expiryDate}" name="payable_amount[]" value="${payableAmount}">
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-xs remove-btn" title="Remove">
+                        <i class="fas fa-times p-1"></i>
+                    </button>
+                </td>
+                </tr>`;
+                    $("#bill-item-list").append(element);
+
+                    $('.remove-btn').on('click',function(e){
+                        $(this).closest("tr").remove();
+                        calculateBill();
+                    });
+                    calculateBill();
             });
-        
+
+
 
     });
 
