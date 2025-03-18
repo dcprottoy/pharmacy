@@ -117,12 +117,18 @@ overflow-y: scroll;
                                             <input class="form-control form-control-md w-100" type="text" id="stock-quantity" name="stock_quantity" value="">
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td style="width:30%;">Payable Amount</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="payable-amount" name="payable_amount" value="">
+                                        </td>
+                                    </tr>
 
                                 </tbody>
                             </table>
                             <div class="card-footer text-right pl-0 pr-0">
                                 <button type="reset" class="btn btn-sm btn-danger float-left">&nbsp;Clear&nbsp;</button>
-                                <button type="submit" class="btn btn-sm btn-success" id="save-btn">&nbsp;Save&nbsp;</button>
+                                <button type="submit" class="btn btn-sm btn-success" id="add-btn">&nbsp;Add&nbsp;</button>
                             </div>
                         </div>
                     </div>
@@ -146,11 +152,20 @@ overflow-y: scroll;
             });
         });
 
+        $('#mrp-rate').on('keyup',function(e){
+            let currentStock =  $("#current-stock").attr("data-current-stock");
+            let stockQuantity = $("#stock-quantity").val();
+            let mrpRate = $("#mrp-rate").val();
+            $("#current-stock").val((Number(currentStock)-Number(stockQuantity)));
+            $("#payable-amount").val((Number(mrpRate)*Number(stockQuantity)));
+        });
 
         $('#stock-quantity').on('keyup',function(e){
             let currentStock =  $("#current-stock").attr("data-current-stock");
             let stockQuantity = $("#stock-quantity").val();
-            $("#current-stock").val((Number(currentStock)+Number(stockQuantity)));
+            let mrpRate = $("#mrp-rate").val();
+            $("#current-stock").val((Number(currentStock)-Number(stockQuantity)));
+            $("#payable-amount").val((Number(mrpRate)*Number(stockQuantity)));
         });
 
         $("#save-btn").on("click",function(e){
@@ -207,6 +222,7 @@ overflow-y: scroll;
                         $("#current-stock").val(result.item.current_stock);
                         $("#current-stock").attr("data-current-stock",result.item.current_stock);
                         $("#stock-quantity").val(0);
+                        $("#payable-amount").val(0);
                         if(result.expiryDates){
                             let element=`<option value="" disabled selected>Please select</option>`;
                             result.expiryDates.map(x=>{
@@ -411,6 +427,20 @@ overflow-y: scroll;
             }
 
         });
+
+        $("#add-btn").on("click",function(e){
+            let itemId = $("#item-id").val();
+            let name = $("#name").val();
+            let stockCell = $("#stock-cell").val();
+            let mrpRate = $("#mrp-rate").val();
+            let tpRate = $("#tp-rate").val();
+            let stockPer = $("#stock_per").val();
+            let currentStock = $("#current-stock").val();
+            let stockQuantity = $("#stock-quantity").val();
+           
+
+            });
+        
 
     });
 
