@@ -38,7 +38,7 @@ overflow-y: scroll;
                 <div class="card-body">
                     <div class="row">
                         <div  class="col-sm-9">
-                            <div class="search-list" style="font-size:14px;height:350px;">
+                            <div class="search-list" style="font-size:14px;height:250px;">
                                 <table class="table table-sm">
                                     <thead>
                                         <th style="width:20%;">Name</th>
@@ -58,7 +58,7 @@ overflow-y: scroll;
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="search-list" style="font-size:14px;height:350px;">
+                            <div class="search-list" style="font-size:14px;height:300px;">
                                 <table class="table table-sm">
                                     <thead>
                                         <th style="width:30%;">Name</th>
@@ -72,7 +72,7 @@ overflow-y: scroll;
                                         <th style="width:8%;">Payble Amount</th>
                                         <th style="width:6%;">Action</th>
                                     </thead>
-                                    <tbody class="bill-item-list-cl" id="bill-item-list">
+                                    <tbody class="bill-item-list-cl" id="bill-item-list" style="background-color:#e9ecef;">
                                     </tbody>
                                 </table>
                             </div>
@@ -160,31 +160,31 @@ overflow-y: scroll;
                                     <tr>
                                         <td style="width:30%;">Sale Quantity</td>
                                         <td style="width:70%;">
-                                            <input class="form-control form-control-md w-100" type="text" id="sale-quantity" name="sale_quantity" value="">
+                                            <input class="form-control form-control-md w-100" type="text" id="sale-quantity" name="sale_quantity" value="0">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="width:30%;">Total Amount</td>
                                         <td style="width:70%;">
-                                            <input class="form-control form-control-md w-100" type="text" id="sale-quantity" name="sale_quantity" value="">
+                                            <input class="form-control form-control-md w-100" type="text" id="total-amount" name="total_amount" value="0">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="width:30%;">Discount Per</td>
                                         <td style="width:70%;">
-                                            <input class="form-control form-control-md w-100" type="text" id="sale-quantity" name="sale_quantity" value="">
+                                            <input class="form-control form-control-md w-100" type="text" id="disc-per" name="disc_per" value="0">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="width:30%;">Discount Amount</td>
                                         <td style="width:70%;">
-                                            <input class="form-control form-control-md w-100" type="text" id="sale-quantity" name="sale_quantity" value="">
+                                            <input class="form-control form-control-md w-100" type="text" id="disc-amt" name="disc_amt" value="0">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="width:30%;">Payable Amount</td>
                                         <td style="width:70%;">
-                                            <input class="form-control form-control-md w-100" type="text" id="payable-amount" name="payable_amount" value="">
+                                            <input class="form-control form-control-md w-100" type="text" id="payable-amount" name="payable_amount" value="0">
                                         </td>
                                     </tr>
                                 </tbody>
@@ -215,20 +215,26 @@ overflow-y: scroll;
             });
         });
 
+        function calculatePrice(){
+            let mrpRate = $('#mrp-rate').val();
+            let saleQuantity = $('#sale-quantity').val();
+
+            let totalAmount = (Number(mrpRate)*Number(saleQuantity)).toFixed(2);
+            $('#total-amount').val(totalAmount);
+
+            let discAmt = $('#disc-amt').val();
+
+            let payableAmount = (totalAmount - Number(discAmt)).toFixed(2);
+            
+            $('#payable-amount').val(payableAmount);
+        }
+
         $('#mrp-rate').on('keyup',function(e){
-            let currentStock =  $("#current-stock").attr("data-current-stock");
-            let stockQuantity = $("#sale-quantity").val();
-            let mrpRate = $("#mrp-rate").val();
-            $("#current-stock").val((Number(currentStock)-Number(stockQuantity)));
-            $("#payable-amount").val((Number(mrpRate)*Number(stockQuantity)));
+            calculatePrice();
         });
 
         $('#sale-quantity').on('keyup',function(e){
-            let currentStock =  $("#current-stock").attr("data-current-stock");
-            let stockQuantity = $("#sale-quantity").val();
-            let mrpRate = $("#mrp-rate").val();
-            $("#current-stock").val((Number(currentStock)-Number(stockQuantity)));
-            $("#payable-amount").val((Number(mrpRate)*Number(stockQuantity)));
+            calculatePrice();
         });
 
         $("#save-btn").on("click",function(e){
@@ -275,7 +281,6 @@ overflow-y: scroll;
                     url: "{{url('stockmedecine')}}/"+id,
                     success: function (result) {
                         console.log(result);
-
                         $("#item-id").val(result.item.id);
                         $("#name").val(result.item.name);
                         $("#stock-cell").val(result.item.stock_cell);
@@ -285,7 +290,7 @@ overflow-y: scroll;
                         $("#current-stock").val(result.item.current_stock);
                         $("#current-stock").attr("data-current-stock",result.item.current_stock);
                         $("#sale-quantity").val(0);
-                        $("#payable-amount").val(0);
+                        $("#total-amount").val(0);
                         if(result.expiryDates){
                             let element=`<option value="" disabled selected>Please select</option>`;
                             result.expiryDates.map(x=>{
@@ -299,7 +304,7 @@ overflow-y: scroll;
                                 $("#current-stock").val(Number(currentStock).toFixed(2));
                                 $("#current-stock").attr("data-current-stock",Number(currentStock).toFixed(2));
                                 $("#sale-quantity").val(0);
-                                $("#payable-amount").val(0);
+                                $("#total-amount").val(0);
                             });
                         }
 
@@ -503,8 +508,6 @@ overflow-y: scroll;
 
         }
 
-
-
         $("#add-btn").on("click",function(e){
             let itemId = $("#item-id").val();
             let name = $("#name").val();
@@ -514,7 +517,7 @@ overflow-y: scroll;
             let stockPer = $("#stock_per").val();
             let currentStock = $("#current-stock").val();
             let saleQuantity = $("#sale-quantity").val();
-            let payableAmount = $("#payable-amount").val();
+            let totalAmount = $("#total-amount").val();
             let expiryDate = $("#expire-date").val();
 
 
@@ -537,7 +540,16 @@ overflow-y: scroll;
                     <input class="form-control form-control-sm w-100" data-id="${itemId+expiryDate}" type="text" id="sale-quantity${itemId+expiryDate}" name="sale_quantity[]" value="${saleQuantity}">
                 </td>
                 <td>
-                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="payable-amount${itemId+expiryDate}" name="payable_amount[]" value="${payableAmount}">
+                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="total-amount${itemId+expiryDate}" name="total_amount[]" value="${totalAmount}">
+                </td>
+                 <td>
+                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="total-amount${itemId+expiryDate}" name="total_amount[]" value="${totalAmount}">
+                </td>
+                 <td>
+                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="total-amount${itemId+expiryDate}" name="total_amount[]" value="${totalAmount}">
+                </td>
+                 <td>
+                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="total-amount${itemId+expiryDate}" name="total_amount[]" value="${totalAmount}">
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-xs remove-btn" title="Remove">
