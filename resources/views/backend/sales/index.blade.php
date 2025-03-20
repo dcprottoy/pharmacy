@@ -83,17 +83,17 @@ overflow-y: scroll;
                                             <th style="text-align: right;">Discount in Amount :</th>
                                             <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_dis_amt" id="bill-dis-amt" /></td>
                                             <th style="text-align: right;">Total Amount :</th>
-                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_amount" id="bill-amount" /></td>
+                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_amount" id="bill-amount" /></td>
                                             <th style="text-align: right;">Total Paid :</th>
                                             <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_paid_amount" id="bill-paid-amount"/></td>
                                         </tr>
                                         <tr>
                                             <th style="text-align: right;">Discount in Percentage :</th>
-                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_in_per" id="bill-in-per"/></td>
+                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_in_per" id="bill-in-per"/></td>
                                             <th style="text-align: right;">Net Payable Amount :</th>
-                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_total_amount" id="bill-total-amount"/></td>
+                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_total_amount" id="bill-total-amount"/></td>
                                             <th style="text-align: right;">Total Due :</th>
-                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_due_amount" id="bill-due-amount"/></td>
+                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_due_amount" id="bill-due-amount"/></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -225,7 +225,7 @@ overflow-y: scroll;
             let discAmt = $('#disc-amt').val();
 
             let payableAmount = (totalAmount - Number(discAmt)).toFixed(2);
-            
+
             $('#payable-amount').val(payableAmount);
         }
 
@@ -236,6 +236,26 @@ overflow-y: scroll;
         $('#sale-quantity').on('keyup',function(e){
             calculatePrice();
         });
+
+        $('#disc-per').on('keyup',function(e){
+           let percent = $(this).val();
+           let totalAmount = $('#total-amount').val();
+           let discAmount = ((Number(percent)*Number(totalAmount))/100).toFixed(2);
+           $('#disc-amt').val(discAmount);
+           calculatePrice();
+        });
+        $('#disc-amt').on('keyup',function(e){
+            let amt = $(this).val();
+           let totalAmount = $('#total-amount').val();
+           let discPercent= ((Number(amt)/Number(totalAmount))*100).toFixed(2);
+           $('#disc-per').val(discPercent);
+           calculatePrice();
+        });
+
+
+
+
+
 
         $("#save-btn").on("click",function(e){
 
@@ -291,6 +311,9 @@ overflow-y: scroll;
                         $("#current-stock").attr("data-current-stock",result.item.current_stock);
                         $("#sale-quantity").val(0);
                         $("#total-amount").val(0);
+                        $("#disc-per").val(0);
+                        $("#disc-amt").val(0);
+                        $("#payable-amount").val(0);
                         if(result.expiryDates){
                             let element=`<option value="" disabled selected>Please select</option>`;
                             result.expiryDates.map(x=>{
@@ -498,14 +521,55 @@ overflow-y: scroll;
 
         });
 
+        function finalBillCalculation(){
+          let billAmount =  $("#bill-amount").val();
+          let discountAmount =  $("#bill-dis-amt").val();
+          let discountPer =  $("#bill-in-per").val();
+          let finalAmount =  $("#bill-total-amount").val();
+          let paidAmount =  $("#bill-paid-amount").val();
+          let dueAmount =  $("#bill-due-amount").val();
+          let newFinalAmount = billAmount;
+          if((!isNaN(discountAmount)) && discountAmount != 0){
+            newFinalAmount = (Number(billAmount)-Number(discountAmount)).toFixed(2);
+          }
+          if(!isNaN(paidAmount)){
+            let newDueAmount = (Number(newFinalAmount)-Number(paidAmount)).toFixed(2);
+            $("#bill-due-amount").val(newDueAmount);
+          }
+          $("#bill-total-amount").val(newFinalAmount);
+
+
+        }
+        $(".final-bill-field").on('keyup',function(){
+            $('#bill-in-per').val(0);
+            finalBillCalculation();
+        });
 
         function calculateBill(){
             let amtResult = 0;
-            $(".payable").each(function(){
+            let discResult = 0;
+                $(".payable-total").each(function(){
                     amtResult += Number($(this).val());
                 });
-            console.log(amtResult);
+                console.log(amtResult);
+                $(".payable-discount").each(function(){
 
+                    discResult += Number($(this).val());
+                });
+                $("#bill-amount").val(amtResult);
+                $("#bill-dis-amt").val(discResult);
+                finalBillCalculation();
+        }
+        function calculateIndividualBill(id){
+            let rate = $('#mrp-rate'+id).val();
+            let qty = $('#sale-quantity'+id).val();
+            let disc = $('#discount-amount'+id).val();
+
+            let payAmount = (Number(rate)*Number(qty))-Number(disc);
+            console.log(id);
+            $('#total-amount'+id).val((Number(rate)*Number(qty)).toFixed(2));
+            $('#payable-amount'+id).val(payAmount);
+            calculateBill();
         }
 
         $("#add-btn").on("click",function(e){
@@ -519,7 +583,9 @@ overflow-y: scroll;
             let saleQuantity = $("#sale-quantity").val();
             let totalAmount = $("#total-amount").val();
             let expiryDate = $("#expire-date").val();
-
+            let discountPer = $("#disc-per").val();
+            let discountAmt = $("#disc-amt").val();
+            let payableAmount = $("#payable-amount").val();
 
             let element = `<tr>
                 <td>
@@ -534,22 +600,22 @@ overflow-y: scroll;
 
                 </td>
                 <td>
-                    <input class="form-control form-control-sm w-100" data-id="${itemId+expiryDate}" type="text" id="mrp-rate${itemId+expiryDate}" name="mrp_rate[]" value="${mrpRate}">
+                    <input class="form-control form-control-sm w-100 mrp-rate" data-id="${itemId+expiryDate}" type="text" id="mrp-rate${itemId+expiryDate}" name="mrp_rate[]" value="${mrpRate}">
                 </td>
                  <td>
-                    <input class="form-control form-control-sm w-100" data-id="${itemId+expiryDate}" type="text" id="sale-quantity${itemId+expiryDate}" name="sale_quantity[]" value="${saleQuantity}">
+                    <input class="form-control form-control-sm w-100 sale-qty" data-id="${itemId+expiryDate}" type="text" id="sale-quantity${itemId+expiryDate}" name="sale_quantity[]" value="${saleQuantity}">
                 </td>
                 <td>
-                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="total-amount${itemId+expiryDate}" name="total_amount[]" value="${totalAmount}">
+                    <input class="form-control form-control-sm w-100 payable-total" data-id="${itemId+expiryDate}" type="text" id="total-amount${itemId+expiryDate}" name="total_amount[]" value="${totalAmount}" readonly>
                 </td>
                  <td>
-                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="total-amount${itemId+expiryDate}" name="total_amount[]" value="${totalAmount}">
+                    <input class="form-control form-control-sm w-100 discount-per" data-id="${itemId+expiryDate}" type="text" id="discount-percent${itemId+expiryDate}" name="discount_percent[]" value="${discountPer}">
                 </td>
                  <td>
-                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="total-amount${itemId+expiryDate}" name="total_amount[]" value="${totalAmount}">
+                    <input class="form-control form-control-sm w-100 payable-discount" data-id="${itemId+expiryDate}" type="text" id="discount-amount${itemId+expiryDate}" name="discount_amount[]" value="${discountAmt}">
                 </td>
                  <td>
-                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="total-amount${itemId+expiryDate}" name="total_amount[]" value="${totalAmount}">
+                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="payable-amount${itemId+expiryDate}" name="payable_amount[]" value="${payableAmount}" readonly>
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-xs remove-btn" title="Remove">
@@ -564,11 +630,55 @@ overflow-y: scroll;
                         calculateBill();
                     });
                     calculateBill();
-            });
+
+                    $('.mrp-rate').on('keyup',function(e){
+                        console.log($(this).attr('data-id'));
+                        calculateIndividualBill($(this).attr('data-id'));
+                    });
+                    $('.sale-qty').on('keyup',function(e){
+                        calculateIndividualBill($(this).attr('data-id'));
+                    });
+
+                    $('.discount-per').on('keyup',function(e){
+                        let id = $(this).attr('data-id');
+                        let totalAmount = $('#total-amount'+id).val();
+                        let perValue = $(this).val();
+                        let discountAmount = ((Number(perValue)*Number(totalAmount))/100).toFixed(2);
+                        console.log(discountAmount);
+                        $('#discount-amount'+id).val(discountAmount);
+                        calculateIndividualBill(id);
+                    });
+                    $('.payable-discount').on('keyup',function(e){
+                        let id = $(this).attr('data-id');
+                        let totalAmount = $('#total-amount'+id).val();
+                        let disValue = $(this).val();
+                        let discountAmount = ((Number(disValue)/Number(totalAmount))*100).toFixed(2);
+                        console.log(discountAmount);
+                        $('#discount-percent'+id).val(discountAmount);
+                        calculateIndividualBill(id);
+                    });
+                });
+
+
+                $('#bill-in-per').on('keyup',function(e){
+                    let perVal = $(this).val();
+
+                    $(".discount-per").each(function(){
+                        let id = $(this).attr('data-id');
+                        let totalAmount = $('#total-amount'+id).val();
+                        let discountAmount = ((Number(perVal)*Number(totalAmount))/100).toFixed(2);
+                        console.log(discountAmount);
+                        $('#discount-amount'+id).val(discountAmount);
+                        $('#discount-percent'+id).val(perVal);
+                        calculateIndividualBill(id);
+                    });
+                })
 
 
 
-    });
+
+
+        });
 
 </script>
 
