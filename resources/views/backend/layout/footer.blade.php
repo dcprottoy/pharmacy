@@ -4,5 +4,5 @@
       Developed By Prottoy Khandakar
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2024-2025 Alif Medical Centre .</strong> All rights reserved.
+    <strong>Copyright &copy; 2024-2025 Pharma Aid .</strong> All rights reserved.
 </footer>
