@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Backend\MedecineStock;
 use App\Models\Backend\ExpireDateMedecines;
 use App\Models\Backend\StockEntryLog;
+use App\Models\Backend\Manufacturer;
 use App\Models\Backend\Medecine;
 
 use Illuminate\Support\Carbon;
@@ -21,6 +22,7 @@ class StockMedecineController extends Controller
     public function index()
     {
         $data['medecineList'] = MedecineStock::orderBy('name','asc')->get();
+        $data['manufacturer'] = Manufacturer::orderBy('name_eng','asc')->select('name_eng')->get();;
         return view('backend.stockmedecine.index',$data);
     }
 
@@ -91,10 +93,10 @@ class StockMedecineController extends Controller
             $stock_log->expiry_date = $request->expire_date;
             $stock_log->stock_qty = $request->stock_quantity;
             $stock_log->save();
-            
+
         }
 
-        
+
 
         return response()->json(['success'=>$medecine]);
     }
@@ -213,4 +215,6 @@ class StockMedecineController extends Controller
         $lastid = MedecineStock::where('name', 'like', '%'.$request->search.'%')->get();
         return $lastid;
     }
+
+
 }
