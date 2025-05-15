@@ -27,6 +27,7 @@ class BillingController extends Controller
     {
 
         return view('backend.billing.index');
+        
     }
 
     /**
