@@ -18,7 +18,8 @@ return new class extends Migration
             $table->decimal('current_qty',18,2)->nullable();
             $table->decimal('sell_qty',18,2)->nullable();
             $table->date('stock_date');
-            $table->date('expiry_date');
+            $table->date('manufacturing_date')->nullable();
+            $table->date('expiry_date')->nullable();
             $table->timestamps();
         });
     }

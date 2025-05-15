@@ -20,7 +20,6 @@ return new class extends Migration
             $table->text('type')->nullable();
             $table->string('use_for')->nullable();
             $table->string('category',3)->nullable();
-            $table->integer('stock_id')->nullable();
             $table->timestamps();
         });
     }
