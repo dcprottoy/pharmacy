@@ -5,16 +5,16 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Models\Backend\Store;
-class StoreController extends Controller
+use App\Models\Backend\Cell;
+class CellController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data['stores'] = Store::all();
-        return view('backend.store.index',$data);
+        $data['stores'] = Cell::all();
+        return view('backend.cell.index',$data);
     }
 
     /**
@@ -38,13 +38,13 @@ class StoreController extends Controller
             // return back()->withErrors($validated)->withInput();
         }else{
             // return $request->input();
-            for($i=1;$i<61;$i++){
-                $advice = new Store();
-                $advice->name_eng = $i;
-                $advice->save();
-            }
-            // $advice = new Store();
-            // $advice->fill($request->all())->save();
+            // for($i=1;$i<61;$i++){
+            //     $advice = new Store();
+            //     $advice->name_eng = $i;
+            //     $advice->save();
+            // }
+            $advice = new Cell();
+            $advice->fill($request->all())->save();
             return back()->with('success','New Cell Created Successfully');
 
         }
@@ -55,7 +55,7 @@ class StoreController extends Controller
      */
     public function show(string $id)
     {
-        $lastid = Store::findOrFail($id);
+        $lastid = Cell::findOrFail($id);
         return $lastid;
     }
 
@@ -78,7 +78,7 @@ class StoreController extends Controller
         if($validated->fails()){
             return back()->with('error','Something went wrong !!')->withInput();
         }else{
-            $advice = Store::findOrFail($id);
+            $advice = Cell::findOrFail($id);
             $data = $request->only(['name_eng',
                                     'status']
                                 );
@@ -92,8 +92,8 @@ class StoreController extends Controller
      */
     public function destroy(string $id)
     {
-        if(Store::find($id)){
-            $createObject = Store::find($id);
+        if(Cell::find($id)){
+            $createObject = Cell::find($id);
             $createObject->delete();
             return back()->with('success','Cell Remove Successfully');
         }else{

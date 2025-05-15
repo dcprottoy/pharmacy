@@ -25,9 +25,15 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item " >
-                        <a href="{{route('store.home')}}" class="nav-link {{ Route::currentRouteName() == 'store.home'||Route::currentRouteName() == 'store.create'||Route::currentRouteName() == 'store.edit' ? 'active' : ''}}" >
+                        <a href="{{route('cell.home')}}" class="nav-link {{ Route::currentRouteName() == 'cell.home'||Route::currentRouteName() == 'cell.create'||Route::currentRouteName() == 'cell.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Stores</p>
+                            <p>Cells</p>
+                        </a>
+                    </li>
+                     <li class="nav-item " >
+                        <a href="{{route('category.home')}}" class="nav-link {{ Route::currentRouteName() == 'category.home'||Route::currentRouteName() == 'category.create'||Route::currentRouteName() == 'category.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Category</p>
                         </a>
                     </li>
                     <li class="nav-item " >

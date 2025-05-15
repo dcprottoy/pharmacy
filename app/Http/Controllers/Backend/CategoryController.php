@@ -5,20 +5,16 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Models\Backend\MedecineStock;
-use App\Models\Backend\Manufacturer;
-
-
-class MedecineController extends Controller
+use App\Models\Backend\Category;
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data['medecines'] = MedecineStock::paginate(50);
-        $data['manufacturers'] = Manufacturer::all();
-        return view('backend.medecine.index',$data);
+        $data['stores'] = Category::all();
+        return view('backend.category.index',$data);
     }
 
     /**
@@ -35,16 +31,16 @@ class MedecineController extends Controller
     public function store(Request $request)
     {
         $validated = Validator::make($request->all(),[
-            'name' => 'required',
+            'name_eng' => 'required',
         ]);
         if($validated->fails()){
             return back()->with('error','Something went wrong !!')->withInput();
             // return back()->withErrors($validated)->withInput();
         }else{
-            // return $request->input();
-            $advice = new MedecineStock();
+
+            $advice = new Category();
             $advice->fill($request->all())->save();
-            return back()->with('success','New Medecine Created Successfully');
+            return back()->with('success','New Cell Created Successfully');
 
         }
     }
@@ -54,7 +50,7 @@ class MedecineController extends Controller
      */
     public function show(string $id)
     {
-        $lastid = MedecineStock::findOrFail($id);
+        $lastid = Category::findOrFail($id);
         return $lastid;
     }
 
@@ -72,22 +68,17 @@ class MedecineController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = Validator::make($request->all(),[
-            'name' => 'required',
+            'name_eng' => 'required',
         ]);
         if($validated->fails()){
             return back()->with('error','Something went wrong !!')->withInput();
         }else{
-            $advice = MedecineStock::findOrFail($id);
-            $data = $request->only(['manufacturer',
-            'name',
-            'generic',
-            'strength',
-            'type',
-            'use_for',
-            'category']
+            $advice = Category::findOrFail($id);
+            $data = $request->only(['name_eng',
+                                    'status']
                                 );
             $advice->fill($data)->save();
-            return back()->with('success','Medecine '.$advice->name_eng.' Updated Successfully');
+            return back()->with('success','Cell '.$advice->name_eng.' Updated Successfully');
         }
     }
 
@@ -96,12 +87,13 @@ class MedecineController extends Controller
      */
     public function destroy(string $id)
     {
-        if(MedecineStock::find($id)){
-            $createObject = MedecineStock::find($id);
+        if(Category::find($id)){
+            $createObject = Category::find($id);
             $createObject->delete();
-            return back()->with('success','Medecine Remove Successfully');
+            return back()->with('success','Cell Remove Successfully');
         }else{
-            return back()->with('danger','Medecine Not Found');
+            return back()->with('danger','Cell Not Found');
         }
     }
 }
+

@@ -19,10 +19,18 @@
                                 </div>
                             </div>
                             <div class="col-sm-4">
+                                <div class="dropdown">
                                 <div class="form-group">
                                     <label>Manufacturer Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='manufacturer' placeholder="Manufacturer Name">
+                                    <input type="text" class="form-control form-control-sm" name='manufacturer' id="manufacturer" placeholder="Manufacturer Name">
                                 </div>
+                                <div class="dropdown-menu w-100" style="max-height:350px;overflow-y:scroll;" id="dropdown-menu" aria-labelledby="dLabel">
+                                    @foreach($manufacturers as $item)
+                                        <li class="dropdown-item" >{{$item->name_eng}}</li>
+                                    @endforeach
+                                </div>
+                                </div>
+
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
@@ -282,6 +290,61 @@
             $('#modal-default-update').modal('show');
 
         });
+
+        $("#manufacturer").on('keyup',function(){
+            var value = $(this).val().toLowerCase();
+            let result = false;
+            $("#dropdown-menu li").filter(function() {
+                if(!result) result = $(this).text().toLowerCase().indexOf(value) > -1;
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            console.log(result);
+            if(result) $("#dropdown-menu").show();
+            else $("#dropdown-menu").hide();
+
+            $('#dropdown-menu li').on('mouseenter', function() {
+                $(this).css('background-color', 'lightgreen');
+            });
+
+            $('#dropdown-menu li').on('mouseleave', function() {
+                $(this).css('background-color', 'white');
+            });
+
+
+
+        })
+
+        $("#dropdown-menu li").on('click',function(e){
+            $("#manufacturer").val($(this).text());
+            $("#dropdown-menu").hide();
+        })
+        $("#manufacturer").on('focusout',function(){
+            $("#dropdown-menu").fadeOut()
+        })
+
+        $("#manufacturer").on('focusin',function(){
+            var value = $(this).val().toLowerCase();
+            let result = false;
+            $("#dropdown-menu li").filter(function() {
+                if(!result) result = $(this).text().toLowerCase().indexOf(value) > -1;
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            console.log(result);
+            if(result) $("#dropdown-menu").show();
+            else $("#dropdown-menu").hide();
+
+            $('#dropdown-menu li').on('mouseenter', function() {
+                $(this).css('background-color', 'lightgreen');
+            });
+
+            $('#dropdown-menu li').on('mouseleave', function() {
+                $(this).css('background-color', 'white');
+            });
+
+
+
+        })
+
 
 
     });

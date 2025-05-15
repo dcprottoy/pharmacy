@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\UserController;
-use App\Http\Controllers\Backend\StoreController;
+use App\Http\Controllers\Backend\CellController;
+use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ManufacturerController;
 use App\Http\Controllers\Backend\MedecineController;
 use App\Http\Controllers\Backend\MedecineStockController;
@@ -40,13 +41,22 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         })->name('home');
 
 
-    Route::resource('/store',StoreController::class)->names([
-        'index'=>'store.home',
-        'create'=>'store.create',
-        'store'=>'store.save',
-        'edit'=>'store.edit',
-        'update'=>'store.update',
-        'destroy'=>'store.delete'
+    Route::resource('/cell',CellController::class)->names([
+        'index'=>'cell.home',
+        'create'=>'cell.create',
+        'store'=>'cell.save',
+        'edit'=>'cell.edit',
+        'update'=>'cell.update',
+        'destroy'=>'cell.delete'
+    ]);
+
+    Route::resource('/category',CategoryController::class)->names([
+        'index'=>'category.home',
+        'create'=>'category.create',
+        'store'=>'category.save',
+        'edit'=>'category.edit',
+        'update'=>'category.update',
+        'destroy'=>'category.delete'
     ]);
 
     Route::resource('/medecine',MedecineController::class)->names([
@@ -57,6 +67,8 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'update'=>'medecine.update',
         'destroy'=>'medecine.delete'
     ]);
+
+
     Route::get('/todaysummary',[MedecineStockController::class,'todaySummary'])->name('todaystock.home');
     Route::get('/stockentrysummary',[MedecineStockController::class,'stockEntrySummary'])->name('stockentry.home');
     Route::post('/stockentrysummary',[MedecineStockController::class,'stockEntrySummaryDate'])->name('stockentry.details');
