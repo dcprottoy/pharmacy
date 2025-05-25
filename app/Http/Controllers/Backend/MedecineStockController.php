@@ -43,7 +43,6 @@ class MedecineStockController extends Controller
             "type"=>'required',
             "manufacturer"=>'required',
             "generic"=>'required',
-            "strength"=>'required',
             "use_for"=>'required'
         ]);
         // return response()->json($request->all());
@@ -60,7 +59,6 @@ class MedecineStockController extends Controller
         $stock->manufacturer = $request->manufacturer;
         $stock->name = $request->name;
         $stock->generic = $request->generic;
-        $stock->strength = $request->strength;
         $stock->type = $request->type;
         $stock->use_for = $request->use_for;
         $stock->category = $request->category;
@@ -166,9 +164,8 @@ class MedecineStockController extends Controller
 
     public function search(Request $request)
     {
-        $lastid = Medecine::leftJoin('medecine_stocks','medecines.stock_id','=','medecine_stocks.id')
-                ->where('medecines.name', 'like', '%'.$request->search.'%')
-                ->select('medecines.id','medecines.manufacturer','medecines.name','medecines.generic','medecines.strength','medecines.type','medecines.use_for','medecines.category','medecines.stock_id','medecine_stocks.current_stock')
+        $lastid = Medecine::where('medecines.name', 'like', '%'.$request->search.'%')
+                ->select('medecines.id','medecines.manufacturer','medecines.name','medecines.generic','medecines.strength','medecines.type','medecines.use_for','medecines.category')
                 ->get();
         return $lastid;
     }

@@ -27,15 +27,14 @@ overflow-y: scroll;
                 <div class="card-header p-2">
                     <div class="row">
                         <div class="col-sm-4">
-                            <input type="text" class="form-control form-control-sm" id="medecinelist" name="medecine_list" placeholder="Search">
+                            <input type="text" class="form-control form-control-md" id="medecinelist" name="medecine_list" placeholder="Search">
                         </div>
-                        <div class="col-sm-2">
-                            <button class="btn btn-sm btn-warning float-left" id="medecine-search-btn">search</button>
-
+                        <div class="col-sm-1">
+                            <button class="btn btn-md btn-warning" id="medecine-search-btn">search</button>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <div class="form-group">
-                                <select class="form-control form-control-sm"  name="expire_date" id="expire-date">
+                                <select class="form-control form-control-xs"  name="manufacturer" id="manufacturer">
                                     <option value="" disabled selected>Please select</option>
                                     @foreach($manufacturer as $item )
                                         <option value="{{$item->name_eng}}">{{$item->name_eng}}</option>
@@ -43,8 +42,8 @@ overflow-y: scroll;
                                 </select>
                               </div>
                         </div>
-                        <div class="col-sm-2">
-                            <a class="btn btn-sm btn-primary float-right" id="add-new-item">
+                        <div class="col-sm-4">
+                            <a class="btn btn-md btn-primary float-right" id="add-new-item">
                                 <i class="fas fa-plus mr-2"></i>
                                 ADD NEW
                             </a>
@@ -58,32 +57,30 @@ overflow-y: scroll;
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="card">
-                                                <div class="card-header p-2">
-                                                    <div class="row">
-                                                        <div class="col-sm-4">
-                                                            <input type="text" class="form-control form-control-sm" id="medecinelistnew" name="medecine_list_new" placeholder="Search">
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <button class="btn btn-sm btn-warning float-left" id="medecine-search-btn-new">search</button>
-                                                        </div>
-                                                    </div>
+                                            <div class="row">
+                                                 <div class="col-sm-7">
                                                 </div>
-                                                <div class="card-body">
-                                                    <div class="col-sm-12 search-list" style="font-size:14px;height:550px;">
-                                                        <table class="table table-sm">
-                                                            <thead>
-                                                                <th style="width:20%;">Name</th>
-                                                                <th style="width:10%;">Type/Use For</th>
-                                                                <th style="width:20%;">Manufacturer/Generic</th>
-                                                                <th style="width:40%;">Strength</th>
-                                                                <th style="width:6%;">Action</th>
-                                                            </thead>
-                                                            <tbody class="bill-item-list-cl" id="medecine-item-list-new">
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control form-control-sm" id="medecinelistnew" name="medecine_list_new" placeholder="Search">
                                                 </div>
+                                                <div class="col-sm-1">
+                                                    <button class="btn btn-sm btn-warning float-left" id="medecine-search-btn-new">search</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 search-list mt-2" style="font-size:14px;height:550px;">
+                                                <table class="table table-sm">
+                                                    <thead>
+                                                        <th style="width:20%;">Name</th>
+                                                        <th style="width:10%;">Type</th>
+                                                        <th style="width:20%;">Manufacturer</th>
+                                                        <th style="width:20%;">Use For</th>
+                                                        <th style="width:20%;">Generic</th>
+                                                        <th style="width:20%;">Category</th>
+                                                        <th style="width:6%;">Action</th>
+                                                    </thead>
+                                                    <tbody class="bill-item-list-cl" id="medecine-item-list-new">
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -196,9 +193,7 @@ overflow-y: scroll;
     $(document).ready(function(){
 
         $(function () {
-            $('#expire-date').select2({
-            theme: 'bootstrap4',
-            });
+           
             $('#birth_date').datetimepicker({
                 format: 'YYYY-MM-DD',
             });
@@ -222,6 +217,7 @@ overflow-y: scroll;
             let currentStock = $("#current-stock").val();
             let stockQuantity = $("#stock-quantity").val();
             let expireDate = $("#expire-date").val();
+            console.log(expireDate);
             $.ajax({
                 type: 'post',
                 dataType: "json",
@@ -365,9 +361,17 @@ overflow-y: scroll;
             let type = $("#type"+id).val();
             let manufacturer = $("#manufacturer"+id).val();
             let generic = $("#generic"+id).val();
-            let strength = $("#strength"+id).val();
             let use_for = $("#use_for"+id).val();
             let category = $("#category"+id).val();
+            console.log({
+                    'name':name,
+                    'type':type,
+                    'manufacturer':manufacturer,
+                    'generic':generic,
+                    'use_for':use_for,
+                    'category':category,
+                    '_token': '{{ csrf_token() }}',
+                });
             $.ajax({
                 type: 'post',
                 dataType: "json",
@@ -377,7 +381,6 @@ overflow-y: scroll;
                     'type':type,
                     'manufacturer':manufacturer,
                     'generic':generic,
-                    'strength':strength,
                     'use_for':use_for,
                     'category':category,
                     '_token': '{{ csrf_token() }}',
@@ -397,10 +400,10 @@ overflow-y: scroll;
                     let element = `
                         <tr class="item-select" data-id="${x.id}">
                             <td>${x.name}</td>
-                                    <td>${x.type}</td>
-                                    <td>${x.manufacturer}</td>
-                                    <td>${x.generic}</td>
-                                </tr>
+                            <td>${x.type}</td>
+                            <td>${x.manufacturer}</td>
+                            <td>${x.generic}</td>
+                        </tr>
                     `;
                     $("#medecine-item-list").append(element);
                     $('#modal-default-add').modal('hide');
@@ -435,24 +438,30 @@ overflow-y: scroll;
                         let element = "";
                         result.forEach(x =>{
                                 element += `<tr>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="name${x.id}" name="name" value="${x.name}"></td>
+                                    <td>
+                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="name${x.id}" name="name" value="${x.name}">
+                                    </td>
                                     <td>
                                         <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="type${x.id}" name="type" value="${x.type}">
-                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="use_for${x.id}" name="use_for" value="${x.use_for}">
                                     </td>
                                     <td>
                                         <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="manufacturer${x.id}" name="manufacturer" value="${x.manufacturer}">
+                                        
+                                    </td>
+                                     <td>
+                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="use_for${x.id}" name="use_for" value="${x.use_for}">
+                                    </td>
+                                    <td>
                                         <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="generic${x.id}" name="generic" value="${x.generic}">
                                     </td>
                                     <td>
-                                    <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="strength${x.id}" name="strength" value="${x.strength}">
-                                    <div class="form-group">
-                                        <select class="form-control form-control-sm" data-id="${x.id}"  name="category" id="category${x.id}">
-                                            <option value="alo" ${x.category=='alo'?"selected":""}>Allopathy</option>
-                                            <option value="her" ${x.category=='her'?"selected":""}>Herbal</option>
-                                        </select>
-                                    </div>
-                                              </td>
+                                        <div class="form-group">
+                                            <select class="form-control form-control-sm" data-id="${x.id}"  name="category" id="category${x.id}">
+                                                <option value="alo" ${x.category=='alo'?"selected":""}>Allopathy</option>
+                                                <option value="her" ${x.category=='her'?"selected":""}>Herbal</option>
+                                            </select>
+                                        </div>
+                                    </td>
                                     <td class="text-center">
                                         <a class="btn btn-xs btn-info add-new" data-id="${x.id}" >ADD
                                             {{-- <i class="fas fa-edit edit-delete-icon pb-1" style="color:#eef4f7;" data-id="${x.id}"></i> --}}

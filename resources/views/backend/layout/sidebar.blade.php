@@ -19,7 +19,7 @@
             <li class="nav-item ">
                 <a href="#" class="nav-link">
                 <i class="nav-icon fab fa-app-store"></i>
-                <p>Application Setup
+                <p>Application
                     <i class="fas fa-angle-left right"></i>
                 </p>
                 </a>
@@ -46,6 +46,18 @@
                         <a href="{{route('medecine.home')}}" class="nav-link {{ Route::currentRouteName() == 'medecine.home'||Route::currentRouteName() == 'medecine.create'||Route::currentRouteName() == 'medecine.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Medecines</p>
+                        </a>
+                    </li>
+                   <li class="nav-item " >
+                        <a href="{{route('stockmedecine.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockmedecine.home'||Route::currentRouteName() == 'stockmedecine.create'||Route::currentRouteName() == 'stockmedecine.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Store</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
+                        <a href="{{route('stockentry.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockentry.home'||Route::currentRouteName() == 'stockentry.create'||Route::currentRouteName() == 'stockentry.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Stock Entry Report</p>
                         </a>
                     </li>
                 </ul>
