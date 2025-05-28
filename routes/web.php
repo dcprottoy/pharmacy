@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\CellController;
+use App\Http\Controllers\Backend\ProductTypeController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ManufacturerController;
 use App\Http\Controllers\Backend\MedecineController;
@@ -48,6 +49,15 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'edit'=>'cell.edit',
         'update'=>'cell.update',
         'destroy'=>'cell.delete'
+    ]);
+
+     Route::resource('/producttype',ProductTypeController::class)->names([
+        'index'=>'producttype.home',
+        'create'=>'producttype.create',
+        'store'=>'producttype.save',
+        'edit'=>'producttype.edit',
+        'update'=>'producttype.update',
+        'destroy'=>'producttype.delete'
     ]);
 
     Route::resource('/category',CategoryController::class)->names([

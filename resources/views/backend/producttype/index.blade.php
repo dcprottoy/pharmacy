@@ -1,21 +1,21 @@
 @extends('backend.layout.main')
 @section('body-part')
 <div class="content-wrapper">
-    <x-breadcumb title="Rack || Cell"/>
+    <x-breadcumb title="Product Type"/>
     <div class="content">
         <div class="container-fluid">
             <div class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title">Rack || Cell</h3>
+                    <h3 class="card-title">Protuct Type</h3>
                 </div>
-                <form action="{{route('cell.save')}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('producttype.save')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label> Cell Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='name_eng' placeholder="Cell Name">
+                                    <label> Product Type Name</label>
+                                    <input type="text" class="form-control form-control-sm" name='name_eng' placeholder="Product Type Name">
                                 </div>
                             </div>
                         </div>
@@ -28,7 +28,7 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Cell</h3>
+                    <h3 class="card-title">Product Type</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
@@ -46,7 +46,7 @@
                                 SL
                             </th>
                             <th style="width: 30%" class="text-center">
-                                Manufacturer Name
+                                Product Type Name
                             </th>
                             <th class="text-center" style="width: 25%">
                                 Action
@@ -88,7 +88,7 @@
                             @csrf
                             @method('DELETE')
                             <div class="modal-header">
-                                <h4 class="modal-title">Delete Cell</h4>
+                                <h4 class="modal-title">Delete Product Type</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -105,7 +105,7 @@
                 </div>
             </div>
             <div class="modal fade" id="modal-default-update">
-                <div class="modal-dialog modal-xl">
+                <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <form action="" method="post" id="update-modal">
                             @csrf
@@ -120,7 +120,7 @@
                                 @csrf
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Manufacturer Name</label>
                                                 <input type="text" class="form-control form-control-sm" id='u-name_eng' name='name_eng' placeholder="Manufacturer Name" required>
@@ -146,21 +146,21 @@
     $(document).ready(function(){
         $(".delete").on('click',function(e){
             let id = $(this).attr("data-id");
-            let link = "{{url('cell/')}}/"+id;
+            let link = "{{url('producttype/')}}/"+id;
             $('#modal-default-delete').modal('show');
             $('#delete-modal').attr('action',link);
         });
         $(".update").on('click',function(e){
             let id = $(this).attr("data-id");
                 $.ajax({
-                    url: "{{url('cell/')}}/"+id,
+                    url: "{{url('producttype/')}}/"+id,
                     success: function (result) {
                         console.log(result);
                         $('#u-name_eng').val(result.name_eng);
 
                     }
                 });
-            let link = "{{url('cell/')}}/"+id;
+            let link = "{{url('producttype/')}}/"+id;
             $('#update-modal').attr('action',link);
             $('#modal-default-update').modal('show');
 

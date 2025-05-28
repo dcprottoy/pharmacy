@@ -5,17 +5,17 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Models\Backend\Cell;
+use App\Models\Backend\ProductType;
 
-class CellController extends Controller
+class ProductTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data['stores'] = Cell::all();
-        return view('backend.cell.index',$data);
+        $data['stores'] = ProductType::all();
+        return view('backend.producttype.index',$data);
     }
 
     /**
@@ -44,9 +44,9 @@ class CellController extends Controller
             //     $advice->name_eng = $i;
             //     $advice->save();
             // }
-            $advice = new Cell();
+            $advice = new ProductType();
             $advice->fill($request->all())->save();
-            return back()->with('success','New Cell Created Successfully');
+            return back()->with('success','New Product Type Created Successfully');
 
         }
     }
@@ -56,7 +56,7 @@ class CellController extends Controller
      */
     public function show(string $id)
     {
-        $lastid = Cell::findOrFail($id);
+        $lastid = ProductType::findOrFail($id);
         return $lastid;
     }
 
@@ -79,12 +79,12 @@ class CellController extends Controller
         if($validated->fails()){
             return back()->with('error','Something went wrong !!')->withInput();
         }else{
-            $advice = Cell::findOrFail($id);
+            $advice = ProductType::findOrFail($id);
             $data = $request->only(['name_eng',
                                     'status']
                                 );
             $advice->fill($data)->save();
-            return back()->with('success','Cell '.$advice->name_eng.' Updated Successfully');
+            return back()->with('success','Product Type '.$advice->name_eng.' Updated Successfully');
         }
     }
 
@@ -93,12 +93,13 @@ class CellController extends Controller
      */
     public function destroy(string $id)
     {
-        if(Cell::find($id)){
-            $createObject = Cell::find($id);
+        if(ProductType::find($id)){
+            $createObject = ProductType::find($id);
             $createObject->delete();
-            return back()->with('success','Cell Remove Successfully');
+            return back()->with('success','Product Type Remove Successfully');
         }else{
-            return back()->with('danger','Cell Not Found');
+            return back()->with('danger','Product Type Not Found');
         }
     }
 }
+

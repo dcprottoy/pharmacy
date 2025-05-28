@@ -27,7 +27,13 @@
                     <li class="nav-item " >
                         <a href="{{route('cell.home')}}" class="nav-link {{ Route::currentRouteName() == 'cell.home'||Route::currentRouteName() == 'cell.create'||Route::currentRouteName() == 'cell.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Cells</p>
+                            <p>Rack || Cell</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
+                        <a href="{{route('producttype.home')}}" class="nav-link {{ Route::currentRouteName() == 'producttype.home'||Route::currentRouteName() == 'producttype.create'||Route::currentRouteName() == 'producttype.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Product Type</p>
                         </a>
                     </li>
                      <li class="nav-item " >
