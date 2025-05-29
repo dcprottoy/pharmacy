@@ -1,8 +1,20 @@
+{{-- <style>
+    .nav-item{
+        font-size: 18px;
+    }
+    .nav-link{
+        padding:2px;
+    }
+    .nav-treeview .nav-item{
+        font-size: 16px;
+    }
+</style> --}}
+
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="#" class="brand-link">
-      <img src="{{asset('backend/adminlte/dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo" class="brand-image" style="background:white">
-      <span class="brand-text font-weight-light">PHARMA-AID</span>
+      <img src="{{asset('backend/adminlte/dist/img/logo.png')}}" alt="AdminLTE Logo" class="brand-image">
+      <span class="brand-text font-weight-bold">PHARMA-AID</span>
     </a>
     <div class="sidebar">
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -19,15 +31,15 @@
             <li class="nav-item ">
                 <a href="#" class="nav-link">
                 <i class="nav-icon fab fa-app-store"></i>
-                <p>Application
+                <p>Application Setup
                     <i class="fas fa-angle-left right"></i>
                 </p>
                 </a>
                 <ul class="nav nav-treeview">
-                    <li class="nav-item " >
-                        <a href="{{route('cell.home')}}" class="nav-link {{ Route::currentRouteName() == 'cell.home'||Route::currentRouteName() == 'cell.create'||Route::currentRouteName() == 'cell.edit' ? 'active' : ''}}" >
+                    <li class="nav-item" >
+                        <a href="{{route('storelocation.home')}}" class="nav-link {{ Route::currentRouteName() == 'storelocation.home'||Route::currentRouteName() == 'storelocation.create'||Route::currentRouteName() == 'storelocation.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Rack || Cell</p>
+                            <p>Store Location</p>
                         </a>
                     </li>
                     <li class="nav-item " >
@@ -36,7 +48,43 @@
                             <p>Product Type</p>
                         </a>
                     </li>
-                     <li class="nav-item " >
+                    <li class="nav-item " >
+                        <a href="{{route('productcategory.home')}}" class="nav-link {{ Route::currentRouteName() == 'productcategory.home'||Route::currentRouteName() == 'productcategory.create'||Route::currentRouteName() == 'productcategory.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Product Category</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
+                        <a href="{{route('producttype.home')}}" class="nav-link {{ Route::currentRouteName() == 'producttype.home'||Route::currentRouteName() == 'producttype.create'||Route::currentRouteName() == 'producttype.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Product Sub Categories</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
+                        <a href="{{route('producttype.home')}}" class="nav-link {{ Route::currentRouteName() == 'producttype.home'||Route::currentRouteName() == 'producttype.create'||Route::currentRouteName() == 'producttype.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Medicine Type</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
+                        <a href="{{route('producttype.home')}}" class="nav-link {{ Route::currentRouteName() == 'producttype.home'||Route::currentRouteName() == 'producttype.create'||Route::currentRouteName() == 'producttype.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Medicine Categories</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
+                        <a href="{{route('producttype.home')}}" class="nav-link {{ Route::currentRouteName() == 'producttype.home'||Route::currentRouteName() == 'producttype.create'||Route::currentRouteName() == 'producttype.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Medicine Usage</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
+                        <a href="{{route('medecine.home')}}" class="nav-link {{ Route::currentRouteName() == 'medecine.home'||Route::currentRouteName() == 'medecine.create'||Route::currentRouteName() == 'medecine.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Medecines</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
                         <a href="{{route('category.home')}}" class="nav-link {{ Route::currentRouteName() == 'category.home'||Route::currentRouteName() == 'category.create'||Route::currentRouteName() == 'category.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Category</p>
@@ -48,12 +96,7 @@
                             <p>Manufacturer</p>
                         </a>
                     </li>
-                    <li class="nav-item " >
-                        <a href="{{route('medecine.home')}}" class="nav-link {{ Route::currentRouteName() == 'medecine.home'||Route::currentRouteName() == 'medecine.create'||Route::currentRouteName() == 'medecine.edit' ? 'active' : ''}}" >
-                            <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Medecines</p>
-                        </a>
-                    </li>
+                    
                    <li class="nav-item " >
                         <a href="{{route('stockmedecine.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockmedecine.home'||Route::currentRouteName() == 'stockmedecine.create'||Route::currentRouteName() == 'stockmedecine.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>

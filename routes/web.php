@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\CellController;
+use App\Http\Controllers\Backend\StoreLocationController;
 use App\Http\Controllers\Backend\ProductTypeController;
+use App\Http\Controllers\Backend\ProductCategoryController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ManufacturerController;
 use App\Http\Controllers\Backend\MedecineController;
@@ -51,13 +53,31 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'destroy'=>'cell.delete'
     ]);
 
-     Route::resource('/producttype',ProductTypeController::class)->names([
+    Route::resource('/storelocation',StoreLocationController::class)->names([
+        'index'=>'storelocation.home',
+        'create'=>'storelocation.create',
+        'store'=>'storelocation.save',
+        'edit'=>'storelocation.edit',
+        'update'=>'storelocation.update',
+        'destroy'=>'storelocation.delete'
+    ]);
+
+    Route::resource('/producttype',ProductTypeController::class)->names([
         'index'=>'producttype.home',
         'create'=>'producttype.create',
         'store'=>'producttype.save',
         'edit'=>'producttype.edit',
         'update'=>'producttype.update',
         'destroy'=>'producttype.delete'
+    ]);
+
+    Route::resource('/productcategory',ProductCategoryController::class)->names([
+        'index'=>'productcategory.home',
+        'create'=>'productcategory.create',
+        'store'=>'productcategory.save',
+        'edit'=>'productcategory.edit',
+        'update'=>'productcategory.update',
+        'destroy'=>'productcategory.delete'
     ]);
 
     Route::resource('/category',CategoryController::class)->names([
