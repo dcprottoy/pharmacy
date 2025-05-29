@@ -55,25 +55,25 @@
                         </a>
                     </li>
                     <li class="nav-item " >
-                        <a href="{{route('producttype.home')}}" class="nav-link {{ Route::currentRouteName() == 'producttype.home'||Route::currentRouteName() == 'producttype.create'||Route::currentRouteName() == 'producttype.edit' ? 'active' : ''}}" >
+                        <a href="{{route('productsubcategory.home')}}" class="nav-link {{ Route::currentRouteName() == 'productsubcategory.home'||Route::currentRouteName() == 'productsubcategory.create'||Route::currentRouteName() == 'productsubcategory.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Product Sub Categories</p>
                         </a>
                     </li>
                     <li class="nav-item " >
-                        <a href="{{route('producttype.home')}}" class="nav-link {{ Route::currentRouteName() == 'producttype.home'||Route::currentRouteName() == 'producttype.create'||Route::currentRouteName() == 'producttype.edit' ? 'active' : ''}}" >
+                        <a href="{{route('medicinetype.home')}}" class="nav-link {{ Route::currentRouteName() == 'medicinetype.home'||Route::currentRouteName() == 'medicinetype.create'||Route::currentRouteName() == 'medicinetype.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Medicine Type</p>
                         </a>
                     </li>
                     <li class="nav-item " >
-                        <a href="{{route('producttype.home')}}" class="nav-link {{ Route::currentRouteName() == 'producttype.home'||Route::currentRouteName() == 'producttype.create'||Route::currentRouteName() == 'producttype.edit' ? 'active' : ''}}" >
+                        <a href="{{route('medicinecategory.home')}}" class="nav-link {{ Route::currentRouteName() == 'medicinecategory.home'||Route::currentRouteName() == 'medicinecategory.create'||Route::currentRouteName() == 'medicinecategory.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Medicine Categories</p>
                         </a>
                     </li>
                     <li class="nav-item " >
-                        <a href="{{route('producttype.home')}}" class="nav-link {{ Route::currentRouteName() == 'producttype.home'||Route::currentRouteName() == 'producttype.create'||Route::currentRouteName() == 'producttype.edit' ? 'active' : ''}}" >
+                        <a href="{{route('medicineusage.home')}}" class="nav-link {{ Route::currentRouteName() == 'medicineusage.home'||Route::currentRouteName() == 'medicineusage.create'||Route::currentRouteName() == 'medicineusage.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Medicine Usage</p>
                         </a>

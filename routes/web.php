@@ -6,6 +6,10 @@ use App\Http\Controllers\Backend\CellController;
 use App\Http\Controllers\Backend\StoreLocationController;
 use App\Http\Controllers\Backend\ProductTypeController;
 use App\Http\Controllers\Backend\ProductCategoryController;
+use App\Http\Controllers\Backend\ProductSubCategoriesController;
+use App\Http\Controllers\Backend\MedicineUsageController;
+use App\Http\Controllers\Backend\MedicineTypeController;
+use App\Http\Controllers\Backend\MedicineCategoryController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ManufacturerController;
 use App\Http\Controllers\Backend\MedecineController;
@@ -64,7 +68,7 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
 
     Route::resource('/producttype',ProductTypeController::class)->names([
         'index'=>'producttype.home',
-        'create'=>'producttype.create',
+        'create'=>'producttype.create', 
         'store'=>'producttype.save',
         'edit'=>'producttype.edit',
         'update'=>'producttype.update',
@@ -79,6 +83,46 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'update'=>'productcategory.update',
         'destroy'=>'productcategory.delete'
     ]);
+
+    Route::resource('/productsubcategory',ProductSubCategoriesController::class)->names([
+        'index'=>'productsubcategory.home',
+        'create'=>'productsubcategory.create',
+        'store'=>'productsubcategory.save',
+        'edit'=>'productsubcategory.edit',
+        'update'=>'productsubcategory.update',
+        'destroy'=>'productsubcategory.delete'
+    ]);
+
+    Route::resource('/medicineusage',MedicineUsageController::class)->names([
+        'index'=>'medicineusage.home',
+        'create'=>'medicineusage.create',
+        'store'=>'medicineusage.save',
+        'edit'=>'medicineusage.edit',
+        'update'=>'medicineusage.update',
+        'destroy'=>'medicineusage.delete'
+    ]);
+
+
+    Route::resource('/medicinetype',MedicineTypeController::class)->names([
+        'index'=>'medicinetype.home',
+        'create'=>'medicinetype.create',
+        'store'=>'medicinetype.save',
+        'edit'=>'medicinetype.edit',
+        'update'=>'medicinetype.update',
+        'destroy'=>'medicinetype.delete'
+    ]);
+
+
+    Route::resource('/medicinecategory',MedicineCategoryController::class)->names([
+        'index'=>'medicinecategory.home',
+        'create'=>'medicinecategory.create',
+        'store'=>'medicinecategory.save',
+        'edit'=>'medicinecategory.edit',
+        'update'=>'medicinecategory.update',
+        'destroy'=>'medicinecategory.delete'
+    ]);
+
+
 
     Route::resource('/category',CategoryController::class)->names([
         'index'=>'category.home',
