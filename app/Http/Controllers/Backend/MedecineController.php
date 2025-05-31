@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Backend\MedecineStock;
 use App\Models\Backend\Manufacturer;
+use App\Models\Backend\MedecineCategory;
+use App\Models\Backend\MedecineType;
+use App\Models\Backend\MedecineUsage;
 
 
 class MedecineController extends Controller
@@ -18,6 +21,9 @@ class MedecineController extends Controller
     {
         $data['medecines'] = MedecineStock::paginate(50);
         $data['manufacturers'] = Manufacturer::all();
+        $data['medecinecategories'] = MedecineCategory::all();
+        $data['medecinetypes'] = MedecineType::all();
+        $data['medecineusages'] = MedecineUsage::all();
         return view('backend.medecine.index',$data);
     }
 

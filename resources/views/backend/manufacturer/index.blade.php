@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title">Cell</h3>
+                    <h3 class="card-title">Manufacturer</h3>
                 </div>
                 <form action="{{route('manufacturer.save')}}" method="post" enctype="multipart/form-data">
                     @csrf
@@ -28,7 +28,7 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">Cell</h3>
+                    <h3 class="card-title">manufacturer</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                             <i class="fas fa-minus"></i>
@@ -88,7 +88,7 @@
                             @csrf
                             @method('DELETE')
                             <div class="modal-header">
-                                <h4 class="modal-title">Delete Cell</h4>
+                                <h4 class="modal-title">Delete manufacturer</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -105,13 +105,13 @@
                 </div>
             </div>
             <div class="modal fade" id="modal-default-update">
-                <div class="modal-dialog modal-xl">
+                <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <form action="" method="post" id="update-modal">
                             @csrf
                             @method('PUT')
                             <div class="modal-header">
-                                <h4 class="modal-title">Update Cell Information</h4>
+                                <h4 class="modal-title">Update manufacturer Information</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -120,10 +120,10 @@
                                 @csrf
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-10">
                                             <div class="form-group">
-                                                <label>Cell Name</label>
-                                                <input type="text" class="form-control form-control-sm" id='u-name_eng' name='name_eng' placeholder="Service Category Name" required>
+                                                <label>Manufacturer Name</label>
+                                                <input type="text" class="form-control form-control-sm" id='u-name_eng' name='name_eng' placeholder="manufacturer Name" required>
                                             </div>
                                         </div>
                                     </div>

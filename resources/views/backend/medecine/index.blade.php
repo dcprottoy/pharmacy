@@ -20,15 +20,15 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="dropdown">
-                                <div class="form-group">
-                                    <label>Manufacturer Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='manufacturer' id="manufacturer" placeholder="Manufacturer Name">
-                                </div>
-                                <div class="dropdown-menu w-100" style="max-height:350px;overflow-y:scroll;" id="dropdown-menu" aria-labelledby="dLabel">
-                                    @foreach($manufacturers as $item)
-                                        <li class="dropdown-item" >{{$item->name_eng}}</li>
-                                    @endforeach
-                                </div>
+                                    <div class="form-group">
+                                        <label>Manufacturer Name</label>
+                                        <input type="text" class="form-control form-control-sm" name='manufacturer' id="manufacturer" placeholder="Manufacturer Name">
+                                    </div>
+                                    <div class="dropdown-menu w-100" style="max-height:350px;overflow-y:scroll;" id="dropdown-menu" aria-labelledby="dLabel">
+                                        @foreach($manufacturers as $item)
+                                            <li class="dropdown-item" >{{$item->name_eng}}</li>
+                                        @endforeach
+                                    </div>
                                 </div>
 
                             </div>
@@ -46,24 +46,34 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label>Type</label>
-                                    <input type="text" class="form-control form-control-sm" name='type' placeholder="Type">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Use For</label>
-                                    <input type="text" class="form-control form-control-sm" name='use_for' placeholder="Use For">
+                                  <label>Type</label>
+                                  <select class="form-control form-control-sm"  name="type" id="type">
+                                    <option value="" selected disabled>Please select</option>
+                                        @foreach ($medecinetypes as $item )
+                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                        @endforeach
+                                  </select>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
                                   <label>Category</label>
                                   <select class="form-control form-control-sm"  name="category" id="category">
-                                    <option value="" selected disabled>Please select</option>
-
-                                    <option value="alo">Allopathy</option>
-
+                                        <option value="" selected disabled>Please select</option>
+                                        @foreach ($medecinecategories as $item )
+                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                        @endforeach
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                  <label>Use For</label>
+                                  <select class="form-control form-control-sm"  name="use_for" id="use_for">
+                                        <option value="" selected disabled>Please select</option>
+                                        @foreach ($medecineusages as $item )
+                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                        @endforeach
                                   </select>
                                 </div>
                             </div>
