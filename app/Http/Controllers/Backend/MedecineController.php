@@ -43,11 +43,12 @@ class MedecineController extends Controller
         $validated = Validator::make($request->all(),[
             'name' => 'required',
         ]);
+        // return response()->json($request->all());
         if($validated->fails()){
             return back()->with('error','Something went wrong !!')->withInput();
             // return back()->withErrors($validated)->withInput();
         }else{
-            // return $request->input();
+            
             $advice = new MedecineStock();
             $advice->fill($request->all())->save();
             return back()->with('success','New Medecine Created Successfully');

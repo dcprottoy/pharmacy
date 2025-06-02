@@ -45,7 +45,7 @@ class MedecineStockController extends Controller
             "generic"=>'required',
             "use_for"=>'required'
         ]);
-        // return response()->json($request->all());
+        return response()->json($request->all());
 
         if($validated->fails()){
             return back()->withErrors($validated)->withInput();
