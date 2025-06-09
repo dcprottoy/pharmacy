@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('manufacturers', function (Blueprint $table) {
             $table->id();
+            $table->integer('product_type_id')->default(0);
             $table->string('name_eng');
             $table->timestamps();
         });

@@ -54,6 +54,8 @@ class CategoryController extends Controller
         return $lastid;
     }
 
+   
+
     /**
      * Show the form for editing the specified resource.
      */

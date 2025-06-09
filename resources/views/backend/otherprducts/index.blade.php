@@ -1,21 +1,21 @@
 @extends('backend.layout.main')
 @section('body-part')
 <div class="content-wrapper">
-    <x-breadcumb title="Medecine"/>
+    <x-breadcumb title="Other Products"/>
     <div class="content">
         <div class="container-fluid">
             <div class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title">Medecine</h3>
+                    <h3 class="card-title">Other Products</h3>
                 </div>
-                <form action="{{route('medecine.save')}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('otherproducts.save')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label>Medecine Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='name' placeholder="Medecine Name">
+                                    <label>Product Name</label>
+                                    <input type="text" class="form-control form-control-sm" name='name' placeholder="Product Name">
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -34,19 +34,18 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label>Generic Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='generic' placeholder="Generic Name">
+                                <label>Product Type</label>
+                                <select class="form-control form-control-sm"  name="product_type_id" id="product_type_id">
+                                    <option value="" selected disabled>Please select</option>
+                                        @foreach ($product_types as $item )
+                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                        @endforeach
+                                </select>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label>Strength Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='strength' placeholder="Strength">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label>Category</label>
+                                  <label>Product Category</label>
                                   <select class="form-control form-control-sm"  name="product_category_id" id="product_category_id">
                                         <option value="" selected disabled>Please select</option>
                                         @foreach ($product_categories as $item )
@@ -57,21 +56,10 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                  <label>Medicine Type</label>
+                                  <label>Product Sub-Category</label>
                                   <select class="form-control form-control-sm"  name="product_sub_category_id" id="product_sub_category_id">
-                                    <option value="" selected disabled>Please select</option>
-                                        @foreach ($product_types as $item )
-                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
-                                        @endforeach
-                                  </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label>Use For</label>
-                                  <select class="form-control form-control-sm"  name="medicine_use_for_id" id="use_for">
                                         <option value="" selected disabled>Please select</option>
-                                        @foreach ($medecineusages as $item )
+                                        @foreach ($product_sub_categories as $item )
                                             <option value="{{$item->id}}">{{$item->name_eng}}</option>
                                         @endforeach
                                   </select>
@@ -105,24 +93,19 @@
                                 SL
                             </th>
                             <th style="width: 25%" class="text-center">
-                                Mdecine Name
+                                Product Name
                             </th>
                             <th style="width: 20%" class="text-center">
                                 Manufacturer
-                            </th><th style="width: 10%" class="text-center">
-                                Generic
-                            </th>
-                            <th style="width: 10%" class="text-center">
-                                Strength
                             </th>
                             <th style="width: 10%" class="text-center">
                                 Type
                             </th>
                             <th style="width: 10%" class="text-center">
-                               Use For
-                            </th>
-                            </th><th style="width: 10%" class="text-center">
                                Category
+                            </th>
+                            <th style="width: 10%" class="text-center">
+                               Sub-Category
                             </th>
                             <th class="text-center" style="width: 25%">
                                 Action
@@ -130,7 +113,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach($medecines as $item)
+                        @foreach($products as $item)
                             <tr>
                                 <td>
                                    #
@@ -142,13 +125,7 @@
                                     {!! $item->manufacturer !!}
                                 </td>
                                 <td class="text-center" style="font-weight:bold;">
-                                    {!! $item->generic !!}
-                                </td>
-                                <td class="text-center" style="font-weight:bold;">
-                                    {!! $item->strength !!}
-                                </td>
-                                <td class="text-center" style="font-weight:bold;">
-                                    {!! $item->use_for !!}
+                                    {!! $item->product_type !!}
                                 </td>
                                 <td class="text-center" style="font-weight:bold;">
                                     {!! $item->product_category !!}
@@ -174,7 +151,7 @@
                     </table>
                 </div>
                 <div class="m-3">
-                    {{ $medecines->links('pagination::bootstrap-4')}}
+                    {{ $products->links('pagination::bootstrap-4')}}
                 </div>
             </div>
             <div class="modal fade" id="modal-default-delete">
@@ -207,7 +184,7 @@
                             @csrf
                             @method('PUT')
                             <div class="modal-header">
-                                <h4 class="modal-title">Update Medecine Information</h4>
+                                <h4 class="modal-title">Update Product Information</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -215,11 +192,11 @@
                             <div class="modal-body">
                                 @csrf
                                 <div class="card-body">
-                                    <div class="row">
+                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label>Medecine Name</label>
-                                                <input type="text" class="form-control form-control-sm" name='name' id="u-name" placeholder="Medecine Name">
+                                                <label>Product Name</label>
+                                                <input type="text" class="form-control form-control-sm" name='name' id="u-name" placeholder="Product Name">
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
@@ -238,19 +215,18 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label>Generic Name</label>
-                                                <input type="text" class="form-control form-control-sm" name='generic' id='u-generic'  placeholder="Generic Name">
+                                            <label>Product Type</label>
+                                            <select class="form-control form-control-sm"  name="product_type_id" id="u-product_type_id">
+                                                <option value="" selected disabled>Please select</option>
+                                                    @foreach ($product_types as $item )
+                                                        <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                                    @endforeach
+                                            </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label>Strength Name</label>
-                                                <input type="text" class="form-control form-control-sm" name='strength' id='u-strength' placeholder="Strength">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="form-group">
-                                            <label>Category</label>
+                                            <label>Product Category</label>
                                             <select class="form-control form-control-sm"  name="product_category_id" id="u-product_category_id">
                                                     <option value="" selected disabled>Please select</option>
                                                     @foreach ($product_categories as $item )
@@ -261,21 +237,10 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                            <label>Medicine Type</label>
+                                            <label>Product Sub-Category</label>
                                             <select class="form-control form-control-sm"  name="product_sub_category_id" id="u-product_sub_category_id">
-                                                <option value="" selected disabled>Please select</option>
-                                                    @foreach ($product_types as $item )
-                                                        <option value="{{$item->id}}">{{$item->name_eng}}</option>
-                                                    @endforeach
-                                            </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <div class="form-group">
-                                            <label>Use For</label>
-                                            <select class="form-control form-control-sm"  name="medicine_use_for_id" id="u-medicine_use_for_id">
                                                     <option value="" selected disabled>Please select</option>
-                                                    @foreach ($medecineusages as $item )
+                                                    @foreach ($product_sub_categories as $item )
                                                         <option value="{{$item->id}}">{{$item->name_eng}}</option>
                                                     @endforeach
                                             </select>
@@ -301,27 +266,25 @@
     $(document).ready(function(){
         $(".delete").on('click',function(e){
             let id = $(this).attr("data-id");
-            let link = "{{url('medecine/')}}/"+id;
+            let link = "{{url('otherproducts/')}}/"+id;
             $('#modal-default-delete').modal('show');
             $('#delete-modal').attr('action',link);
         });
         $(".update").on('click',function(e){
             let id = $(this).attr("data-id");
                 $.ajax({
-                    url: "{{url('medecine/')}}/"+id,
+                    url: "{{url('otherproducts/')}}/"+id,
                     success: function (result) {
                         console.log(result);
                         $('#u-name').val(result.name)
                         $('#u-manufacturer').val(result.manufacturer)
-                        $('#u-generic').val(result.generic)
-                        $('#u-strength').val(result.strength)
+                        $('#u-product_type_id').val(result.product_type_id)
                         $('#u-product_sub_category_id').val(result.product_sub_category_id)
-                        $('#u-medicine_use_for_id').val(result.medicine_use_for_id)
                         $('#u-product_category_id').val(result.product_category_id)
 
                     }
                 });
-            let link = "{{url('medecine/')}}/"+id;
+            let link = "{{url('otherproducts/')}}/"+id;
             $('#update-modal').attr('action',link);
             $('#modal-default-update').modal('show');
 
@@ -376,7 +339,25 @@
             });
         })
 
+        $("#product_type_id").on('change',function(e){
+                let id = $("#product_type_id").val();
+                    $.ajax({
+                        url: "{{url('productcategory/listbytype/')}}/"+id,
+                        success: function (result) {
+                            let element = `<option value="" selected disabled>Please select</option>`;
+                            console.log(result);
+                            result.forEach(x => {
+                                element +=`<option value="${x.id}">${x.name_eng}</option>`;
+                            });
 
+                            $("#product_category_id").empty();
+                            $("#product_category_id").append(element);
+                        
+                        }
+                    });
+            
+
+            });
 
         $("#product_category_id").on('change',function(e){
             let id = $("#product_category_id").val();

@@ -67,18 +67,6 @@
                         </a>
                     </li>
                     <li class="nav-item " >
-                        <a href="{{route('medicinetype.home')}}" class="nav-link {{ Route::currentRouteName() == 'medicinetype.home'||Route::currentRouteName() == 'medicinetype.create'||Route::currentRouteName() == 'medicinetype.edit' ? 'active' : ''}}" >
-                            <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Medicine Type</p>
-                        </a>
-                    </li>
-                    <li class="nav-item " >
-                        <a href="{{route('medicinecategory.home')}}" class="nav-link {{ Route::currentRouteName() == 'medicinecategory.home'||Route::currentRouteName() == 'medicinecategory.create'||Route::currentRouteName() == 'medicinecategory.edit' ? 'active' : ''}}" >
-                            <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Medicine Categories</p>
-                        </a>
-                    </li>
-                    <li class="nav-item " >
                         <a href="{{route('medicineusage.home')}}" class="nav-link {{ Route::currentRouteName() == 'medicineusage.home'||Route::currentRouteName() == 'medicineusage.create'||Route::currentRouteName() == 'medicineusage.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Medicine Usage</p>
@@ -91,23 +79,9 @@
                         </a>
                     </li>
                     <li class="nav-item " >
-                        <a href="{{route('category.home')}}" class="nav-link {{ Route::currentRouteName() == 'category.home'||Route::currentRouteName() == 'category.create'||Route::currentRouteName() == 'category.edit' ? 'active' : ''}}" >
+                        <a href="{{route('otherproducts.home')}}" class="nav-link {{ Route::currentRouteName() == 'otherproducts.home'||Route::currentRouteName() == 'otherproducts.create'||Route::currentRouteName() == 'otherproducts.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Category</p>
-                        </a>
-                    </li>
-                    
-                    
-                   <li class="nav-item " >
-                        <a href="{{route('stockmedecine.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockmedecine.home'||Route::currentRouteName() == 'stockmedecine.create'||Route::currentRouteName() == 'stockmedecine.edit' ? 'active' : ''}}" >
-                            <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Store</p>
-                        </a>
-                    </li>
-                    <li class="nav-item " >
-                        <a href="{{route('stockentry.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockentry.home'||Route::currentRouteName() == 'stockentry.create'||Route::currentRouteName() == 'stockentry.edit' ? 'active' : ''}}" >
-                            <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Stock Entry Report</p>
+                            <p>Other Products</p>
                         </a>
                     </li>
                 </ul>

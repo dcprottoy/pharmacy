@@ -12,20 +12,19 @@ use App\Models\Backend\ProductCategory;
 use App\Models\Backend\ProductSubCategory;
 use App\Models\Backend\MedecineUsage;
 
-
-class MedecineController extends Controller
+class OtherProductsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data['medecines'] = Product::where('product_type_id',1)->paginate(50);
+        $data['products'] = Product::whereNotIn('product_type_id',[1])->paginate(50);
         $data['manufacturers'] = Manufacturer::all();
+        $data['product_types'] = ProductType::all();
         $data['product_categories'] = ProductCategory::all();
-        $data['product_types'] = ProductSubCategory::where('product_type_id',1)->get();
-        $data['medecineusages'] = MedecineUsage::all();
-        return view('backend.medecine.index',$data);
+        $data['product_sub_categories'] = ProductSubCategory::all();
+        return view('backend.otherprducts.index',$data);
     }
 
     /**
@@ -60,16 +59,14 @@ class MedecineController extends Controller
                 $manufacturer->save();
                 $inputs['manufacturer_id'] = $manufacturer->id;
             }
-            $inputs['product_type_id'] = 1;
-            $inputs['product_type'] = ProductType::find(1)->name_eng;
+            $inputs['product_type'] = ProductType::find($inputs['product_type_id'])->name_eng;
             $inputs['product_category'] = ProductCategory::find($inputs['product_category_id'])->name_eng;
             $inputs['product_sub_category'] = ProductSubCategory::find($inputs['product_sub_category_id'])->name_eng;
-            $inputs['use_for'] = MedecineUsage::find($inputs['medicine_use_for_id'])->name_eng;
            
             // return $inputs;
             $advice = new Product();
             $advice->fill($inputs)->save();
-            return back()->with('success','New Medecine Created Successfully');
+            return back()->with('success','New Product Created Successfully');
 
         }
     }
@@ -114,10 +111,9 @@ class MedecineController extends Controller
                 $manufacturer->save();
                 $inputs['manufacturer_id'] = $manufacturer->id;
             }
-            $inputs['product_type_id'] = 1;
-            $inputs['category'] = ProductCategory::find($inputs['product_category_id'])->name_eng;
-            $inputs['medicine_type'] = ProductSubCategory::find($inputs['product_sub_category_id'])->name_eng;
-            $inputs['use_for'] = MedecineUsage::find($inputs['medicine_use_for_id'])->name_eng;
+             $inputs['product_type'] = ProductType::find($inputs['product_type_id'])->name_eng;
+            $inputs['product_category'] = ProductCategory::find($inputs['product_category_id'])->name_eng;
+            $inputs['product_sub_category'] = ProductSubCategory::find($inputs['product_sub_category_id'])->name_eng;
            
             // return $inputs;
            

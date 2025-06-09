@@ -64,6 +64,15 @@ class ProductSubCategoriesController extends Controller
         return $lastid;
     }
 
+
+
+
+
+     public function subList(string $id)
+    {
+        $data = ProductSubCategory::where('product_category_id','=',(int)$id)->get();
+        return $data;
+    }
     /**
      * Show the form for editing the specified resource.
      */

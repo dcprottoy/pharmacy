@@ -13,6 +13,7 @@ use App\Http\Controllers\Backend\MedicineCategoryController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ManufacturerController;
 use App\Http\Controllers\Backend\MedecineController;
+use App\Http\Controllers\Backend\OtherProductsController;
 use App\Http\Controllers\Backend\MedecineStockController;
 use App\Http\Controllers\Backend\StockMedecineController;
 use App\Http\Controllers\Backend\SalesController;
@@ -74,6 +75,7 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'update'=>'producttype.update',
         'destroy'=>'producttype.delete'
     ]);
+    Route::get('/productcategory/listbytype/{id}',[ProductCategoryController::class,'subList'])->name('productcategory.categorylist');
 
     Route::resource('/productcategory',ProductCategoryController::class)->names([
         'index'=>'productcategory.home',
@@ -83,6 +85,7 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'update'=>'productcategory.update',
         'destroy'=>'productcategory.delete'
     ]);
+    Route::get('/productsubcategory/listbycategory/{id}',[ProductSubCategoriesController::class,'subList'])->name('productsubcategory.sublist');
 
     Route::resource('/productsubcategory',ProductSubCategoriesController::class)->names([
         'index'=>'productsubcategory.home',
@@ -102,6 +105,24 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'destroy'=>'medicineusage.delete'
     ]);
 
+
+    Route::resource('/medecine',MedecineController::class)->names([
+        'index'=>'medecine.home',
+        'create'=>'medecine.create',
+        'store'=>'medecine.save',
+        'edit'=>'medecine.edit',
+        'update'=>'medecine.update',
+        'destroy'=>'medecine.delete'
+    ]);
+
+    Route::resource('/otherproducts',OtherProductsController::class)->names([
+        'index'=>'otherproducts.home',
+        'create'=>'otherproducts.create',
+        'store'=>'otherproducts.save',
+        'edit'=>'otherproducts.edit',
+        'update'=>'otherproducts.update',
+        'destroy'=>'otherproducts.delete'
+    ]);
 
     Route::resource('/medicinetype',MedicineTypeController::class)->names([
         'index'=>'medicinetype.home',
@@ -123,7 +144,6 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
     ]);
 
 
-
     Route::resource('/category',CategoryController::class)->names([
         'index'=>'category.home',
         'create'=>'category.create',
@@ -133,14 +153,7 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'destroy'=>'category.delete'
     ]);
 
-    Route::resource('/medecine',MedecineController::class)->names([
-        'index'=>'medecine.home',
-        'create'=>'medecine.create',
-        'store'=>'medecine.save',
-        'edit'=>'medecine.edit',
-        'update'=>'medecine.update',
-        'destroy'=>'medecine.delete'
-    ]);
+
 
 
     Route::get('/todaysummary',[MedecineStockController::class,'todaySummary'])->name('todaystock.home');

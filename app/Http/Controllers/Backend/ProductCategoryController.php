@@ -62,7 +62,11 @@ class ProductCategoryController extends Controller
         $lastid = ProductCategory::with('producttype')->findOrFail($id);
         return $lastid;
     }
-
+    public function subList(string $id)
+    {
+        $data = ProductCategory::where('product_type_id','=',(int)$id)->get();
+        return $data;
+    }
     /**
      * Show the form for editing the specified resource.
      */

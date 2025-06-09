@@ -18,6 +18,17 @@
                                     <input type="text" class="form-control form-control-sm" name='name_eng' placeholder="Manufacturer Name">
                                 </div>
                             </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                <label>Product Type</label>
+                                <select class="form-control form-control-sm"  name="product_type_id" id="product_type_id">
+                                    <option value="" selected disabled>Please select</option>
+                                        @foreach ($product_types as $item )
+                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                        @endforeach
+                                </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-footer text-right">
@@ -46,7 +57,10 @@
                                 SL
                             </th>
                             <th style="width: 30%" class="text-center">
-                                Cell Name
+                                Manufacturer Name
+                            </th>
+                             <th style="width: 5%">
+                                Product Type
                             </th>
                             <th class="text-center" style="width: 25%">
                                 Action
@@ -59,8 +73,12 @@
                                 <td>
                                 {!! $item->id !!}
                                 </td>
+                                
                                 <td class="text-center" style="font-weight:bold;">
                                 {!! $item->name_eng !!}
+                                </td>
+                                <td class="text-center" style="font-weight:bold;">
+                                {!! $item->producttype->name_eng !!}
                                 </td>
                                 <td class="project-actions text-center">
                                     <a class="btn btn-info btn-sm update" data-id="{{$item->id}}">
@@ -105,7 +123,7 @@
                 </div>
             </div>
             <div class="modal fade" id="modal-default-update">
-                <div class="modal-dialog modal-md">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <form action="" method="post" id="update-modal">
                             @csrf
@@ -120,10 +138,21 @@
                                 @csrf
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-10">
+                                        <div class="col-sm-8">
                                             <div class="form-group">
                                                 <label>Manufacturer Name</label>
                                                 <input type="text" class="form-control form-control-sm" id='u-name_eng' name='name_eng' placeholder="manufacturer Name" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                            <label>Product Type</label>
+                                            <select class="form-control form-control-sm"  name="product_type_id" id="u-product_type_id">
+                                                <option value="" selected disabled>Please select</option>
+                                                    @foreach ($product_types as $item )
+                                                        <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                                    @endforeach
+                                            </select>
                                             </div>
                                         </div>
                                     </div>
@@ -156,6 +185,7 @@
                     url: "{{url('manufacturer/')}}/"+id,
                     success: function (result) {
                         console.log(result);
+                        $('#u-product_type_id').val(result.product_type_id);
                         $('#u-name_eng').val(result.name_eng);
 
                     }

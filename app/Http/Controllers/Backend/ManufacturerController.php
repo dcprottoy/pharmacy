@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Backend\Manufacturer;
+use App\Models\Backend\ProductType;
+
 class ManufacturerController extends Controller
 {
     /**
@@ -14,6 +16,7 @@ class ManufacturerController extends Controller
     public function index()
     {
         $data['manufacturer'] = Manufacturer::all();
+        $data['product_types'] = ProductType::all();
         return view('backend.manufacturer.index',$data);
     }
 
@@ -37,14 +40,9 @@ class ManufacturerController extends Controller
             return back()->with('error','Something went wrong !!')->withInput();
             // return back()->withErrors($validated)->withInput();
         }else{
-            // return $request->input();
-            for($i=1;$i<61;$i++){
-                $manufacturer = new Manufacturer();
-                $manufacturer->name_eng = $i;
-                $manufacturer->save();
-            }
-            // $manufacturer = new Manufacturer();
-            // $manufacturer->fill($request->all())->save();
+            
+            $manufacturer = new Manufacturer();
+            $manufacturer->fill($request->all())->save();
             return back()->with('success','New Manufacturer Created Successfully');
 
         }
@@ -80,6 +78,7 @@ class ManufacturerController extends Controller
         }else{
             $manufacturer = Manufacturer::findOrFail($id);
             $data = $request->only(['name_eng',
+                                    'product_type_id',
                                     'status']
                                 );
             $manufacturer->fill($data)->save();
