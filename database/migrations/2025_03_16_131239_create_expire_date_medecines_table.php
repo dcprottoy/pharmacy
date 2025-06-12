@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('expire_date_medecines', function (Blueprint $table) {
             $table->id();
             $table->integer('medecine_id');
+            $table->integer('mrr_id')->default(0);
             $table->decimal('stock_qty',18,2)->nullable();
             $table->decimal('current_qty',18,2)->nullable();
             $table->decimal('sell_qty',18,2)->nullable();
             $table->date('stock_date');
-            $table->date('manufacturing_date')->nullable();
+            $table->date('manufacture_date')->nullable();
             $table->date('expiry_date')->nullable();
             $table->timestamps();
         });

@@ -30,7 +30,6 @@
                                         @endforeach
                                     </div>
                                 </div>
-
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
@@ -121,7 +120,8 @@
                             <th style="width: 10%" class="text-center">
                                Use For
                             </th>
-                            </th><th style="width: 10%" class="text-center">
+                            </th>
+                            <th style="width: 10%" class="text-center">
                                Category
                             </th>
                             <th class="text-center" style="width: 25%">
@@ -148,14 +148,15 @@
                                     {!! $item->strength !!}
                                 </td>
                                 <td class="text-center" style="font-weight:bold;">
+                                    {!! $item->product_sub_category !!}
+                                </td>
+                                <td class="text-center" style="font-weight:bold;">
                                     {!! $item->use_for !!}
                                 </td>
                                 <td class="text-center" style="font-weight:bold;">
                                     {!! $item->product_category !!}
                                 </td>
-                                <td class="text-center" style="font-weight:bold;">
-                                    {!! $item->product_sub_category !!}
-                                </td>
+                                
                                 <td class="project-actions text-center">
                                     <a class="btn btn-info btn-sm update p-1" data-id="{{$item->id}}">
                                         <i style="font-size:10px;" class="fas fa-pencil-alt">
@@ -375,8 +376,6 @@
                 $(this).css('background-color', 'white');
             });
         })
-
-
 
         $("#product_category_id").on('change',function(e){
             let id = $("#product_category_id").val();

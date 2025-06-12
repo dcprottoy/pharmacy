@@ -16,7 +16,10 @@ class ExpireDateMedecines extends Model
         'current_qty',
         'sell_qty',
         'stock_date',
-        'expiry_date'
+        'expiry_date',
+        'mrr_id',
+        'manufacture_date'
+        
     ];
 
     

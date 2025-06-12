@@ -6,20 +6,35 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Backend\MedecineStock;
+use App\Models\Backend\ExpireDateMedecines;
 use App\Models\Backend\StockEntryLog;
+use App\Models\Backend\Manufacturer;
 use App\Models\Backend\Medecine;
-
+use App\Models\Backend\Product;
+use App\Models\Backend\Supplier;
+use App\Models\Backend\Mrr;
+use App\Models\Backend\ProductType;
+use App\Models\Backend\ProductCategory;
+use App\Models\Backend\ProductSubCategory;
+use App\Models\Backend\MedecineUsage;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class MedecineStockController extends Controller
+class StockEntryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('backend.medecinestock.index');
+        $data['medecineList'] = Product::orderBy('name','asc')->get();
+        $data['mrrs'] = Mrr::orderBy('mrr_id','desc')->select('mrr_id')->take(10)->get();
+        $data['suppliers'] = Supplier::orderBy('name_eng','asc')->select('name_eng')->get();
+        $data['manufacturers'] = Manufacturer::orderBy('name_eng','asc')->select('name_eng')->get();
+        $data['product_categories'] = ProductCategory::all();
+        $data['product_types'] = ProductSubCategory::where('product_type_id',1)->get();
+        $data['medecineusages'] = MedecineUsage::all();
+        return view('backend.stockentry.index',$data);
     }
 
     /**
@@ -37,36 +52,56 @@ class MedecineStockController extends Controller
     {
 
         $date = Carbon::now()->format('Y-m-d');
-
         $validated = Validator::make($request->all(),[
-            "name"=>'required',
-            "type"=>'required',
-            "manufacturer"=>'required',
-            "generic"=>'required',
-            "use_for"=>'required'
+            'item_id' => 'required',
         ]);
-        return response()->json($request->all());
+        // return response()->json($request->all());
 
         if($validated->fails()){
             return back()->withErrors($validated)->withInput();
         }
 
-        $isExists = MedecineStock::where('name','=',$request->name)->first();
-        if($isExists){
-            return response()->json(['existed'=>$isExists]);
+        $item_id = (int)$request->item_id;
+
+        $medecine = Product::find($item_id);
+        // return $medecine;
+
+        $medecine->last_stock = $request->current_stock;
+        $medecine->current_stock = $request->current_stock;
+        $medecine->mrp_rate = $request->mrp_rate;
+        $medecine->tp_rate = $request->tp_rate;
+        $medecine->stock_location = $request->stock_location;
+        $medecine->stock_per = 100;
+        // $medecine->stock_date = $date;
+        $medecine->total_stock = $medecine->total_stock + $request->stock_quantity;
+        $medecine->save();
+
+        if($request->expire_date != ""){
+
+            $expiry_wise = new ExpireDateMedecines();
+            $expiry_wise->medecine_id = $medecine->id;
+            $expiry_wise->stock_date = $date;
+            $expiry_wise->mrr_id = $request->mrr_id;
+            $expiry_wise->expiry_date = $request->expire_date;
+            $expiry_wise->manufacture_date = $request->manufacture_date;
+            $expiry_wise->stock_qty = $request->stock_quantity;
+            $expiry_wise->current_qty = $request->stock_quantity;
+            $expiry_wise->save();
+
         }
-        $stock = new MedecineStock();
-        $stock->manufacturer = $request->manufacturer;
-        $stock->name = $request->name;
-        $stock->generic = $request->generic;
-        $stock->type = $request->type;
-        $stock->use_for = $request->use_for;
-        $stock->category = $request->category;
-        $stock->save();
-        return response()->json(['success'=>$stock]);
+
+        $stock_log = new StockEntryLog();
+        $stock_log->medecine_id = $medecine->id;
+        $stock_log->stock_date = $date;
+        $stock_log->mrr_id = $request->mrr_id;
+        $stock_log->expiry_date = $request->expire_date;
+        $stock_log->manufacture_date = $request->manufacture_date;
+        $stock_log->stock_qty = $request->stock_quantity;
+        $stock_log->save();
 
 
 
+        return response()->json(['success'=>$medecine]);
     }
 
     /**
@@ -74,9 +109,14 @@ class MedecineStockController extends Controller
      */
     public function show(string $id)
     {
-        $stock = Medecine::find((int)$id);
-        return $stock;
-        return response()->json($stock);
+        $stock = MedecineStock::find((int)$id);
+        $expiryDate = ExpireDateMedecines::where('medecine_id','=',(int)$id)
+                        ->where('medecine_id','=',(int)$id)
+                        ->where('current_qty','>',0)
+                        ->select('expiry_date','current_qty')
+                        ->get();
+
+        return response()->json(['item'=>$stock,'expiryDates'=>$expiryDate]);
     }
 
     public function todaySummary()
@@ -90,7 +130,7 @@ class MedecineStockController extends Controller
         ->where('stock_entry_logs.stock_date','=',$date)
         ->get();
         // return $data;
-        return view('backend.medecinestock.todaystocksummary',$data);
+        return view('backend.stockmedecine.todaystocksummary',$data);
 
     }
 
@@ -105,7 +145,7 @@ class MedecineStockController extends Controller
         ->where('stock_entry_logs.stock_date','=',$date)
         ->get();
         // return $data;
-        return view('backend.medecinestock.stocksummary',$data);
+        return view('backend.stockmedecine.stocksummary',$data);
 
     }
 
@@ -130,7 +170,7 @@ class MedecineStockController extends Controller
         ->whereBetween('stock_entry_logs.stock_date',[$date1,$date2])
         ->get();
         // return $data;
-        return view('backend.medecinestock.stocksummary',$data);
+        return view('backend.stockmedecine.stocksummary',$data);
 
     }
 
@@ -158,15 +198,23 @@ class MedecineStockController extends Controller
         //
     }
 
-
+    /**
+     * Fetch the billing item and associated equipment of a given bill item id
+     *
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function billingitems(string $id){
+       
+    }
 
 
 
     public function search(Request $request)
     {
-        $lastid = Medecine::where('medecines.name', 'like', '%'.$request->search.'%')
-                ->select('medecines.id','medecines.manufacturer','medecines.name','medecines.generic','medecines.strength','medecines.product_category','medecines.use_for','medecines.product_category')
-                ->get();
+        $lastid = MedecineStock::where('name', 'like', '%'.$request->search.'%')->get();
         return $lastid;
     }
+
+
 }

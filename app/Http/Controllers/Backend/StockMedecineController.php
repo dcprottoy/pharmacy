@@ -10,6 +10,7 @@ use App\Models\Backend\ExpireDateMedecines;
 use App\Models\Backend\StockEntryLog;
 use App\Models\Backend\Manufacturer;
 use App\Models\Backend\Medecine;
+use App\Models\Backend\Product;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class StockMedecineController extends Controller
      */
     public function index()
     {
-        $data['medecineList'] = MedecineStock::orderBy('name','asc')->get();
+        $data['medecineList'] = Product::orderBy('name','asc')->get();
         $data['manufacturer'] = Manufacturer::orderBy('name_eng','asc')->select('name_eng')->get();;
         return view('backend.stockmedecine.index',$data);
     }

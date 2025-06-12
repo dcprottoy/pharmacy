@@ -14,6 +14,9 @@ use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ManufacturerController;
 use App\Http\Controllers\Backend\MedecineController;
 use App\Http\Controllers\Backend\OtherProductsController;
+use App\Http\Controllers\Backend\StockEntryController;
+use App\Http\Controllers\Backend\MrrController;
+use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\MedecineStockController;
 use App\Http\Controllers\Backend\StockMedecineController;
 use App\Http\Controllers\Backend\SalesController;
@@ -105,6 +108,7 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'destroy'=>'medicineusage.delete'
     ]);
 
+    Route::put('/medecine',[MedecineController::class,'search']);
 
     Route::resource('/medecine',MedecineController::class)->names([
         'index'=>'medecine.home',
@@ -122,6 +126,35 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'edit'=>'otherproducts.edit',
         'update'=>'otherproducts.update',
         'destroy'=>'otherproducts.delete'
+    ]);
+
+
+    Route::resource('/stockentry',StockEntryController::class)->names([
+        'index'=>'stockentry.home',
+        'create'=>'stockentry.create',
+        'store'=>'stockentry.save',
+        'edit'=>'stockentry.edit',
+        'update'=>'stockentry.update',
+        'destroy'=>'stockentry.delete'
+    ]);
+    Route::put('/mrr',[MrrController::class,'search']);
+
+    Route::resource('/mrr',MrrController::class)->names([
+        'index'=>'mrr.home',
+        'create'=>'mrr.create',
+        'store'=>'mrr.save',
+        'edit'=>'mrr.edit',
+        'update'=>'mrr.update',
+        'destroy'=>'mrr.delete'
+    ]);
+
+    Route::resource('/supplier',SupplierController::class)->names([
+        'index'=>'supplier.home',
+        'create'=>'supplier.create',
+        'store'=>'supplier.save',
+        'edit'=>'supplier.edit',
+        'update'=>'supplier.update',
+        'destroy'=>'supplier.delete'
     ]);
 
     Route::resource('/medicinetype',MedicineTypeController::class)->names([
@@ -157,8 +190,8 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
 
 
     Route::get('/todaysummary',[MedecineStockController::class,'todaySummary'])->name('todaystock.home');
-    Route::get('/stockentrysummary',[MedecineStockController::class,'stockEntrySummary'])->name('stockentry.home');
-    Route::post('/stockentrysummary',[MedecineStockController::class,'stockEntrySummaryDate'])->name('stockentry.details');
+    Route::get('/stockentrysummary',[MedecineStockController::class,'stockEntrySummary'])->name('stockentrysummary.home');
+    Route::post('/stockentrysummary',[MedecineStockController::class,'stockEntrySummaryDate'])->name('stockentrysummary.details');
 
 
     Route::put('/medecinestock',[MedecineStockController::class,'search']);

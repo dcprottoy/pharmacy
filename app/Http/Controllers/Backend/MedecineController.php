@@ -47,9 +47,12 @@ class MedecineController extends Controller
         // return response()->json($request->all());
         if($validated->fails()){
             return back()->with('error','Something went wrong !!')->withInput();
-            return back()->withErrors($validated)->withInput();
+            // return back()->withErrors($validated)->withInput();
         }else{
-
+            $isExists = Product::where('name','=',$request->name)->first();
+            if($isExists){
+                return response()->json(['existed'=>$isExists]);
+            }
             $inputs = $request->all();
             $manufacturer = Manufacturer::where('name_eng','=',$inputs['manufacturer'])->first();
             if($manufacturer){
@@ -69,7 +72,9 @@ class MedecineController extends Controller
             // return $inputs;
             $advice = new Product();
             $advice->fill($inputs)->save();
-            return back()->with('success','New Medecine Created Successfully');
+            if($request->has('form')){
+                return response()->json(['success'=>$advice]);
+            }else return back()->with('success','New Medecine Created Successfully');
 
         }
     }
@@ -138,5 +143,16 @@ class MedecineController extends Controller
         }else{
             return back()->with('danger','Medecine Not Found');
         }
+    }
+
+
+    public function search(Request $request)
+    {
+        if($request->match == "P"){
+            $lastid = Product::where('name', 'like', '%'.$request->search.'%')->get();
+        }else if($request->match == "E"){
+            $lastid = Product::where('name', 'like', $request->search.'%')->get();
+        }
+        return $lastid;
     }
 }
