@@ -10,69 +10,123 @@
     }
     .bill-item-list-cl tr:hover{
 
-background-color:rgb(241, 242, 248);
+background-color:rgb(245, 247, 250);
 }
 .search-list{
 height:550px;
 overflow-x: hidden;
 overflow-y: scroll;
 }
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 1fr;
+}
+
+.grid-container-medicine {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 1fr 1fr;
+}
 
 </style>
 <div class="content-wrapper">
-    <x-breadcumb title="Sale Medecine"/>
+    <x-breadcumb title="Sale Entry"/>
     <div class="content">
         <div class="container-fluid">
-            <div class="card">
-                <div class="card-header p-2">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control form-control-sm" id="medecinelist" name="medecine_list" placeholder="Search">
+            <div class="row">
+                <div class="col-sm-9">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Invoice NO.</label>
+                                        <input type="text" class="form-control form-control-sm" name='invoice_no' id="invoice_no" placeholder="Invoice No" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Customer </label>
+                                        <input type="text" class="form-control form-control-sm" name='customer_name' id="customer_name" placeholder="Customer Name">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Contact No.</label>
+                                        <input type="text" class="form-control form-control-sm" name='contact_no' id="contact_no" placeholder="Contact No">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="reset" class="btn btn-sm btn-info" id="invoice_create_new">&nbsp;Create New&nbsp;</button>
+                                <button type="submit" class="btn btn-sm btn-success" id="add-new-invoice">&nbsp;Save&nbsp;</button>
+                            </div>
+                            
                         </div>
-                        <div class="col-sm-4">
-                            <button class="btn btn-sm btn-warning float-left" id="medecine-search-btn">search</button>
-                        </div>
-
                     </div>
                 </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="form-group">
+                                <label>Search MRR NO.</label>
+                                <input type="text" class="form-control form-control-sm" name='mrr_no_search' id="mrr_no_search" placeholder="MRR NO">
+                            </div>
+                            <div class="dropdown-menu w-100" style="max-height:350px;overflow-y:scroll;" id="mrr_dropdown-menu" aria-labelledby="dLabel">
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>   
+        </div>
+        <div class="container-fluid">
+            <div class="card p-0">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="dropdown">
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-sm" name='search_data' id="search_data" placeholder="Medicine Name">
+                                </div>
+                                <div class="dropdown-menu" style="max-height:350px;min-width:100%;overflow-y:scroll;" id="search_dropdown-menu" aria-labelledby="dLabel">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-2 d-flex">
+                            <div class="form-check mr-2">
+                                <input class="form-check-input" type="radio" name="match" value="E"checked required>
+                                <label class="form-check-label">Exact</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="match" value="P">
+                                <label class="form-check-label">Partial</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div  class="col-sm-9">
-                            <div class="search-list" style="font-size:14px;height:250px;">
+                        <div class="col-sm-9">
+                             <div class="search-list" style="font-size:14px;">
                                 <table class="table table-sm">
                                     <thead>
-                                        <th style="width:20%;">Name</th>
-                                        <th style="width:20%;">Type</th>
-                                        <th style="width:25%;">Manufacturer</th>
-                                        <th style="width:35%;">Generic</th>
+                                        <th style="width:20%;">Product Name</th>
+                                        <th style="width:10%;">Expire Date</th>
+                                        <th style="width:10%;">MRP Price</th>
+                                        <th style="width:10%;">Quantity</th>
+                                        <th style="width:10%;">Total Price</th>
+                                        <th style="width:10%;">Discount Percent</th>
+                                        <th style="width:10%;">Discount Amount</th>
+                                        <th style="width:10%;">Final Price</th>
+                                        <th style="width:10%;">Action</th>
                                     </thead>
                                     <tbody class="bill-item-list-cl" id="medecine-item-list">
-                                        @foreach ($medecineList as $item)
-                                            <tr class="item-select" data-id="{{$item->id}}">
-                                                <td>{{$item->name}}</td>
-                                                <td>{{$item->type}}</td>
-                                                <td>{{$item->manufacturer}}</td>
-                                                <td>{{$item->generic}}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="search-list" style="font-size:14px;height:300px;">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <th style="width:30%;">Name</th>
-                                        <th style="width:8%;">Expire Date</th>
-                                        <th style="width:8%;">TP Rate</th>
-                                        <th style="width:8%;">MRP Rate</th>
-                                        <th style="width:8%;">Quantity</th>
-                                        <th style="width:8%;">Total Amount</th>
-                                        <th style="width:8%;">Discount Per</th>
-                                        <th style="width:8%;">Discount Amt</th>
-                                        <th style="width:8%;">Payble Amount</th>
-                                        <th style="width:6%;">Action</th>
-                                    </thead>
-                                    <tbody class="bill-item-list-cl" id="bill-item-list" style="background-color:#e9ecef;">
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -83,7 +137,7 @@ overflow-y: scroll;
                                             <th style="text-align: right;">Discount in Amount :</th>
                                             <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_dis_amt" id="bill-dis-amt" /></td>
                                             <th style="text-align: right;">Total Amount :</th>
-                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_amount" id="bill-amount" /></td>
+                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_amount" id="bill-amount"  readonly/></td>
                                             <th style="text-align: right;">Total Paid :</th>
                                             <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_paid_amount" id="bill-paid-amount"/></td>
                                         </tr>
@@ -91,7 +145,7 @@ overflow-y: scroll;
                                             <th style="text-align: right;">Discount in Percentage :</th>
                                             <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_in_per" id="bill-in-per"/></td>
                                             <th style="text-align: right;">Net Payable Amount :</th>
-                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_total_amount" id="bill-total-amount"/></td>
+                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_total_amount" id="bill-total-amount" readonly/></td>
                                             <th style="text-align: right;">Total Due :</th>
                                             <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_due_amount" id="bill-due-amount"/></td>
                                         </tr>
@@ -120,7 +174,7 @@ overflow-y: scroll;
                                     <tr>
                                         <td style="width:30%;">Cell</td>
                                         <td style="width:70%;">
-                                            <input class="form-control form-control-md w-100" type="text" id="stock-cell" name="stock_cell" value="" disabled>
+                                            <input class="form-control form-control-md w-100" type="text" id="stock-location" name="stock_location" value="" disabled>
                                         </td>
                                     </tr>
                                     <tr>
@@ -195,9 +249,9 @@ overflow-y: scroll;
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -206,14 +260,288 @@ overflow-y: scroll;
 <script>
     $(document).ready(function(){
 
-        $(function () {
-            $('.select2bs4').select2({
-            theme: 'bootstrap4',
-            })
-            $('#birth_date').datetimepicker({
-                format: 'YYYY-MM-DD',
+        //Add New Invoice No.
+        $("#invoice_create_new").on('click',function(){
+            $("#invoice_no").val("");
+            $("#customer_name").val("");
+            $("#contact_no").val("");
+            $("#add-new-invoice").show();
+        });
+        //Save New Invoice No.
+        $("#add-new-invoice").on('click',function(){
+            let customer = $("#customer_name").val();
+            let contact =   $("#contact_no").val();
+            
+            $.ajax({
+                type: 'post',
+                dataType: "json",
+                url: "{{url('invoice')}}",
+                data:{
+                    '_token': '{{ csrf_token() }}',
+                    'customer_name': customer,
+                    'contact_no': contact,
+                },
+                success: function (response) {
+                    console.log(response);
+                    $("#invoice_no").val(response.invoice_id);
+                    $("#customer_name").val(response.customer_name);
+                    $("#contact_no").val(response.contact_no);
+                    toastr.success('MRR Created Successfully');
+                    $("#add-new-mrr").hide();
+                    $("#medecine-item-list").empty();
+
+                }
             });
         });
+        
+        //Search Mrr No. & Select
+
+        $("#mrr_no_search").on('keyup',function(){
+            var value = $(this).val().toLowerCase();
+            console.log("Prottoy");
+            $.ajax({
+                    type: 'put',
+                    dataType: "json",
+                    url: "{{url('mrr')}}/",
+                    data:{
+                        'search':value,
+                        '_token': '{{ csrf_token() }}',
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        let element = "";
+                        result.forEach(x =>{
+                                element += `<li class="dropdown-item" >${x.mrr_id}</li>`;
+                        });
+                        $("#mrr_dropdown-menu").empty();
+                        $("#mrr_dropdown-menu").append(element);
+                        $("#mrr_dropdown-menu li").on('click',function(e){
+                            $("#mrr_no_search").val('');
+                            let mrr_no = $(this).text();
+                            $.ajax({
+                                type: 'get',
+                                dataType: "json",
+                                url: "{{url('mrr')}}/"+mrr_no,
+                                success: function (result) {
+                                    console.log(result);
+                                    $("#mrr_no").val(result.mrr.mrr_id);
+                                    $("#supplier_name").val(result.mrr.supplier_name);
+                                    $("#challan_no").val(result.mrr.challan_no);
+                                    $("#medecine-item-list").empty();
+
+                                    let element = "";
+                                    result.stock.forEach(x=>{
+                                            element += `<tr class="item-select" data-id="${x.id}">
+                                                    <td>${x.name}</td>
+                                                    <td>
+                                                        <input class="form-control form-control-sm w-100" type="text" id="mfg_date${x.id}"" name="stock_per" value="${x.manufacture_date}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control form-control-sm w-100" type="text" id="expire_date${x.id}"" name="stock_per" value="${x.expiry_date}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control form-control-sm w-100" type="text" id="stock_qty${x.id}"" name="stock_per" value="${x.stock_qty}">
+                                                    </td>
+                                                    <td class="project-actions text-center">
+                                                        <a class="btn btn-info btn-sm update" data-id="${x.id}">
+                                                            <i style="font-size:10px;" class="fas fa-pencil-alt"></i>
+                                                        </a>
+                                                        <a class="btn btn-danger btn-sm delete" href="#" data-id="${x.id}" data-toggle="modal" data-target="#modal-default">
+                                                            <i style="font-size:10px;" class="fas fa-trash"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>`
+                                        
+                                        })
+                                        $("#medecine-item-list").append(element);
+                                        $('.update').off('click').on('click',function(e){
+                                            let id = $(this).attr('data-id');
+                                            updateStockEntry(id);
+                                        })
+                                        $('.delete').off('click').on('click',function(e){
+                                            let id = $(this).attr('data-id');
+                                            deleteStockEntry(id);
+                                        })
+
+                                    
+
+                                    $("#add-new-mrr").hide();
+                                }
+                            });
+                            $("#mrr_dropdown-menu").hide();
+                        });
+                        $('#mrr_dropdown-menu li').on('mouseenter', function() {
+                            $(this).css('background-color', 'lightgreen');
+                        });
+
+                        $('#mrr_dropdown-menu li').on('mouseleave', function() {
+                            $(this).css('background-color', 'white');
+                        });
+                    }
+                });
+            $("#mrr_dropdown-menu").show();
+         })
+         
+        
+        $("#mrr_dropdown-menu li").on('click',function(e){
+            $("#mrr_no_search").val('');
+            let mrr_no = $(this).text();
+            $.ajax({
+                type: 'get',
+                dataType: "json",
+                url: "{{url('mrr')}}/"+mrr_no,
+                success: function (result) {
+                    console.log(result);
+                    
+                }
+            });
+
+            
+            $("#mrr_dropdown-menu").hide();
+        });
+        $("#mrr_no_search").on('focusout',function(){
+            $("#mrr_dropdown-menu").fadeOut()
+        })
+        $("#mrr_no_search").on('focusin',function(){
+            var value = $(this).val().toLowerCase();
+            let result = false;
+            $("#mrr_dropdown-menu li").filter(function() {
+                if(!result) result = $(this).text().toLowerCase().indexOf(value) > -1;
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            console.log(result);
+            if(result) $("#mrr_dropdown-menu").show();
+            else $("#mrr_dropdown-menu").hide();
+
+            $('#mrr_dropdown-menu li').on('mouseenter', function() {
+                $(this).css('background-color', 'lightgreen');
+            });
+
+            $('#mrr_dropdown-menu li').on('mouseleave', function() {
+                $(this).css('background-color', 'white');
+            });
+        
+        })
+
+        
+        //Item Set To Sale Section
+        function setItem(id){
+            console.log(id);
+            $.ajax({
+                    type: 'get',
+                    dataType: "json",
+                    url: "{{url('medecine/productInfo')}}/"+id,
+                    success: function (result) {
+                        if(result.item.current_stock == 0){
+                            toastr.error('Stock Not Available');
+                        }else{
+                            $("#item-id").val(result.item.id);
+                        $("#name").val(result.item.name);
+                        $("#stock-location").val(result.item.stock_location);
+                        $("#mrp-rate").val(result.item.mrp_rate);
+                        $("#tp-rate").val(result.item.tp_rate);
+                        $("#stock_per").val(result.item.stock_per);
+                        $("#current-stock").val(result.item.current_stock);
+                        $("#current-stock").attr("data-current-stock",result.item.current_stock);
+                        $("#sale-quantity").val(0);
+                        $("#total-amount").val(0);
+                        $("#disc-per").val(0);
+                        $("#disc-amt").val(0);
+                        $("#payable-amount").val(0);
+                        if(result.expiryDates){
+                            let element=`<option value="" disabled selected>Please select</option>`;
+                            result.expiryDates.map(x=>{
+                                element+=`<option value="${x.expiry_date}" data-current-qty="${x.current_qty}">${x.expiry_date}</option>`;
+                            });
+                            $("#expire-date").empty();
+                            $("#expire-date").append(element);
+
+                            $("#expire-date").on('change',function(e){
+                                let currentStock = $('#expire-date option:selected').attr('data-current-qty');
+                                $("#current-stock").val(Number(currentStock).toFixed(2));
+                                $("#current-stock").attr("data-current-stock",Number(currentStock).toFixed(2));
+                                $("#sale-quantity").val(0);
+                                $("#total-amount").val(0);
+                            });
+                        }
+                        }
+                        console.log(result);
+                        
+
+                    }
+                });
+
+        }
+
+        //Registerd Medicine Search
+        $("#search_data").on('keyup',function(){
+            var value = $(this).val().toLowerCase();
+            let match = $('input[name="match"]:checked').val();
+            console.log("Prottoy");
+            if((value != '') &&( value.length >= 3)){
+                $.ajax({
+                    type: 'put',
+                    dataType: "json",
+                    url: "{{url('medecine')}}/",
+                    data:{
+                        'search':value,
+                        'match':match,
+                        '_token': '{{ csrf_token() }}',
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        let element = "";
+                        result.forEach(x =>{
+                                element += `<li class="dropdown-item grid-container-medicine text-left">
+                                                <b data-id="${x.id}">${x.name}</b>
+                                                <span>${x.product_sub_category}</span>
+                                                <span>${x.manufacturer}</span>
+                                                <span>${x.strength}</span>
+                                                <span>${x.generic}</span>
+                                            </li>`;
+                        });
+                        $("#search_dropdown-menu").empty();
+                        $("#search_dropdown-menu").append(element);
+                        $("#search_dropdown-menu li").on('click',function(e){
+                        $("#search_data").val($(this).children('b').text());
+                            let item_id = $(this).children('b').attr("data-id");
+                            setItem(item_id);
+                            $("#search_dropdown-menu").hide();
+                        });
+                        $('#search_dropdown-menu li').on('mouseenter', function() {
+                            $(this).css('background-color', 'lightgreen');
+                        });
+
+                        $('#search_dropdown-menu li').on('mouseleave', function() {
+                            $(this).css('background-color', 'white');
+                        });
+                    }
+                });
+            }
+            $("#search_dropdown-menu").show();
+            
+        })
+        $("#search_dropdown-menu li").on('click',function(e){
+            $("#mrr_no_search").val($(this).text());
+            $("#search_dropdown-menu").hide();
+        })
+        $("#search_data").on('focusout',function(){
+            $("#search_dropdown-menu").fadeOut()
+        })
+        $("#search_data").on('focusin',function(){
+            var value = $(this).val().toLowerCase();
+            $("#search_dropdown-menu").show();
+
+            $('#search_dropdown-menu li').on('mouseenter', function() {
+                $(this).css('background-color', 'lightgreen');
+            });
+
+            $('#search_new_dropdown-menu li').on('mouseleave', function() {
+                $(this).css('background-color', 'white');
+            });
+        })
+
+        //Sale Entry Portion Calculation
 
         function calculatePrice(){
             let mrpRate = $('#mrp-rate').val();
@@ -253,273 +581,261 @@ overflow-y: scroll;
         });
 
 
-
-
-
-
-        $("#save-btn").on("click",function(e){
-
-            let itemId = $("#item-id").val();
-            let name = $("#name").val();
-            let stockCell = $("#stock-cell").val();
-            let mrpRate = $("#mrp-rate").val();
-            let tpRate = $("#tp-rate").val();
-            let stockPer = $("#stock_per").val();
-            let currentStock = $("#current-stock").val();
-            let stockQuantity = $("#sale-quantity").val();
-            let expireDate = $("#expire-date").val();
-            $.ajax({
-                type: 'post',
-                dataType: "json",
-                url: "{{url('stockmedecine')}}",
-                data:{
-                    'item_id':itemId,
-                    'name':name,
-                    'stock_cell':stockCell,
-                    'mrp_rate':mrpRate,
-                    'tp_rate':tpRate,
-                    'stock_per':stockPer,
-                    'current_stock':currentStock,
-                    'stock_quantity':stockQuantity,
-                    'expire_date':expireDate,
-                    '_token': '{{ csrf_token() }}',
-                },
-                success: function (response) {
-                    console.log(response);
-
-
-                }
-            });
-
+         $('#stock-quantity').on('keyup',function(e){
+            let currentStock =  $("#current-stock").attr("data-current-stock");
+            let stockQuantity = $("#stock-quantity").val();
+            $("#current-stock").val((Number(currentStock)+Number(stockQuantity)));
         });
 
-        function setItem(id){
+        //Invoice Details Bill Calculation
+        function calculateInvoiceDetails(id){
+
             console.log(id);
-            $.ajax({
-                    type: 'get',
-                    dataType: "json",
-                    url: "{{url('stockmedecine')}}/"+id,
-                    success: function (result) {
-                        console.log(result);
-                        $("#item-id").val(result.item.id);
-                        $("#name").val(result.item.name);
-                        $("#stock-cell").val(result.item.stock_cell);
-                        $("#mrp-rate").val(result.item.mrp_rate);
-                        $("#tp-rate").val(result.item.tp_rate);
-                        $("#stock_per").val(result.item.stock_per);
-                        $("#current-stock").val(result.item.current_stock);
-                        $("#current-stock").attr("data-current-stock",result.item.current_stock);
-                        $("#sale-quantity").val(0);
-                        $("#total-amount").val(0);
-                        $("#disc-per").val(0);
-                        $("#disc-amt").val(0);
-                        $("#payable-amount").val(0);
-                        if(result.expiryDates){
-                            let element=`<option value="" disabled selected>Please select</option>`;
-                            result.expiryDates.map(x=>{
-                                element+=`<option value="${x.expiry_date}" data-current-qty="${x.current_qty}">${x.expiry_date}</option>`;
-                            });
-                            $("#expire-date").empty();
-                            $("#expire-date").append(element);
 
-                            $("#expire-date").on('change',function(e){
-                                let currentStock = $('#expire-date option:selected').attr('data-current-qty');
-                                $("#current-stock").val(Number(currentStock).toFixed(2));
-                                $("#current-stock").attr("data-current-stock",Number(currentStock).toFixed(2));
-                                $("#sale-quantity").val(0);
-                                $("#total-amount").val(0);
-                            });
-                        }
+            // mrp_price
+            // quantity
+            // price
+            // discount_percent
+            // discount_amount
+            // final_price
 
-                    }
-                });
+            let mrpRate = $('#mrp_price'+id).val();
+            let saleQuantity = $('#quantity'+id).val();
 
+            let totalAmount = (Number(mrpRate)*Number(saleQuantity)).toFixed(2);
+            $('#price'+id).val(totalAmount);
+
+            let discAmt = $('#discount_amount'+id).val();
+
+            let payableAmount = (totalAmount - Number(discAmt)).toFixed(2);
+
+            $('#final_price'+id).val(payableAmount);
         }
 
-        $(".item-select").on('click',function(e){
-            let id = $(this).attr('data-id');
-            setItem(id);
-        });
+        
+        function InvDetailsDisAmtCalc(id){
 
-        function stockEntry(id){
-              let storeQty = 5;
-              let medecineID = 5;
-              let stockID = 5;
-            console.log(id);
-            $.ajax({
+            let percent =  $('#discount_percent'+id).val();
+            let totalAmount =  $('#price'+id).val();
+            let discAmount = ((Number(percent)*Number(totalAmount))/100).toFixed(2);
+            $('#discount_amount'+id).val(discAmount);
+            calculateInvoiceDetails(id);
+            
+        }
+
+        function InvDetailsDisPerCalc(id){
+
+            let amt =  $('#discount_amount'+id).val();
+            let totalAmount =  $('#price'+id).val();
+            let discPercent = ((Number(amt)/Number(totalAmount))*100).toFixed(2);
+            $('#discount_percent'+id).val(discPercent);
+            calculateInvoiceDetails(id);
+
+        }
+       
+
+        //Sale Entry
+        $("#add-btn").on('click',function(e){
+            let invoice_no = $('#invoice_no').val();
+            let product_name = $('#name').val();
+            let product_id = $('#item-id').val();
+            let expire_date = $('#expire-date').val();
+            let mrp_rate = $('#mrp-rate').val();
+            let quantity = $('#sale-quantity').val();
+            let price = $('#total-amount').val();
+            let discount_percent = $('#disc-per').val();
+            let discount_amount = $('#disc-amt').val();
+            let final_price = $('#payable-amount').val();
+            if(expire_date == "" || expire_date == null || expire_date == undefined){
+                toastr.error('Please Select Expire Date');
+            }else if(invoice_no == "" || invoice_no == null || invoice_no == undefined){
+                toastr.error('Please Enter Invoice No');
+            }else if(quantity == "" || quantity == null || quantity == undefined || quantity == 0){
+                toastr.error('Please Enter Quantity');
+            }else{
+                $.ajax({
                     type: 'post',
                     dataType: "json",
-                    url: "{{url('stockmedecine')}}",
+                    url: "{{url('sales')}}",
                     data:{
-                        'storeQty':storeQty,
-                        'medecineID':medecineID,
-                        'stockID':stockID,
+                        'invoice_id':invoice_no,
+                        'product_name':product_name,
+                        'product_id':product_id,
+                        'expire_date':expire_date,
+                        'quantity':quantity,
+                        'mrp_rate':mrp_rate,
+                        'price':price,
+                        'discount_percent':discount_percent,
+                        'discount_amount':discount_amount,
+                        'final_price':final_price,
                         '_token': '{{ csrf_token() }}',
                     },
                     success: function (response) {
                         console.log(response);
-                        if('success' in response){
-                            $('#storeqty'+id).val(0);
-                            $('#current-stock'+id).text(response.success.current_stock);
-                            $('#storeqty'+id).attr('data-stock-id',response.success.id);
-                            toastr.success('Stock Updated Successfully for '+response.success.name);
+                        $("#bill-dis-amt").val(response.invoice.discount_amount);
+                        $("#bill-amount").val(response.invoice.total_amount);
+                        $("#bill_paid_amount").val(response.invoice.paid_amount);
+                        $("#bill-in-per").val(response.invoice.discount_percent);
+                        $("#bill-total-amount").val(response.invoice.payable_amount);
+                        $("#bill-due-amount").val(response.invoice.due_amount);
+                        // toastr.success('Item Updated Successfully for '+response.success.name);
+                          
+                        let element = `<tr class="item-select" data-id="${response.invoice_details.id}">
+                                <td>${response.invoice_details.product_name}</td>
+                                <td>${response.invoice_details.expire_date}</td>
+                                <td>
+                                    <input class="form-control form-control-sm w-100" type="text" id="mrp_price${response.invoice_details.id}" name="mrp_price" value="${response.invoice_details.mrp_price}" readonly>
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm w-100 inv_dtls_qnty" type="text" id="quantity${response.invoice_details.id}" name="quantity" value="${response.invoice_details.quantity}">
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm w-100" type="text" id="price${response.invoice_details.id}" name="price" value="${response.invoice_details.price}" readonly>
+                                </td><td>
+                                    <input class="form-control form-control-sm w-100 disc-cal-per" type="text" id="discount_percent${response.invoice_details.id}" name="discount_percent" value="${response.invoice_details.discount_percent}">
+                                </td><td>
+                                    <input class="form-control form-control-sm w-100 disc-cal-amt" type="text" id="discount_amount${response.invoice_details.id}" name="discount_amount" value="${response.invoice_details.discount_amount}">
+                                </td><td>
+                                    <input class="form-control form-control-sm w-100" type="text" id="final_price${response.invoice_details.id}" name="final_price" value="${response.invoice_details.final_price}" readonly>
+                                </td>
+                                <td class="project-actions text-center">
+                                    <a class="btn btn-info btn-sm update" data-id="${response.invoice_details.id}">
+                                        <i style="font-size:10px;" class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a class="btn btn-danger btn-sm delete" href="#" data-id="${response.invoice_details.id}" data-toggle="modal" data-target="#modal-default">
+                                        <i style="font-size:10px;" class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>`
+                            $("#medecine-item-list").append(element);
+                            $('.delete').off('click').on('click',function(e){
+                                let id = $(this).attr('data-id');
+                                deleteSaleEntry(id);
+                            });
+                            $('.update').off('click').on('click',function(e){
+                                let id = $(this).attr('data-id');
+                                updateSaleEntry(id);
+                            });
+                            $(".inv_dtls_qnty").off('keyup').on('keyup',function(e){ 
+                                let id = $(this).closest("tr").attr('data-id');
+                                calculateInvoiceDetails(id);
+                            });
+                            $(".disc-cal-per").off('keyup').on('keyup',function(e){
+                                let id = $(this).closest("tr").attr('data-id');
+                                InvDetailsDisAmtCalc(id);
+                            });
+                            $(".disc-cal-amt").off('keyup').on('keyup',function(e){
+                                let id = $(this).closest("tr").attr('data-id');
+                                InvDetailsDisPerCalc(id);
+                            });
 
-                        }
-
-                    }
-                });
-        }
-
-        $("#medecine-search-btn").on('click',function(e){
-            let ch_data = $("#medecinelist").val();
-            console.log(ch_data);
-            if((ch_data != '') &&( ch_data.length >= 3)){
-            $.ajax({
-                    type: 'put',
-                    dataType: "json",
-                    url: "{{url('stockmedecine')}}/",
-                    data:{
-                        'search':ch_data,
-                        '_token': '{{ csrf_token() }}',
-                    },
-                    success: function (result) {
-                        console.log(result);
-                        let element = "";
-                        result.forEach(x =>{
-                                element += `<tr class="item-select" data-id="${x.id}">
-                                    <td>${x.name}</td>
-                                    <td>${x.type}</td>
-                                    <td>${x.manufacturer}</td>
-                                    <td>${x.generic}</td>
-                                </tr>`
-                        });
-                        $("#medecine-item-list").empty();
-                        $("#medecine-item-list").append(element);
-
-                      $(".item-select").on('click',function(e){
-                            let id = $(this).attr('data-id');
-                            setItem(id);
-                        });
                     }
                 });
             }
+            console.log({
+                'product_name':product_name,
+                'product_id':product_id,
+                'expire_date':expire_date,
+                'quantity':quantity,
+                'mrp_rate':mrp_rate,
+                'price':price,
+                'discount_percent':discount_percent,
+                'discount_amount':discount_amount,
+                'final_price':final_price});
 
-        });
-
-        $(".store-medecine").on('click',function(e){
-            let id = $(this).attr('data-id');
-            console.log(id);
-        });
-
-
-        $("#add-new-item").on('click',function(){
-            $('#modal-default-add').modal('show');
         })
 
-        function NewItemAdd(id){
-            let name = $("#name"+id).val();
-            let type = $("#type"+id).val();
-            let manufacturer = $("#manufacturer"+id).val();
-            let generic = $("#generic"+id).val();
-            let strength = $("#strength"+id).val();
-            let use_for = $("#use_for"+id).val();
+
+       
+      
+
+        $(function () {
+           
+            $('#birth_date').datetimepicker({
+                format: 'YYYY-MM-DD',
+            });
+
+             $('#manufacture_date').datetimepicker({
+                format: 'YYYY-MM-DD',
+            });
+        });
+
+
+       
+
+        function updateSaleEntry(id){
+            console.log(id)
+                let quantity = $('#quantity'+id).val();
+                let price = $('#price'+id).val();
+                let discount_percent = $('#discount_percent'+id).val();
+                let discount_amount = $('#discount_amount'+id).val();
+                let final_price = $('#final_price'+id).val();
+                console.log({
+                    'quantity':quantity,
+                    'price':price,
+                    'discount_percent':discount_percent,
+                    'discount_amount':discount_amount,
+                    'final_price':final_price,
+                });
             $.ajax({
-                type: 'post',
+                type: 'put',
                 dataType: "json",
-                url: "{{url('medecinestock')}}",
+                url: "{{ url('sales') }}/"+id,
                 data:{
-                    'name':name,
-                    'type':type,
-                    'manufacturer':manufacturer,
-                    'generic':generic,
-                    'strength':strength,
-                    'use_for':use_for,
-                    '_token': '{{ csrf_token() }}',
+                    'quantity':quantity,
+                    'price':price,
+                    'discount_percent':discount_percent,
+                    'discount_amount':discount_amount,
+                    'final_price':final_price,
+                    '_token': "{{ csrf_token() }}",
                 },
                 success: function (response) {
                     console.log(response);
-                    let x;
-                    if('success' in response){
-                        toastr.success('Item Added Successfully for '+response.success.name);
-                        x = response.success;
-                    }else if('existed' in response){
-                        toastr.warning('Item Already Exists In store '+response.existed.name);
-                        x = response.existed;
-                    }
-
-                    $("#medecine-item-list").empty();
-                    let element = `
-                        <tr class="item-select" data-id="${x.id}">
-                            <td>${x.name}</td>
-                                    <td>${x.type}</td>
-                                    <td>${x.manufacturer}</td>
-                                    <td>${x.generic}</td>
-                                </tr>
-                    `;
-                    $("#medecine-item-list").append(element);
-                    $('#modal-default-add').modal('hide');
-
-                    $(".item-select").on('click',function(e){
-                        let id = $(this).attr('data-id');
-                        setItem(id);
-                    });
-
+                    toastr.success('Item Updated Successfully for '+response.invoice_details.product_name);
+                    $('#quantity'+id).val(response.invoice_details.quantity);
+                    $('#price'+id).val(response.invoice_details.price);
+                    $('#discount_percent'+id).val(response.invoice_details.discount_percent);
+                    $('#discount_amount'+id).val(response.invoice_details.discount_amount);
+                    $('#final_price'+id).val(response.invoice_details.final_price);
+                    $("#bill-dis-amt").val(response.invoice.discount_amount);
+                    $("#bill-amount").val(response.invoice.total_amount);
+                    $("#bill_paid_amount").val(response.invoice.paid_amount);
+                    $("#bill-in-per").val(response.invoice.discount_percent);
+                    $("#bill-total-amount").val(response.invoice.payable_amount);
+                    $("#bill-due-amount").val(response.invoice.due_amount);
                 }
             });
-
-
-
         }
 
-
-        $("#medecine-search-btn-new").on('click',function(e){
-            let ch_data = $("#medecinelistnew").val();
-            console.log(ch_data);
-            if((ch_data != '') &&( ch_data.length >= 3)){
-            $.ajax({
-                    type: 'put',
+        function deleteSaleEntry(id){
+                $.ajax({
+                    type: 'post',
+                    url: "{{ url('sales') }}/" + id,
                     dataType: "json",
-                    url: "{{url('medecinestock')}}/",
-                    data:{
-                        'search':ch_data,
-                        '_token': '{{ csrf_token() }}',
+                    data: {
+                        '_token': "{{ csrf_token() }}",
+                        '_method': 'DELETE'
                     },
-                    success: function (result) {
-                        console.log(result);
-                        let element = "";
-                        result.forEach(x =>{
-                                element += `<tr>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="name${x.id}" name="name" value="${x.name}"></td>
-                                    <td>
-                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="type${x.id}" name="type" value="${x.type}">
-                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="use_for${x.id}" name="use_for" value="${x.use_for}">
-                                    </td>
-                                    <td>
-                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="manufacturer${x.id}" name="manufacturer" value="${x.manufacturer}">
-                                        <input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="generic${x.id}" name="generic" value="${x.generic}">
-                                    </td>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="generic${x.id}" name="generic" value="${x.generic}"></td>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="strength${x.id}" name="strength" value="${x.strength}"></td>
-                                    <td><input class="form-control form-control-sm w-100" data-id="${x.id}" type="text" id="use_for${x.id}" name="use_for" value="${x.use_for}"></td>
-                                    <td class="text-center">
-                                        <a class="btn btn-xs btn-info add-new" data-id="${x.id}" >ADD
-                                            {{-- <i class="fas fa-edit edit-delete-icon pb-1" style="color:#eef4f7;" data-id="${x.id}"></i> --}}
-                                        </a>
-                                    </td>
-                                </tr>`
-                        });
-                        $("#medecine-item-list-new").empty();
-                        $("#medecine-item-list-new").append(element);
+                    success: function (response) {
+                        console.log(response);
 
-                        $(".add-new").on('click',function(e){
-                            let id = $(this).attr('data-id');
-                            NewItemAdd(id);
-                        })
+                        // Update fields
+                        $("#bill-dis-amt").val(response.invoice.discount_amount);
+                        $("#bill-amount").val(response.invoice.total_amount);
+                        $("#bill_paid_amount").val(response.invoice.paid_amount);
+                        $("#bill-in-per").val(response.invoice.discount_percent);
+                        $("#bill-total-amount").val(response.invoice.payable_amount);
+                        $("#bill-due-amount").val(response.invoice.due_amount);
+
+                        // Remove row
+                        $("#quantity" + id).closest("tr").remove();
+                    },
+                    error: function (xhr) {
+                        console.error("Delete failed", xhr.responseText);
+                        toastr.error("Something went wrong while deleting.");
                     }
                 });
-            }
-
-        });
+        }
 
         function finalBillCalculation(){
           let billAmount =  $("#bill-amount").val();
@@ -541,144 +857,21 @@ overflow-y: scroll;
 
         }
         $(".final-bill-field").on('keyup',function(){
-            $('#bill-in-per').val(0);
             finalBillCalculation();
         });
 
-        function calculateBill(){
-            let amtResult = 0;
-            let discResult = 0;
-                $(".payable-total").each(function(){
-                    amtResult += Number($(this).val());
-                });
-                console.log(amtResult);
-                $(".payable-discount").each(function(){
-
-                    discResult += Number($(this).val());
-                });
-                $("#bill-amount").val(amtResult);
-                $("#bill-dis-amt").val(discResult);
-                finalBillCalculation();
-        }
-        function calculateIndividualBill(id){
-            let rate = $('#mrp-rate'+id).val();
-            let qty = $('#sale-quantity'+id).val();
-            let disc = $('#discount-amount'+id).val();
-
-            let payAmount = (Number(rate)*Number(qty))-Number(disc);
-            console.log(id);
-            $('#total-amount'+id).val((Number(rate)*Number(qty)).toFixed(2));
-            $('#payable-amount'+id).val(payAmount);
-            calculateBill();
-        }
-
-        $("#add-btn").on("click",function(e){
-            let itemId = $("#item-id").val();
-            let name = $("#name").val();
-            let stockCell = $("#stock-cell").val();
-            let mrpRate = $("#mrp-rate").val();
-            let tpRate = $("#tp-rate").val();
-            let stockPer = $("#stock_per").val();
-            let currentStock = $("#current-stock").val();
-            let saleQuantity = $("#sale-quantity").val();
-            let totalAmount = $("#total-amount").val();
-            let expiryDate = $("#expire-date").val();
-            let discountPer = $("#disc-per").val();
-            let discountAmt = $("#disc-amt").val();
-            let payableAmount = $("#payable-amount").val();
-
-            let element = `<tr>
-                <td>
-                    ${name}
-
-                </td>
-                <td>
-                    <input class="form-control form-control-sm w-100" data-id="${itemId+expiryDate}" type="text" id="expire-date${itemId+expiryDate}" name="expire_date[]" value="${expiryDate}" readonly>
-                </td>
-                <td>
-                    ${tpRate}
-
-                </td>
-                <td>
-                    <input class="form-control form-control-sm w-100 mrp-rate" data-id="${itemId+expiryDate}" type="text" id="mrp-rate${itemId+expiryDate}" name="mrp_rate[]" value="${mrpRate}">
-                </td>
-                 <td>
-                    <input class="form-control form-control-sm w-100 sale-qty" data-id="${itemId+expiryDate}" type="text" id="sale-quantity${itemId+expiryDate}" name="sale_quantity[]" value="${saleQuantity}">
-                </td>
-                <td>
-                    <input class="form-control form-control-sm w-100 payable-total" data-id="${itemId+expiryDate}" type="text" id="total-amount${itemId+expiryDate}" name="total_amount[]" value="${totalAmount}" readonly>
-                </td>
-                 <td>
-                    <input class="form-control form-control-sm w-100 discount-per" data-id="${itemId+expiryDate}" type="text" id="discount-percent${itemId+expiryDate}" name="discount_percent[]" value="${discountPer}">
-                </td>
-                 <td>
-                    <input class="form-control form-control-sm w-100 payable-discount" data-id="${itemId+expiryDate}" type="text" id="discount-amount${itemId+expiryDate}" name="discount_amount[]" value="${discountAmt}">
-                </td>
-                 <td>
-                    <input class="form-control form-control-sm w-100 payable" data-id="${itemId+expiryDate}" type="text" id="payable-amount${itemId+expiryDate}" name="payable_amount[]" value="${payableAmount}" readonly>
-                </td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-xs remove-btn" title="Remove">
-                        <i class="fas fa-times p-1"></i>
-                    </button>
-                </td>
-                </tr>`;
-                    $("#bill-item-list").append(element);
-
-                    $('.remove-btn').on('click',function(e){
-                        $(this).closest("tr").remove();
-                        calculateBill();
-                    });
-                    calculateBill();
-
-                    $('.mrp-rate').on('keyup',function(e){
-                        console.log($(this).attr('data-id'));
-                        calculateIndividualBill($(this).attr('data-id'));
-                    });
-                    $('.sale-qty').on('keyup',function(e){
-                        calculateIndividualBill($(this).attr('data-id'));
-                    });
-
-                    $('.discount-per').on('keyup',function(e){
-                        let id = $(this).attr('data-id');
-                        let totalAmount = $('#total-amount'+id).val();
-                        let perValue = $(this).val();
-                        let discountAmount = ((Number(perValue)*Number(totalAmount))/100).toFixed(2);
-                        console.log(discountAmount);
-                        $('#discount-amount'+id).val(discountAmount);
-                        calculateIndividualBill(id);
-                    });
-                    $('.payable-discount').on('keyup',function(e){
-                        let id = $(this).attr('data-id');
-                        let totalAmount = $('#total-amount'+id).val();
-                        let disValue = $(this).val();
-                        let discountAmount = ((Number(disValue)/Number(totalAmount))*100).toFixed(2);
-                        console.log(discountAmount);
-                        $('#discount-percent'+id).val(discountAmount);
-                        calculateIndividualBill(id);
-                    });
-                });
-
-
-                $('#bill-in-per').on('keyup',function(e){
-                    let perVal = $(this).val();
-
-                    $(".discount-per").each(function(){
-                        let id = $(this).attr('data-id');
-                        let totalAmount = $('#total-amount'+id).val();
-                        let discountAmount = ((Number(perVal)*Number(totalAmount))/100).toFixed(2);
-                        console.log(discountAmount);
-                        $('#discount-amount'+id).val(discountAmount);
-                        $('#discount-percent'+id).val(perVal);
-                        calculateIndividualBill(id);
-                    });
-                })
-
-
-
-
-
+        $("#bill-in-per").on('keyup',function(){
+            let billAmount =  $("#bill-amount").val();
+            let discountPer =  $(this).val();
+            let amtValue = ((Number(discountPer)/100)*Number(billAmount)).toFixed(2);
+            $("#bill-dis-amt").val(amtValue);
+            finalBillCalculation();
         });
+
+        
+
+
+    });
 
 </script>
 

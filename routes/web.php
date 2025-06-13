@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\MedecineController;
 use App\Http\Controllers\Backend\OtherProductsController;
 use App\Http\Controllers\Backend\StockEntryController;
 use App\Http\Controllers\Backend\MrrController;
+use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\SupplierController;
 use App\Http\Controllers\Backend\MedecineStockController;
 use App\Http\Controllers\Backend\StockMedecineController;
@@ -109,6 +110,7 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
     ]);
 
     Route::put('/medecine',[MedecineController::class,'search']);
+    Route::get('/medecine/productInfo/{id}',[MedecineController::class,'productInfo']);
 
     Route::resource('/medecine',MedecineController::class)->names([
         'index'=>'medecine.home',
@@ -137,6 +139,19 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'update'=>'stockentry.update',
         'destroy'=>'stockentry.delete'
     ]);
+
+
+
+    Route::resource('/sales',SalesController::class)->names([
+        'index'=>'sales.home',
+        'create'=>'sales.create',
+        'store'=>'sales.save',
+        'edit'=>'sales.edit',
+        'update'=>'sales.update',
+        'destroy'=>'sales.delete'
+    ]);
+
+
     Route::put('/mrr',[MrrController::class,'search']);
 
     Route::resource('/mrr',MrrController::class)->names([
@@ -146,6 +161,18 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'edit'=>'mrr.edit',
         'update'=>'mrr.update',
         'destroy'=>'mrr.delete'
+    ]);
+
+
+    Route::put('/invoice',[InvoiceController::class,'search']);
+
+    Route::resource('/invoice',InvoiceController::class)->names([
+        'index'=>'invoice.home',
+        'create'=>'invoice.create',
+        'store'=>'invoice.save',
+        'edit'=>'invoice.edit',
+        'update'=>'invoice.update',
+        'destroy'=>'invoice.delete'
     ]);
 
     Route::resource('/supplier',SupplierController::class)->names([
@@ -217,15 +244,7 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
         'destroy'=>'stockmedecine.delete'
     ]);
 
-    Route::resource('/sales',SalesController::class)->names([
-        'index'=>'sales.home',
-        'create'=>'sales.create',
-        'store'=>'sales.save',
-        'edit'=>'sales.edit',
-        'update'=>'sales.update',
-        'destroy'=>'sales.delete'
-    ]);
-
+    
 
     Route::resource('/manufacturer',ManufacturerController::class)->names([
         'index'=>'manufacturer.home',

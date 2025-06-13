@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use App\Models\Backend\StockEntryLog;
 use App\Models\Backend\Mrr;
 use Illuminate\Support\Carbon;
 use App\Models\Backend\Supplier;
@@ -69,7 +70,10 @@ class MrrController extends Controller
     public function show(string $id)
     {
         $lastid = Mrr::where('mrrs.mrr_id', '=', $id)->first();
-        return $lastid;
+        $stock_entries = StockEntryLog::join('products','stock_entry_logs.medecine_id','=','products.id')
+                    ->select('stock_entry_logs.*','products.name')
+                    ->where('mrr_id','=',$id)->get();
+        return response()->json(['mrr'=>$lastid,'stock'=>$stock_entries]);
     }
 
     /**

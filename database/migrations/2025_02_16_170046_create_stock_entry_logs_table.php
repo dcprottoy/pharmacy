@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('stock_entry_logs', function (Blueprint $table) {
             $table->id();
             $table->integer('medecine_id');
-            $table->integer('mrr_id')->nullable()->default(0);
-            $table->decimal('stock_qty',18,2)->nullable();
+            $table->integer('mrr_id');
+            $table->decimal('stock_qty',18,2)->default(0);
             $table->date('stock_date');
             $table->date('manufacture_date')->nullable();
             $table->date('expiry_date')->nullable();

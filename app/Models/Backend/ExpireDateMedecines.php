@@ -11,15 +11,11 @@ class ExpireDateMedecines extends Model
     use HasFactory;
 
     protected $fillable = [
-        'medecine_id',
-        'stock_qty',
-        'current_qty',
-        'sell_qty',
-        'stock_date',
-        'expiry_date',
-        'mrr_id',
-        'manufacture_date'
-        
+            'medecine_id',
+            'stock_qty',
+            'current_qty',
+            'sell_qty',
+            'expiry_date',
     ];
 
     

@@ -11,6 +11,7 @@ use App\Models\Backend\Manufacturer;
 use App\Models\Backend\ProductCategory;
 use App\Models\Backend\ProductSubCategory;
 use App\Models\Backend\MedecineUsage;
+use App\Models\Backend\ExpireDateMedecines;
 
 
 class MedecineController extends Controller
@@ -86,6 +87,17 @@ class MedecineController extends Controller
     {
         $lastid = Product::findOrFail($id);
         return $lastid;
+    }
+
+    public function productInfo(string $id){
+        $stock = Product::find((int)$id);
+        $expiryDate = ExpireDateMedecines::where('medecine_id','=',(int)$id)
+                        ->where('medecine_id','=',(int)$id)
+                        ->where('current_qty','>',0)
+                        ->select('expiry_date','current_qty')
+                        ->get();
+
+        return response()->json(['item'=>$stock,'expiryDates'=>$expiryDate]);
     }
 
     /**

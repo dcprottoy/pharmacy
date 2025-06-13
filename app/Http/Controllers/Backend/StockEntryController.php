@@ -17,9 +17,10 @@ use App\Models\Backend\ProductType;
 use App\Models\Backend\ProductCategory;
 use App\Models\Backend\ProductSubCategory;
 use App\Models\Backend\MedecineUsage;
+use App\Models\Backend\Stock;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-
+use Exception;
 class StockEntryController extends Controller
 {
     /**
@@ -54,15 +55,18 @@ class StockEntryController extends Controller
         $date = Carbon::now()->format('Y-m-d');
         $validated = Validator::make($request->all(),[
             'item_id' => 'required',
+            'expire_date' => 'required',
+            'manufacture_date' => 'required',
         ]);
         // return response()->json($request->all());
 
         if($validated->fails()){
-            return back()->withErrors($validated)->withInput();
+            return response()->json(['error'=>'Something went wrong !!']);
         }
 
         $item_id = (int)$request->item_id;
-
+    try {
+            DB::beginTransaction();
         $medecine = Product::find($item_id);
         // return $medecine;
 
@@ -75,33 +79,38 @@ class StockEntryController extends Controller
         // $medecine->stock_date = $date;
         $medecine->total_stock = $medecine->total_stock + $request->stock_quantity;
         $medecine->save();
-
-        if($request->expire_date != ""){
-
+        $item_exists_expiry = ExpireDateMedecines::where('medecine_id','=',$medecine->id)->where('expiry_date','=',$request->expire_date)->first();
+        if($item_exists_expiry){
+            $item_exists_expiry->stock_qty = (int)$item_exists_expiry->stock_qty + (int)$request->stock_quantity;
+            $item_exists_expiry->current_qty = (int)$item_exists_expiry->current_qty + (int)$request->stock_quantity;
+            $item_exists_expiry->save();
+        }else{
             $expiry_wise = new ExpireDateMedecines();
             $expiry_wise->medecine_id = $medecine->id;
-            $expiry_wise->stock_date = $date;
-            $expiry_wise->mrr_id = $request->mrr_id;
             $expiry_wise->expiry_date = $request->expire_date;
-            $expiry_wise->manufacture_date = $request->manufacture_date;
             $expiry_wise->stock_qty = $request->stock_quantity;
             $expiry_wise->current_qty = $request->stock_quantity;
             $expiry_wise->save();
-
         }
-
+        
         $stock_log = new StockEntryLog();
         $stock_log->medecine_id = $medecine->id;
-        $stock_log->stock_date = $date;
         $stock_log->mrr_id = $request->mrr_id;
+        $stock_log->stock_date = $date;
         $stock_log->expiry_date = $request->expire_date;
         $stock_log->manufacture_date = $request->manufacture_date;
         $stock_log->stock_qty = $request->stock_quantity;
         $stock_log->save();
 
+        DB::commit(); 
 
+        return response()->json(['success'=>$medecine,'expiry_log'=>$stock_log]);
+        
+        } catch (Exception $e) {
+            DB::rollBack(); 
 
-        return response()->json(['success'=>$medecine]);
+            return response()->json(['error' => 'Transaction failed.', 'message' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -187,7 +196,43 @@ class StockEntryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        try {
+            DB::beginTransaction(); 
+
+            $stock_log = StockEntryLog::find($id);
+
+            $expiry_wise = ExpireDateMedecines::where('medecine_id','=',$stock_log->medecine_id)->where('expiry_date','=',$stock_log->expiry_date)->first();
+
+            // return response()->json([$request->all()]);
+
+            $item_id = $stock_log->medecine_id;
+            $medecine = Product::find($item_id);
+            // return $medecine;
+
+            $medecine->last_stock = ((int)$medecine->last_stock - (int)$stock_log->stock_qty)+(int)$request->stock_qty;;
+            $medecine->current_stock = ((int)$medecine->current_stock - (int)$stock_log->stock_qty)+(int)$request->stock_qty;
+            $medecine->stock_per = 100;
+            $medecine->total_stock = ((int)$medecine->total_stock - (int)$stock_log->stock_qty)+(int)$request->stock_qty;
+            $medecine->save();
+
+            $expiry_wise->stock_qty = ((int)$expiry_wise->stock_qty - (int)$stock_log->stock_qty)+(int)$request->stock_qty;
+            $expiry_wise->current_qty = ((int)$expiry_wise->current_qty - (int)$stock_log->stock_qty)+(int)$request->stock_qty;
+            $expiry_wise->update();
+
+           
+            $stock_log->stock_qty = $request->stock_qty;
+            $stock_log->update();
+
+            DB::commit();
+            
+            return response()->json(['success'=>$medecine,'expiry_log'=>$stock_log]);
+
+        }catch (Exception $e) {
+            DB::rollBack(); 
+
+            return response()->json(['error' => 'Transaction failed.', 'message' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -195,7 +240,27 @@ class StockEntryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $stock_log = StockEntryLog::find($id);
+        // return response()->json([$stock_log]);
+        $expiry_wise = ExpireDateMedecines::where('medecine_id','=',$stock_log->medecine_id)->where('expiry_date','=',$stock_log->expiry_date)->first();
+
+        $item_id = $stock_log->medecine_id;
+        $medecine = Product::find($item_id);
+        // return $medecine;
+
+        $medecine->last_stock = ((int)$medecine->last_stock - (int)$stock_log->stock_qty);
+        $medecine->current_stock = ((int)$medecine->current_stock - (int)$stock_log->stock_qty);
+        $medecine->total_stock = ((int)$medecine->total_stock - (int)$stock_log->stock_qty);
+        $medecine->save();
+
+        $expiry_wise->stock_qty = ((int)$expiry_wise->stock_qty - (int)$stock_log->stock_qty);
+        $expiry_wise->current_qty = ((int)$expiry_wise->current_qty - (int)$stock_log->stock_qty);
+        $expiry_wise->update();
+    
+        $stock_log->delete();
+
+        
+        return response()->json(['success'=>$medecine]);
     }
 
     /**
