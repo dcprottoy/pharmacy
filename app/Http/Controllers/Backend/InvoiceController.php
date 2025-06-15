@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Backend\ExpireDateMedecines;
 use App\Models\Backend\Invoice;
+use App\Models\Backend\InvoiceDetails;
 use App\Models\Backend\Mrr;
 use Illuminate\Support\Carbon;
 use App\Models\Backend\Supplier;
@@ -62,7 +63,9 @@ class InvoiceController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $invoice = Invoice::where('invoices.invoice_id', '=', $id)->first();
+        $invoice_details = InvoiceDetails::where('invoice_id','=',$id)->get();
+        return response()->json(['invoice'=>$invoice,'invoice_details'=>$invoice_details]);
     }
 
     /**
@@ -78,7 +81,16 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+
+        // return response()->json($request->all());
+
+        $invoice = Invoice::where('invoices.invoice_id', '=', $id)->first();
+        $invoice->fill($request->all());
+        $invoice->paid_status = 1;
+        $invoice->update();
+
+        return $invoice;
     }
 
     /**
@@ -87,5 +99,11 @@ class InvoiceController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function search(Request $request)
+    {
+        $lastid = Invoice::where('invoices.invoice_id', 'like', '%'.$request->search.'%')->select('invoice_id')->get();
+        return $lastid;
     }
 }

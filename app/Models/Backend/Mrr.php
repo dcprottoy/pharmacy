@@ -14,9 +14,12 @@ class Mrr extends Model
             'supplier_id',
             'supplier_name',
             'challan_no',
+            'purchase_date',
             'bill_amount',
             'paid_amount',
             'due_amount',
+            'approved',
+            'paid_status',
             'created_by',
             'updated_by'
         ];

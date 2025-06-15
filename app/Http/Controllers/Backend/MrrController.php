@@ -58,6 +58,7 @@ class MrrController extends Controller
 
         $mrr = new Mrr();
         $mrr->fill($inputs);
+        $mrr->purchase_date = $date->format('Y-m-d');
         $mrr->mrr_id = (int)$mrr_id;
         $mrr->save();
 
@@ -89,7 +90,14 @@ class MrrController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $lastid = Mrr::where('mrrs.mrr_id', '=', $id)->first();
+
+        $stock_entries = StockEntryLog::join('products','stock_entry_logs.medecine_id','=','products.id')
+                    ->select('stock_entry_logs.*','products.name')
+                    ->where('mrr_id','=',$id)->get();
+        $lastid->approved = true;
+        $lastid->save();  
+        return response()->json(['mrr'=>$lastid,'stock'=>$stock_entries]);
     }
 
 
@@ -98,7 +106,7 @@ class MrrController extends Controller
      */
     public function search(Request $request)
     {
-        $lastid = Mrr::where('mrrs.mrr_id', 'like', '%'.$request->search.'%')->select('mrr_id')->get();
+        $lastid = Mrr::where('mrrs.mrr_id', 'like', '%'.$request->search.'%')->where('approved',false)->orderBy('mrr_id', 'desc')->select('mrr_id')->get();
         return $lastid;
     }
 

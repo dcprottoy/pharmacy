@@ -17,11 +17,14 @@ return new class extends Migration
             $table->integer('supplier_id');
             $table->string('supplier_name');
             $table->string('challan_no');
+            $table->date('purchase_date');
             $table->decimal('bill_amount',18,2)->default(0);
             $table->decimal('paid_amount',18,2)->default(0);
             $table->decimal('due_amount',18,2)->default(0);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
+            $table->boolean('approved')->nullable()->default(false);
+            $table->boolean('paid_status')->nullable()->default(false);
             $table->timestamps();
         });
     }

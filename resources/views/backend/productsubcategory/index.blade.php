@@ -12,12 +12,6 @@
                     @csrf
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Product Sub-Category Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='name_eng' placeholder="Product Sub-Category Name" required>
-                                </div>
-                            </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label>Product Type </label>
@@ -34,10 +28,17 @@
                                     <label>Product Category </label>
                                     <select class="form-control form-control-sm"  name="product_category_id" id="product_category_id" required>
                                         <option value="" disabled selected>Please select</option>
-                                        @foreach($product_categories as $item )
+                                        {{-- @foreach($product_categories as $item )
                                             <option value="{{$item->id}}">{{$item->name_eng}}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Product Sub-Category Name</label>
+                                    <input type="text" class="form-control form-control-sm" name='name_eng' placeholder="Product Sub-Category Name" required>
                                 </div>
                             </div>
                         </div>
@@ -148,12 +149,6 @@
                                 @csrf
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-4">
-                                            <div class="form-group">
-                                                <label>Product Sub-Category Name</label>
-                                                <input type="text" class="form-control form-control-sm" id='u-name_eng' name='name_eng' placeholder="Product Category Name" required>
-                                            </div>
-                                        </div>
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label>Product Type </label>
@@ -167,13 +162,19 @@
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="form-group">
-                                                <label>Product Type </label>
+                                                <label>Product Category </label>
                                                 <select class="form-control form-control-sm"  name="product_category_id" id="u-product_category_id" required>
                                                     <option value="" disabled selected>Please select</option>
                                                     @foreach($product_categories as $item )
                                                         <option value="{{$item->id}}">{{$item->name_eng}}</option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label>Product Sub-Category Name</label>
+                                                <input type="text" class="form-control form-control-sm" id='u-name_eng' name='name_eng' placeholder="Product Category Name" required>
                                             </div>
                                         </div>
                                     </div>
@@ -208,6 +209,7 @@
                         console.log(result);
                         $('#u-name_eng').val(result.name_eng);
                         $('#u-product_type_id').val(result.product_type_id);
+                        $('#u-product_category_id').val(result.product_category_id);
 
                     }
                 });
@@ -221,6 +223,27 @@
         "responsive": true, "lengthChange": false, "autoWidth": false,
         //   "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+
+        $("#product_type_id").on('change',function(e){
+                let id = $("#product_type_id").val();
+                    $.ajax({
+                        url: "{{url('productcategory/listbytype/')}}/"+id,
+                        success: function (result) {
+                            let element = `<option value="" selected disabled>Please select</option>`;
+                            console.log(result);
+                            result.forEach(x => {
+                                element +=`<option value="${x.id}">${x.name_eng}</option>`;
+                            });
+
+                            $("#product_category_id").empty();
+                            $("#product_category_id").append(element);
+                        
+                        }
+                    });
+            
+
+            });
 
 
 

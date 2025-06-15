@@ -12,6 +12,7 @@ use App\Models\Backend\ProductCategory;
 use App\Models\Backend\ProductSubCategory;
 use App\Models\Backend\MedecineUsage;
 use App\Models\Backend\ExpireDateMedecines;
+use App\Models\Backend\Medecine;
 
 
 class MedecineController extends Controller
@@ -23,7 +24,7 @@ class MedecineController extends Controller
     {
         $data['medecines'] = Product::where('product_type_id',1)->paginate(50);
         $data['manufacturers'] = Manufacturer::all();
-        $data['product_categories'] = ProductCategory::all();
+        $data['product_categories'] = ProductCategory::where('product_type_id',1)->get();
         $data['product_types'] = ProductSubCategory::where('product_type_id',1)->get();
         $data['medecineusages'] = MedecineUsage::all();
         return view('backend.medecine.index',$data);
@@ -86,6 +87,17 @@ class MedecineController extends Controller
     public function show(string $id)
     {
         $lastid = Product::findOrFail($id);
+        return $lastid;
+    }
+
+    public function medicineinfoBank(string $id)
+    {
+        $lastid = Medecine::findOrFail($id);
+        return $lastid;
+    }
+
+    public function medicineFromBank(Request $request){
+        $lastid = Medecine::where('name', 'like', '%'.$request->search.'%')->get();
         return $lastid;
     }
 

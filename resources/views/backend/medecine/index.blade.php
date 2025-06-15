@@ -15,7 +15,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Medecine Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='name' placeholder="Medecine Name">
+                                    <input type="text" class="form-control form-control-sm" name='name' placeholder="Medecine Name" required>
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -46,7 +46,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                   <label>Category</label>
-                                  <select class="form-control form-control-sm"  name="product_category_id" id="product_category_id">
+                                  <select class="form-control form-control-sm"  name="product_category_id" id="product_category_id" required>
                                         <option value="" selected disabled>Please select</option>
                                         @foreach ($product_categories as $item )
                                             <option value="{{$item->id}}">{{$item->name_eng}}</option>
@@ -57,11 +57,11 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                   <label>Medicine Type</label>
-                                  <select class="form-control form-control-sm"  name="product_sub_category_id" id="product_sub_category_id">
+                                  <select class="form-control form-control-sm"  name="product_sub_category_id" id="product_sub_category_id" required>
                                     <option value="" selected disabled>Please select</option>
-                                        @foreach ($product_types as $item )
+                                        {{-- @foreach ($product_types as $item )
                                             <option value="{{$item->id}}">{{$item->name_eng}}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                   </select>
                                 </div>
                             </div>
@@ -390,6 +390,26 @@
 
                         $("#product_sub_category_id").empty();
                         $("#product_sub_category_id").append(element);
+                       
+                    }
+                });
+           
+
+        });
+
+        $("#u-product_category_id").on('change',function(e){
+            let id = $("#u-product_category_id").val();
+                $.ajax({
+                    url: "{{url('productsubcategory/listbycategory/')}}/"+id,
+                    success: function (result) {
+                        let element = `<option value="" selected disabled>Please select</option>`;
+                        console.log(result);
+                        result.forEach(x => {
+                            element +=`<option value="${x.id}">${x.name_eng}</option>`;
+                        });
+
+                        $("#u-product_sub_category_id").empty();
+                        $("#u-product_sub_category_id").append(element);
                        
                     }
                 });

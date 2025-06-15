@@ -17,10 +17,16 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->text('generic')->nullable();
             $table->text('strength')->nullable();
-            $table->text('type')->nullable();
             $table->string('use_for')->nullable();
-            $table->string('category',3)->nullable();
+            $table->string("product_category")->nullable();
+            $table->string("product_sub_category")->nullable();
+            $table->integer('product_type_id')->nullable();
+            $table->integer('product_category_id')->nullable();
+            $table->integer('product_sub_category_id')->nullable();
+            $table->integer('medicine_use_for_id')->nullable();
             $table->timestamps();
+
+
         });
     }
 

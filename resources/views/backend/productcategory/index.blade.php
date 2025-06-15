@@ -12,12 +12,6 @@
                     @csrf
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Product Category Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='name_eng' placeholder="Product Category Name" required>
-                                </div>
-                            </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label>Product Type </label>
@@ -27,6 +21,12 @@
                                             <option value="{{$item->id}}">{{$item->name_eng}}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Product Category Name</label>
+                                    <input type="text" class="form-control form-control-sm" name='name_eng' placeholder="Product Category Name" required>
                                 </div>
                             </div>
                         </div>

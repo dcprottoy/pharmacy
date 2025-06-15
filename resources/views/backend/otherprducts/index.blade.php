@@ -14,6 +14,39 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
+                                <label>Product Type</label>
+                                <select class="form-control form-control-sm"  name="product_type_id" id="product_type_id" required>
+                                    <option value="" selected disabled>Please select</option>
+                                        @foreach ($product_types as $item )
+                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                        @endforeach
+                                </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                  <label>Product Category</label>
+                                  <select class="form-control form-control-sm"  name="product_category_id" id="product_category_id" required>
+                                        <option value="" selected disabled>Please select</option>
+                                        {{-- @foreach ($product_categories as $item )
+                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                        @endforeach --}}
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                  <label>Product Sub-Category</label>
+                                  <select class="form-control form-control-sm"  name="product_sub_category_id" id="product_sub_category_id" required>
+                                        <option value="" selected disabled>Please select</option>
+                                        {{-- @foreach ($product_sub_categories as $item )
+                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                        @endforeach --}}
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
                                     <label>Product Name</label>
                                     <input type="text" class="form-control form-control-sm" name='name' placeholder="Product Name">
                                 </div>
@@ -29,40 +62,6 @@
                                             <li class="dropdown-item" >{{$item->name_eng}}</li>
                                         @endforeach
                                     </div>
-                                </div>
-
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                <label>Product Type</label>
-                                <select class="form-control form-control-sm"  name="product_type_id" id="product_type_id">
-                                    <option value="" selected disabled>Please select</option>
-                                        @foreach ($product_types as $item )
-                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
-                                        @endforeach
-                                </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label>Product Category</label>
-                                  <select class="form-control form-control-sm"  name="product_category_id" id="product_category_id">
-                                        <option value="" selected disabled>Please select</option>
-                                        @foreach ($product_categories as $item )
-                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
-                                        @endforeach
-                                  </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label>Product Sub-Category</label>
-                                  <select class="form-control form-control-sm"  name="product_sub_category_id" id="product_sub_category_id">
-                                        <option value="" selected disabled>Please select</option>
-                                        @foreach ($product_sub_categories as $item )
-                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
-                                        @endforeach
-                                  </select>
                                 </div>
                             </div>
                         </div>

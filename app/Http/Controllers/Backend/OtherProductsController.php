@@ -21,9 +21,9 @@ class OtherProductsController extends Controller
     {
         $data['products'] = Product::whereNotIn('product_type_id',[1])->paginate(50);
         $data['manufacturers'] = Manufacturer::all();
-        $data['product_types'] = ProductType::all();
-        $data['product_categories'] = ProductCategory::all();
-        $data['product_sub_categories'] = ProductSubCategory::all();
+        $data['product_types'] = ProductType::whereNotIn('id',[1])->get();
+        $data['product_categories'] = ProductCategory::whereNotIn('product_type_id',[1])->get();
+        $data['product_sub_categories'] = ProductSubCategory::whereNotIn('product_type_id',[1])->get();
         return view('backend.otherprducts.index',$data);
     }
 

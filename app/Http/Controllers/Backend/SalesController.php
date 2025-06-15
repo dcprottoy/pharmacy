@@ -70,13 +70,17 @@ class SalesController extends Controller
 
 
         try {
-            DB::beginTransaction();
 
                 $medecine = Product::find($item_id);
                 $expire_wise = ExpireDateMedecines::where('medecine_id','=',$medecine->id)->where('expiry_date','=',$request->expire_date)->first();
                 $invoice = Invoice::where('invoice_id','=',$request->invoice_id)->first();
+                if($expire_wise->current_qty - $request->quantity < 0){
+                    return response()->json(['error'=>'Stock not available !!']);
+                }
 
+                DB::beginTransaction();
 
+                
                 $invoice_details = new InvoiceDetails();
                 
                 $invoice_details->invoice_id = $invoice->invoice_id;
@@ -130,7 +134,7 @@ class SalesController extends Controller
      */
     public function show(string $id)
     {
-        $stock = MedecineStock::find((int)$id);
+        $stock = Product::find((int)$id);
         $expiryDate = ExpireDateMedecines::where('medecine_id','=',(int)$id)
                         ->where('medecine_id','=',(int)$id)
                         ->where('current_qty','>',0)
@@ -140,60 +144,6 @@ class SalesController extends Controller
         return response()->json(['item'=>$stock,'expiryDates'=>$expiryDate]);
     }
 
-    public function todaySummary()
-    {
-
-        $date = Carbon::now()->format('Y-m-d');
-
-
-        $data['todaystock'] = StockEntryLog::leftJoin('medecine_stocks','stock_entry_logs.medecine_id','=','medecine_stocks.id')
-        ->select('stock_entry_logs.stock_qty','stock_entry_logs.stock_date','medecine_stocks.manufacturer','medecine_stocks.name','medecine_stocks.generic','medecine_stocks.strength','medecine_stocks.type','medecine_stocks.use_for','medecine_stocks.category','medecine_stocks.current_stock' )
-        ->where('stock_entry_logs.stock_date','=',$date)
-        ->get();
-        // return $data;
-        return view('backend.stockmedecine.todaystocksummary',$data);
-
-    }
-
-    public function stockEntrySummary()
-    {
-
-        $date = Carbon::now()->format('Y-m-d');
-
-
-        $data['todaystock'] = StockEntryLog::leftJoin('medecine_stocks','stock_entry_logs.medecine_id','=','medecine_stocks.id')
-        ->select('stock_entry_logs.stock_qty','stock_entry_logs.stock_date','medecine_stocks.manufacturer','medecine_stocks.name','medecine_stocks.generic','medecine_stocks.strength','medecine_stocks.type','medecine_stocks.use_for','medecine_stocks.category','medecine_stocks.current_stock' )
-        ->where('stock_entry_logs.stock_date','=',$date)
-        ->get();
-        // return $data;
-        return view('backend.stockmedecine.stocksummary',$data);
-
-    }
-
-    public function stockEntrySummaryDate(Request $request)
-    {
-
-
-        $validated = Validator::make($request->all(),[
-            'from_date' => 'required',
-            'to_date' => 'required',
-        ]);
-
-        if($validated->fails()){
-            return back()->withErrors($validated)->withInput();
-        }
-        $date = Carbon::now()->format('Y-m-d');
-        $date1 = $request->from_date;
-        $date2 = $request->to_date;
-
-        $data['todaystock'] = StockEntryLog::leftJoin('medecine_stocks','stock_entry_logs.medecine_id','=','medecine_stocks.id')
-        ->select('stock_entry_logs.stock_qty','stock_entry_logs.stock_date','medecine_stocks.manufacturer','medecine_stocks.name','medecine_stocks.generic','medecine_stocks.strength','medecine_stocks.type','medecine_stocks.use_for','medecine_stocks.category','medecine_stocks.current_stock' )
-        ->whereBetween('stock_entry_logs.stock_date',[$date1,$date2])
-        ->get();
-        // return $data;
-        return view('backend.stockmedecine.stocksummary',$data);
-
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -207,15 +157,21 @@ class SalesController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
+    {    
         
         try {
-            DB::beginTransaction();
-
                 $invoice_details = InvoiceDetails::find($id);
                 $medecine = Product::find($invoice_details->product_id);
                 $expire_wise = ExpireDateMedecines::where('medecine_id','=',$medecine->id)->where('expiry_date','=',$invoice_details->expire_date)->first();
                 $invoice = Invoice::where('invoice_id','=',$invoice_details->invoice_id)->first();
+
+                if(((int)$expire_wise->current_qty + (int)$invoice_details->quantity ) - (int)$request->quantity < 0){
+                        return response()->json(['error'=>'Stock not available !!']);
+                }
+
+                DB::beginTransaction();
+
+               
 
 
                 $expire_wise->current_qty = ($expire_wise->current_qty + $invoice_details->quantity ) - $request->quantity;
@@ -319,7 +275,7 @@ class SalesController extends Controller
 
     public function search(Request $request)
     {
-        $lastid = MedecineStock::where('name', 'like', '%'.$request->search.'%')->get();
+        $lastid = Product::where('name', 'like', '%'.$request->search.'%')->get();
         return $lastid;
     }
 

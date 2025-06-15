@@ -66,6 +66,8 @@ overflow-y: scroll;
                             <div class="text-right">
                                 <button type="reset" class="btn btn-sm btn-info" id="mrr_create_new">&nbsp;Create New&nbsp;</button>
                                 <button type="submit" class="btn btn-sm btn-success" id="add-new-mrr">&nbsp;Save&nbsp;</button>
+                                <button type="submit" class="btn btn-sm btn-danger" id="done-mrr">&nbsp;Done&nbsp;</button>
+
                             </div>
                             
                         </div>
@@ -447,7 +449,7 @@ overflow-y: scroll;
 
                                     let element = "";
                                     result.stock.forEach(x=>{
-                                            element += `<tr class="item-select" data-id="${x.id}">
+                                            element += `<tr class="item-select" data-medicine-id="${x.medecine_id}" data-id="${x.id}">
                                                     <td>${x.name}</td>
                                                     <td>${x.manufacture_date}</td>
                                                     <td>${x.expiry_date}</td>
@@ -474,6 +476,10 @@ overflow-y: scroll;
                                             let id = $(this).attr('data-id');
                                             deleteStockEntry(id);
                                         })
+                                        $(".item-select").off('click').on('click',function(e){
+                                            let id = $(this).attr('data-medicine-id');
+                                            setItem(id);
+                                        });
 
                                     
 
@@ -635,7 +641,7 @@ overflow-y: scroll;
                 $.ajax({
                     type: 'put',
                     dataType: "json",
-                    url: "{{url('medecinestock')}}/",
+                    url: "{{url('medicinefrombank')}}/",
                     data:{
                         'search':value,
                         '_token': '{{ csrf_token() }}',
@@ -660,7 +666,7 @@ overflow-y: scroll;
                             $.ajax({
                                 type: 'get',
                                 dataType: "json",
-                                url: "{{url('medecinestock')}}/"+item_id,
+                                url: "{{url('medicineinfobank')}}/"+item_id,
                                 success: function (result) {
                                     console.log(result);
                                     $("#item_name").val(result.name);
@@ -811,44 +817,49 @@ overflow-y: scroll;
         }
 
         function deleteStockEntry(id){
-            $.ajax({
-                type: 'post',
-                url: "{{ url('stockentry') }}/" + id,
-                dataType: "json",
-                data: {
-                    '_token': "{{ csrf_token() }}",
-                    '_method': 'DELETE'
-                },
-                success: function (response) {
-                    console.log(response);
-                    toastr.success('Item Deleted Successfully for ' + response.success.name);
+                $.ajax({
+                    type: 'post',
+                    url: "{{ url('stockentry') }}/" + id,
+                    dataType: "json",
+                    data: {
+                        '_token': "{{ csrf_token() }}",
+                        '_method': 'DELETE'
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        if('error' in response){
+                            toastr.warning(response.message);
+                        }else{
+                            toastr.success('Item Deleted Successfully for ' + response.success.name);
 
-                    // Update fields
-                    $("#item-id").val(response.success.id);
-                    $("#name").val(response.success.name);
-                    $("#stock-location").val(response.success.stock_location);
-                    $("#mrp-rate").val(response.success.mrp_rate);
-                    $("#tp-rate").val(response.success.tp_rate);
-                    $("#stock_per").val(response.success.stock_per);
-                    $("#current-stock").val(response.success.current_stock);
-                    $("#current-stock").attr("data-current-stock", response.success.current_stock);
+                        // Update fields
+                        $("#item-id").val(response.success.id);
+                        $("#name").val(response.success.name);
+                        $("#stock-location").val(response.success.stock_location);
+                        $("#mrp-rate").val(response.success.mrp_rate);
+                        $("#tp-rate").val(response.success.tp_rate);
+                        $("#stock_per").val(response.success.stock_per);
+                        $("#current-stock").val(response.success.current_stock);
+                        $("#current-stock").attr("data-current-stock", response.success.current_stock);
 
-                    // Remove row
-                    $("#stock_qty" + id).closest("tr").remove();
-                },
-                error: function (xhr) {
-                    console.error("Delete failed", xhr.responseText);
-                    toastr.error("Something went wrong while deleting.");
-                }
-            });
+                        // Remove row
+                        $("#stock_qty" + id).closest("tr").remove();
+                        }
+                        
+                    },
+                    error: function (xhr) {
+                        console.error("Delete failed", xhr.responseText);
+                        toastr.error("Something went wrong while deleting.");
+                    }
+                });
+        }
 
-            }
-
+        
         $("#save-btn").on("click",function(e){
             console.log("Prottoy");
             let mrrId = $("#mrr_no").val();
             console.log(typeof(mrrId));
-            // if(mrrId != null & mrrId != undefined && mrrId != ""){
+            if(mrrId != null & mrrId != undefined && mrrId != ""){
                 let itemId = $("#item-id").val();
                 let name = $("#name").val();
                 let stockCell = $("#stock-location").val();
@@ -860,79 +871,137 @@ overflow-y: scroll;
                 let expireDate = $("#expire-date").val();
                 let manufactureDate = $("#manufacture-date").val();
                 console.log({expireDate,manufactureDate});
+                if(itemId == null || itemId == undefined || itemId == ""){
+                    toastr.error("Please Select Item");
+                }else if(stockQuantity == null || stockQuantity == undefined || stockQuantity == "" || stockQuantity == 0){
+                    toastr.error("Please Enter Stock Quantity");
+                }else if(expireDate == null || expireDate == undefined || expireDate == ""){
+                    toastr.error("Please Enter Expire Date");
+                }else if(manufactureDate == null || manufactureDate == undefined || manufactureDate == ""){
+                    toastr.error("Please Enter Manufacture Date");
+                }else{
+                    $.ajax({
+                        type: 'post',
+                        dataType: "json",
+                        url: "{{url('stockentry')}}",
+                        data:{
+                            'item_id':itemId,
+                            'mrr_id':mrrId,
+                            'name':name,
+                            'stock_location':stockCell,
+                            'mrp_rate':mrpRate,
+                            'tp_rate':tpRate,
+                            'stock_per':stockPer,
+                            'current_stock':currentStock,
+                            'stock_quantity':stockQuantity,
+                            'expire_date':expireDate,
+                            'manufacture_date':manufactureDate,
+                            '_token': '{{ csrf_token() }}',
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            toastr.success('Item Updated Successfully for '+response.success.name);
+                                $("#item-id").val(response.success.id);
+                                $("#name").val(response.success.name);
+                                $("#stock-location").val(response.success.stock_location);
+                                $("#mrp-rate").val(response.success.mrp_rate);
+                                $("#tp-rate").val(response.success.tp_rate);
+                                $("#stock_per").val(response.success.stock_per);
+                                $("#current-stock").val(response.success.current_stock);
+                                $("#current-stock").attr("data-current-stock",response.success.current_stock);
+                                $("#stock-quantity").val(0);
+                                $("#expire-date").val("");
+                                $("#manufacture-date").val("");
+                                let element = `<tr class="item-select" data-medicine-id="${response.expiry_log.medecine_id}" data-id="${response.expiry_log.id}">
+                                            <td>${response.success.name}</td>
+                                            <td>${response.expiry_log.manufacture_date}</td>
+                                            <td>${response.expiry_log.expiry_date}</td>
+                                            <td>
+                                                <input class="form-control form-control-sm w-100" type="text" id="stock_qty${response.expiry_log.id}"" name="stock_per" value="${response.expiry_log.stock_qty}">
+                                            </td>
+                                            <td class="project-actions text-center">
+                                                <a class="btn btn-info btn-sm update" data-id="${response.expiry_log.id}">
+                                                    <i style="font-size:10px;" class="fas fa-pencil-alt"></i>
+                                                </a>
+                                                <a class="btn btn-danger btn-sm delete" href="#" data-id="${response.expiry_log.id}" data-toggle="modal" data-target="#modal-default">
+                                                    <i style="font-size:10px;" class="fas fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>`
+                                $("#medecine-item-list").append(element);
+                                $('.update').off('click').on('click',function(e){
+                                    let id = $(this).attr('data-id');
+                                    updateStockEntry(id);
+                                })
+                                $('.delete').off('click').on('click',function(e){
+                                    let id = $(this).attr('data-id');
+                                    deleteStockEntry(id);
+                                })
+
+                        }
+                    });
+                }
                 
-                $.ajax({
-                    type: 'post',
-                    dataType: "json",
-                    url: "{{url('stockentry')}}",
-                    data:{
-                        'item_id':itemId,
-                        'mrr_id':mrrId,
-                        'name':name,
-                        'stock_location':stockCell,
-                        'mrp_rate':mrpRate,
-                        'tp_rate':tpRate,
-                        'stock_per':stockPer,
-                        'current_stock':currentStock,
-                        'stock_quantity':stockQuantity,
-                        'expire_date':expireDate,
-                        'manufacture_date':manufactureDate,
-                        '_token': '{{ csrf_token() }}',
-                    },
-                    success: function (response) {
-                        console.log(response);
-                        toastr.success('Item Updated Successfully for '+response.success.name);
-                            $("#item-id").val(response.success.id);
-                            $("#name").val(response.success.name);
-                            $("#stock-location").val(response.success.stock_location);
-                            $("#mrp-rate").val(response.success.mrp_rate);
-                            $("#tp-rate").val(response.success.tp_rate);
-                            $("#stock_per").val(response.success.stock_per);
-                            $("#current-stock").val(response.success.current_stock);
-                            $("#current-stock").attr("data-current-stock",response.success.current_stock);
-                            $("#stock-quantity").val(0);
-                            $("#expire-date").val("");
-                            $("#manufacture-date").val("");
-                             let element = `<tr class="item-select" data-id="${response.expiry_log.id}">
-                                        <td>${response.success.name}</td>
-                                        <td>${response.expiry_log.manufacture_date}</td>
-                                        <td>${response.expiry_log.expiry_date}</td>
-                                        <td>
-                                            <input class="form-control form-control-sm w-100" type="text" id="stock_qty${response.expiry_log.id}"" name="stock_per" value="${response.expiry_log.stock_qty}">
-                                        </td>
-                                        <td class="project-actions text-center">
-                                            <a class="btn btn-info btn-sm update" data-id="${response.expiry_log.id}">
-                                                <i style="font-size:10px;" class="fas fa-pencil-alt"></i>
-                                            </a>
-                                            <a class="btn btn-danger btn-sm delete" href="#" data-id="${response.expiry_log.id}" data-toggle="modal" data-target="#modal-default">
-                                                <i style="font-size:10px;" class="fas fa-trash"></i>
-                                            </a>
-                                        </td>
-                                    </tr>`
-                            $("#medecine-item-list").append(element);
-                            $('.update').off('click').on('click',function(e){
-                                let id = $(this).attr('data-id');
-                                updateStockEntry(id);
-                            })
-                            $('.delete').off('click').on('click',function(e){
-                                let id = $(this).attr('data-id');
-                                deleteStockEntry(id);
-                            })
-
-                    }
-                });
 
 
-            // }else{
-                // toastr.error('Must Have Mrr Number');
-            // }
-            
+            }else{
+                toastr.error('Must Have Mrr Number');
+            }
+        
         });
 
+        $("#done-mrr").on('click',function(e){
+             let mrrId = $("#mrr_no").val();
+            if(mrrId != null & mrrId != undefined && mrrId != ""){
+                 $.ajax({
+                        type: 'put',
+                        dataType: "json",
+                        url: "{{url('mrr')}}/"+mrrId,
+                        data:{
+                            'approved':1,
+                            '_token': '{{ csrf_token() }}',
+                        },
+                        success: function (result) {
+                                    console.log(result);
+                                    $("#mrr_no").val(result.mrr.mrr_id);
+                                    $("#supplier_name").val(result.mrr.supplier_name);
+                                    $("#challan_no").val(result.mrr.challan_no);
+                                    $("#medecine-item-list").empty();
+
+                                    let element = "";
+                                    result.stock.forEach(x=>{
+                                            element += `<tr class="item-select" data-medicine-id="${x.medecine_id}" data-id="${x.id}">
+                                                    <td>${x.name}</td>
+                                                    <td>${x.manufacture_date}</td>
+                                                    <td>${x.expiry_date}</td>
+                                                    <td>
+                                                       ${x.stock_qty}
+                                                    </td>
+                                                    <td class="project-actions text-center">
+                                                        <span style:"text-color:red;">Not Changable</span>
+                                                    </td>
+                                                </tr>`
+                                        
+                                        })
+                                        $("#medecine-item-list").append(element);
+                                        $(".item-select").off('click').on('click',function(e){
+                                            let id = $(this).attr('data-medicine-id');
+                                            setItem(id);
+                                        });
+
+                                    $("#mrr_dropdown-menu").empty();
+
+                                    $("#add-new-mrr").hide();
+                                }
+                    });
+            }else{
+                toastr.error('Must Have Mrr Number');
+            }
+        });
         
 
         $(".item-select").on('click',function(e){
-            let id = $(this).attr('data-id');
+            let id = $(this).attr('data-medicine-id');
             setItem(id);
         });
 
@@ -998,7 +1067,7 @@ overflow-y: scroll;
                     $('#modal-default-add').modal('hide');
 
                     $(".item-select").on('click',function(e){
-                        let id = $(this).attr('data-id');
+                        let id = $(this).attr('data-medicine-id');
                         setItem(id);
                     });
 
@@ -1019,7 +1088,7 @@ overflow-y: scroll;
             $.ajax({
                     type: 'put',
                     dataType: "json",
-                    url: "{{url('medecinestock')}}/",
+                    url: "{{url('medicinefrombank')}}/",
                     data:{
                         'search':ch_data,
                         '_token': '{{ csrf_token() }}',

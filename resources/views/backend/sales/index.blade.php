@@ -68,10 +68,10 @@ overflow-y: scroll;
                     <div class="card">
                         <div class="card-header">
                             <div class="form-group">
-                                <label>Search MRR NO.</label>
-                                <input type="text" class="form-control form-control-sm" name='mrr_no_search' id="mrr_no_search" placeholder="MRR NO">
+                                <label>Search Invoice NO.</label>
+                                <input type="text" class="form-control form-control-sm" name='invoice_no_search' id="invoice_no_search" placeholder="Invoice NO">
                             </div>
-                            <div class="dropdown-menu w-100" style="max-height:350px;overflow-y:scroll;" id="mrr_dropdown-menu" aria-labelledby="dLabel">
+                            <div class="dropdown-menu w-100" style="max-height:350px;overflow-y:scroll;" id="invoice_dropdown-menu" aria-labelledby="dLabel">
                                
                             </div>
                         </div>
@@ -153,7 +153,7 @@ overflow-y: scroll;
                                 </table>
                                 <div class="card-footer text-right">
                                     <button type="reset" class="btn btn-sm btn-danger float-left">&nbsp;Clear&nbsp;</button>
-                                    <button type="submit" class="btn btn-sm btn-success">&nbsp;Save&nbsp;</button>
+                                    <button type="submit" class="btn btn-sm btn-success" id="bill-final-save">&nbsp;Save&nbsp;</button>
                                 </div>
                             </div>
                         </div>
@@ -286,8 +286,15 @@ overflow-y: scroll;
                     $("#invoice_no").val(response.invoice_id);
                     $("#customer_name").val(response.customer_name);
                     $("#contact_no").val(response.contact_no);
-                    toastr.success('MRR Created Successfully');
-                    $("#add-new-mrr").hide();
+                    $("#bill-dis-amt").val(0);
+                    $("#bill-amount").val(0);
+                    $("#bill-paid-amount").val(0);
+                    $("#bill-in-per").val(0);
+                    $("#bill-total-amount").val(0);
+                    $("#bill-due-amount").val(0);
+                    toastr.success('Invoice Created Successfully');
+                    $("#add-new-invoice").hide();
+                    $("#bill-final-save").show();
                     $("#medecine-item-list").empty();
 
                 }
@@ -296,13 +303,13 @@ overflow-y: scroll;
         
         //Search Mrr No. & Select
 
-        $("#mrr_no_search").on('keyup',function(){
+        $("#invoice_no_search").on('keyup',function(){
             var value = $(this).val().toLowerCase();
             console.log("Prottoy");
             $.ajax({
                     type: 'put',
                     dataType: "json",
-                    url: "{{url('mrr')}}/",
+                    url: "{{url('invoice')}}/",
                     data:{
                         'search':value,
                         '_token': '{{ csrf_token() }}',
@@ -311,85 +318,110 @@ overflow-y: scroll;
                         console.log(result);
                         let element = "";
                         result.forEach(x =>{
-                                element += `<li class="dropdown-item" >${x.mrr_id}</li>`;
+                                element += `<li class="dropdown-item" >${x.invoice_id}</li>`;
                         });
-                        $("#mrr_dropdown-menu").empty();
-                        $("#mrr_dropdown-menu").append(element);
-                        $("#mrr_dropdown-menu li").on('click',function(e){
-                            $("#mrr_no_search").val('');
-                            let mrr_no = $(this).text();
+                        $("#invoice_dropdown-menu").empty();
+                        $("#invoice_dropdown-menu").append(element);
+                        $("#invoice_dropdown-menu li").on('click',function(e){
+                            $("#invoice_no_search").val('');
+                            let invoice_no = $(this).text();
                             $.ajax({
                                 type: 'get',
                                 dataType: "json",
-                                url: "{{url('mrr')}}/"+mrr_no,
-                                success: function (result) {
-                                    console.log(result);
-                                    $("#mrr_no").val(result.mrr.mrr_id);
-                                    $("#supplier_name").val(result.mrr.supplier_name);
-                                    $("#challan_no").val(result.mrr.challan_no);
-                                    $("#medecine-item-list").empty();
-
-                                    let element = "";
-                                    result.stock.forEach(x=>{
+                                url: "{{url('invoice')}}/"+invoice_no,
+                                success: function (response) {
+                                    console.log(response);
+                                    $("#invoice_no").val(response.invoice.invoice_id);
+                                    $("#customer_name").val(response.invoice.customer_name);
+                                    $("#contact_no").val(response.invoice.contact_no);
+                                    $("#bill-dis-amt").val(response.invoice.discount_amount);
+                                    $("#bill-amount").val(response.invoice.total_amount);
+                                    $("#bill-paid-amount").val(response.invoice.paid_amount);
+                                    $("#bill-in-per").val(response.invoice.discount_percent);
+                                    $("#bill-total-amount").val(response.invoice.payable_amount);
+                                    $("#bill-due-amount").val(response.invoice.due_amount);
+                                    // toastr.success('Item Updated Successfully for '+response.success.name);
+                                    let element ="";
+                                    response.invoice_details.forEach(x =>{
                                             element += `<tr class="item-select" data-id="${x.id}">
-                                                    <td>${x.name}</td>
-                                                    <td>
-                                                        <input class="form-control form-control-sm w-100" type="text" id="mfg_date${x.id}"" name="stock_per" value="${x.manufacture_date}">
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control form-control-sm w-100" type="text" id="expire_date${x.id}"" name="stock_per" value="${x.expiry_date}">
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control form-control-sm w-100" type="text" id="stock_qty${x.id}"" name="stock_per" value="${x.stock_qty}">
-                                                    </td>
-                                                    <td class="project-actions text-center">
-                                                        <a class="btn btn-info btn-sm update" data-id="${x.id}">
-                                                            <i style="font-size:10px;" class="fas fa-pencil-alt"></i>
-                                                        </a>
-                                                        <a class="btn btn-danger btn-sm delete" href="#" data-id="${x.id}" data-toggle="modal" data-target="#modal-default">
-                                                            <i style="font-size:10px;" class="fas fa-trash"></i>
-                                                        </a>
-                                                    </td>
-                                                </tr>`
-                                        
+                                                <td>${x.product_name}</td>
+                                                <td>${x.expire_date}</td>
+                                                <td>
+                                                    <input class="form-control form-control-sm w-100" type="text" id="mrp_price${x.id}" name="mrp_price" value="${x.mrp_price}" readonly>
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm w-100 inv_dtls_qnty" type="text" id="quantity${x.id}" name="quantity" value="${x.quantity}">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm w-100" type="text" id="price${x.id}" name="price" value="${x.price}" readonly>
+                                                </td><td>
+                                                    <input class="form-control form-control-sm w-100 disc-cal-per" type="text" id="discount_percent${x.id}" name="discount_percent" value="${x.discount_percent}">
+                                                </td><td>
+                                                    <input class="form-control form-control-sm w-100 disc-cal-amt" type="text" id="discount_amount${x.id}" name="discount_amount" value="${x.discount_amount}">
+                                                </td><td>
+                                                    <input class="form-control form-control-sm w-100" type="text" id="final_price${x.id}" name="final_price" value="${x.final_price}" readonly>
+                                                </td>
+                                                <td class="project-actions text-center">
+                                                    <a class="btn btn-info btn-sm update" data-id="${x.id}">
+                                                        <i style="font-size:10px;" class="fas fa-pencil-alt"></i>
+                                                    </a>
+                                                    <a class="btn btn-danger btn-sm delete" href="#" data-id="${x.id}" data-toggle="modal" data-target="#modal-default">
+                                                        <i style="font-size:10px;" class="fas fa-trash"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>`
                                         })
+                                        $("#medecine-item-list").empty();
                                         $("#medecine-item-list").append(element);
-                                        $('.update').off('click').on('click',function(e){
-                                            let id = $(this).attr('data-id');
-                                            updateStockEntry(id);
-                                        })
                                         $('.delete').off('click').on('click',function(e){
                                             let id = $(this).attr('data-id');
-                                            deleteStockEntry(id);
-                                        })
+                                            deleteSaleEntry(id);
+                                        });
+                                        $('.update').off('click').on('click',function(e){
+                                            let id = $(this).attr('data-id');
+                                            updateSaleEntry(id);
+                                        });
+                                        $(".inv_dtls_qnty").off('keyup').on('keyup',function(e){ 
+                                            let id = $(this).closest("tr").attr('data-id');
+                                            calculateInvoiceDetails(id);
+                                        });
+                                        $(".disc-cal-per").off('keyup').on('keyup',function(e){
+                                            let id = $(this).closest("tr").attr('data-id');
+                                            InvDetailsDisAmtCalc(id);
+                                        });
+                                        $(".disc-cal-amt").off('keyup').on('keyup',function(e){
+                                            let id = $(this).closest("tr").attr('data-id');
+                                            InvDetailsDisPerCalc(id);
+                                        });
+                                                
 
-                                    
+                                                $("#add-new-invoice").hide();
+                                                $("#bill-final-save").show();
 
-                                    $("#add-new-mrr").hide();
-                                }
-                            });
-                            $("#mrr_dropdown-menu").hide();
+                                            }
+                                        });
+                            $("#invoice_dropdown-menu").hide();
                         });
-                        $('#mrr_dropdown-menu li').on('mouseenter', function() {
+                        $('#invoice_dropdown-menu li').on('mouseenter', function() {
                             $(this).css('background-color', 'lightgreen');
                         });
 
-                        $('#mrr_dropdown-menu li').on('mouseleave', function() {
+                        $('#invoice_dropdown-menu li').on('mouseleave', function() {
                             $(this).css('background-color', 'white');
                         });
                     }
                 });
-            $("#mrr_dropdown-menu").show();
+            $("#invoice_dropdown-menu").show();
          })
          
         
-        $("#mrr_dropdown-menu li").on('click',function(e){
-            $("#mrr_no_search").val('');
-            let mrr_no = $(this).text();
+        $("#invoice_dropdown-menu li").on('click',function(e){
+            $("#invoice_no_search").val('');
+            let invoice_no = $(this).text();
             $.ajax({
                 type: 'get',
                 dataType: "json",
-                url: "{{url('mrr')}}/"+mrr_no,
+                url: "{{url('invoice')}}/"+invoice_no,
                 success: function (result) {
                     console.log(result);
                     
@@ -399,25 +431,25 @@ overflow-y: scroll;
             
             $("#mrr_dropdown-menu").hide();
         });
-        $("#mrr_no_search").on('focusout',function(){
-            $("#mrr_dropdown-menu").fadeOut()
+        $("#invoice_no_search").on('focusout',function(){
+            $("#invoice_dropdown-menu").fadeOut()
         })
-        $("#mrr_no_search").on('focusin',function(){
+        $("#invoice_no_search").on('focusin',function(){
             var value = $(this).val().toLowerCase();
             let result = false;
-            $("#mrr_dropdown-menu li").filter(function() {
+            $("#invoice_dropdown-menu li").filter(function() {
                 if(!result) result = $(this).text().toLowerCase().indexOf(value) > -1;
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             });
             console.log(result);
-            if(result) $("#mrr_dropdown-menu").show();
-            else $("#mrr_dropdown-menu").hide();
+            if(result) $("#invoice_dropdown-menu").show();
+            else $("#invoice_dropdown-menu").hide();
 
-            $('#mrr_dropdown-menu li').on('mouseenter', function() {
+            $('#invoice_dropdown-menu li').on('mouseenter', function() {
                 $(this).css('background-color', 'lightgreen');
             });
 
-            $('#mrr_dropdown-menu li').on('mouseleave', function() {
+            $('#invoice_dropdown-menu li').on('mouseleave', function() {
                 $(this).css('background-color', 'white');
             });
         
@@ -632,6 +664,39 @@ overflow-y: scroll;
             calculateInvoiceDetails(id);
 
         }
+
+        $("#bill-final-save").on('click',function(e){
+            e.preventDefault();
+            let invoice_no = $('#invoice_no').val();
+            let billAmount =  $("#bill-amount").val();
+            let discountAmount =  $("#bill-dis-amt").val();
+            let discountPer =  $("#bill-in-per").val();
+            let finalAmount =  $("#bill-total-amount").val();
+            let paidAmount =  $("#bill-paid-amount").val();
+            let dueAmount =  $("#bill-due-amount").val();
+            if(invoice_no == "" || invoice_no == null || invoice_no == undefined){
+                toastr.error('Please Enter Invoice No');
+            }else{
+                $.ajax({
+                    type: 'put',
+                    dataType: "json",
+                    url: "{{ url('invoice') }}/"+invoice_no,
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        'total_amount':billAmount,
+                        'discount_amount':discountAmount,
+                        'discount_percent':discountPer,
+                        'payable_amount':finalAmount,
+                        'paid_amount':paidAmount,
+                        'due_amount':dueAmount,
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $("#bill-final-save").hide();
+                    }
+                });
+            }
+        })
        
 
         //Sale Entry
@@ -674,7 +739,7 @@ overflow-y: scroll;
                         console.log(response);
                         $("#bill-dis-amt").val(response.invoice.discount_amount);
                         $("#bill-amount").val(response.invoice.total_amount);
-                        $("#bill_paid_amount").val(response.invoice.paid_amount);
+                        $("#bill-paid-amount").val(response.invoice.paid_amount);
                         $("#bill-in-per").val(response.invoice.discount_percent);
                         $("#bill-total-amount").val(response.invoice.payable_amount);
                         $("#bill-due-amount").val(response.invoice.due_amount);
@@ -799,7 +864,7 @@ overflow-y: scroll;
                     $('#final_price'+id).val(response.invoice_details.final_price);
                     $("#bill-dis-amt").val(response.invoice.discount_amount);
                     $("#bill-amount").val(response.invoice.total_amount);
-                    $("#bill_paid_amount").val(response.invoice.paid_amount);
+                    $("#bill-paid-amount").val(response.invoice.paid_amount);
                     $("#bill-in-per").val(response.invoice.discount_percent);
                     $("#bill-total-amount").val(response.invoice.payable_amount);
                     $("#bill-due-amount").val(response.invoice.due_amount);
@@ -822,7 +887,7 @@ overflow-y: scroll;
                         // Update fields
                         $("#bill-dis-amt").val(response.invoice.discount_amount);
                         $("#bill-amount").val(response.invoice.total_amount);
-                        $("#bill_paid_amount").val(response.invoice.paid_amount);
+                        $("#bill-paid-amount").val(response.invoice.paid_amount);
                         $("#bill-in-per").val(response.invoice.discount_percent);
                         $("#bill-total-amount").val(response.invoice.payable_amount);
                         $("#bill-due-amount").val(response.invoice.due_amount);
