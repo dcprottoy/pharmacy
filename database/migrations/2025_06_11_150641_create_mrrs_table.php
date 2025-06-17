@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->boolean('approved')->nullable()->default(false);
+            $table->boolean('done')->nullable()->default(false);
             $table->boolean('paid_status')->nullable()->default(false);
             $table->timestamps();
         });

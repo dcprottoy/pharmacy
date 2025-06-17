@@ -63,6 +63,10 @@ class StockEntryController extends Controller
         }
 
         $item_id = (int)$request->item_id;
+        $mrr_status = Mrr::where('mrr_id','=',$request->mrr_id)->first();
+        if($mrr_status->status == 1){
+            return response()->json(['error'=>'Mrr already approved !!']);
+        }
         try {
             DB::beginTransaction();
             $medecine = Product::find($item_id);

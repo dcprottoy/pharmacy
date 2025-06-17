@@ -15,7 +15,7 @@
                             <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Medecine Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='name' placeholder="Medecine Name" required>
+                                    <input type="text" class="form-control form-control-sm" name='name' placeholder="Medecine Name" >
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -31,41 +31,75 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-2">
                                 <div class="form-group">
-                                    <label>Generic Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='generic' placeholder="Generic Name">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Strength Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='strength' placeholder="Strength">
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label>Category</label>
-                                  <select class="form-control form-control-sm"  name="product_category_id" id="product_category_id" required>
-                                        <option value="" selected disabled>Please select</option>
-                                        @foreach ($product_categories as $item )
+                                  <label>Product Type</label>
+                                  <select class="form-control form-control-sm"  name="product_type_id" id="product_type_id" >
+                                    <option value="" selected disabled>Please select</option>
+                                        @foreach ($product_types as $item )
                                             <option value="{{$item->id}}">{{$item->name_eng}}</option>
                                         @endforeach
                                   </select>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-2">
                                 <div class="form-group">
-                                  <label>Medicine Type</label>
-                                  <select class="form-control form-control-sm"  name="product_sub_category_id" id="product_sub_category_id" required>
-                                    <option value="" selected disabled>Please select</option>
-                                        {{-- @foreach ($product_types as $item )
+                                  <label>Category</label>
+                                  <select class="form-control form-control-sm"  name="product_category_id" id="product_category_id" >
+                                        <option value="" selected disabled>Please select</option>
+                                        {{-- @foreach ($product_categories as $item )
                                             <option value="{{$item->id}}">{{$item->name_eng}}</option>
                                         @endforeach --}}
                                   </select>
                                 </div>
                             </div>
                             <div class="col-sm-4">
+                                <div class="form-group">
+                                  <label>Sub Category</label>
+                                  <select class="form-control form-control-sm"  name="product_sub_category_id" id="product_sub_category_id" >
+                                        <option value="" selected disabled>Please select</option>
+                                        {{-- @foreach ($product_categories as $item )
+                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                        @endforeach --}}
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                  <label>Store Location</label>
+                                  <select class="form-control form-control-sm"  name="stock_location_id" id="stock_location">
+                                        <option value="" selected disabled>Please select</option>
+                                        {{-- @foreach ($store_locations as $item )
+                                            <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                        @endforeach --}}
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>MRP Rate</label>
+                                    <input type="text" class="form-control form-control-sm" name='mrp_rate' placeholder="MRP Rate" >
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>TP Rate</label>
+                                    <input type="text" class="form-control form-control-sm" name='tp_rate' placeholder="TP Rate" >
+                                </div>
+                            </div>
+                            <div class="col-sm-4 show-hide" style="display: none;">
+                                <div class="form-group">
+                                    <label>Generic Name</label>
+                                    <input type="text" class="form-control form-control-sm" name='generic' id='generic' placeholder="Generic Name">
+                                </div>
+                            </div>
+                            <div class="col-sm-4  show-hide" style="display: none;">
+                                <div class="form-group">
+                                    <label>Strength Name</label>
+                                    <input type="text" class="form-control form-control-sm" name='strength' id='strength' placeholder="Strength">
+                                </div>
+                            </div>
+                            <div class="col-sm-4 show-hide" style="display: none;">
                                 <div class="form-group">
                                   <label>Use For</label>
                                   <select class="form-control form-control-sm"  name="medicine_use_for_id" id="use_for">
@@ -100,15 +134,10 @@
                     <table class="table table-sm table-striped">
                         <thead>
                             <tr>
-                            <th style="width: 5%">
-                                SL
-                            </th>
                             <th style="width: 25%" class="text-center">
                                 Mdecine Name
                             </th>
-                            <th style="width: 20%" class="text-center">
-                                Manufacturer
-                            </th><th style="width: 10%" class="text-center">
+                            <th style="width: 10%" class="text-center">
                                 Generic
                             </th>
                             <th style="width: 10%" class="text-center">
@@ -124,7 +153,16 @@
                             <th style="width: 10%" class="text-center">
                                Category
                             </th>
-                            <th class="text-center" style="width: 25%">
+                            <th style="width: 10%" class="text-center">
+                                MRP Rate
+                            </th>
+                            <th style="width: 10%" class="text-center">
+                                TP Rate
+                            </th>
+                            <th style="width: 10%" class="text-center">
+                                Store Location
+                            </th>
+                            <th class="text-center" style="width: 10%">
                                 Action
                             </th>
                             </tr>
@@ -132,32 +170,37 @@
                         <tbody>
                         @foreach($medecines as $item)
                             <tr>
-                                <td>
-                                   #
-                                </td>
                                 <td class="text-center" style="font-weight:bold;">
-                                    {!! $item->name !!}
+                                    <blockquote class="blockquote m-0">
+                                        <p class="mb-0">{!! $item->name !!}</p>
+                                        <footer class="blockquote-footer">{!! $item->manufacturer !!}</footer>
+                                    </blockquote>
                                 </td>
-                                <td class="text-center" style="font-weight:bold;">
-                                    {!! $item->manufacturer !!}
-                                </td>
-                                <td class="text-center" style="font-weight:bold;">
+                                <td class="text-center align-middle " style="font-weight:bold;">
                                     {!! $item->generic !!}
                                 </td>
-                                <td class="text-center" style="font-weight:bold;">
+                                <td class="text-center align-middle " style="font-weight:bold;">
                                     {!! $item->strength !!}
                                 </td>
-                                <td class="text-center" style="font-weight:bold;">
+                                <td class="text-center align-middle " style="font-weight:bold;">
                                     {!! $item->product_sub_category !!}
                                 </td>
-                                <td class="text-center" style="font-weight:bold;">
+                                <td class="text-center align-middle " style="font-weight:bold;">
                                     {!! $item->use_for !!}
                                 </td>
-                                <td class="text-center" style="font-weight:bold;">
+                                <td class="text-center align-middle " style="font-weight:bold;">
                                     {!! $item->product_category !!}
                                 </td>
-                                
-                                <td class="project-actions text-center">
+                                <td class="text-center align-middle " style="font-weight:bold;">
+                                    {!! $item->mrp_rate !!}
+                                </td>
+                                <td class="text-center align-middle " style="font-weight:bold;">
+                                    {!! $item->tp_rate !!}
+                                </td>
+                                <td class="text-center align-middle " style="font-weight:bold;">
+                                    {!! $item->stock_location !!}
+                                </td>
+                                <td class="project-actions text-center align-middle ">
                                     <a class="btn btn-info btn-sm update p-1" data-id="{{$item->id}}">
                                         <i style="font-size:10px;" class="fas fa-pencil-alt">
                                         </i>
@@ -235,7 +278,6 @@
                                                     @endforeach
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
@@ -300,6 +342,60 @@
 @push('scripts')
 <script>
     $(document).ready(function(){
+
+
+        // $('#store_location').select2({
+        //     theme: 'bootstrap4',
+        //     });
+
+        $('#stock_location').select2({
+            placeholder: 'Search for a Product',
+            minimumInputLength: 2, // API call triggers after 2 characters
+            ajax: {
+                type: 'put',
+                url: 'stock_locations', // Your API endpoint
+                dataType: 'json',
+                cache: true, // Enable caching
+                delay: 250, // delay in ms before request
+                data: function (params) {
+                    return {
+                        'q': params.term,
+                        '_token': "{{ csrf_token() }}" // search term
+                    };
+                },
+                processResults: function (data) {
+                    // Map your API response to { id, text }
+                    return {
+                        results: data.map(item => ({
+                            id: item.id,
+                            text: item.name_eng
+                        }))
+                    };
+                },
+                cache: true
+            }
+        });
+
+        
+        // $('#stock_location').select2('open');
+        setTimeout(function() {
+            $('#stock_location').select2('open');
+            }, 200);
+
+    $('#stock_location').on('select2:open', function () {
+            let searchField = document.querySelector('.select2-container--open .select2-search__field');
+            if (searchField) {
+                searchField.focus();
+            }
+        });
+
+    setTimeout(() => {
+        $('#stock_location').select2('close');
+    }, 5000);
+
+
+
+
         $(".delete").on('click',function(e){
             let id = $(this).attr("data-id");
             let link = "{{url('medecine/')}}/"+id;
@@ -377,6 +473,34 @@
             });
         })
 
+        $("#product_type_id").on('change',function(e){
+                let id = $("#product_type_id").val();
+                console.log(id)
+                if(id == 1){
+                    $('.show-hide').toggle();
+                }else{
+                    $('.show-hide').hide();
+                }
+                    
+               
+                    $.ajax({
+                        url: "{{url('productcategory/listbytype/')}}/"+id,
+                        success: function (result) {
+                            let element = `<option value="" selected disabled>Please select</option>`;
+                            console.log(result);
+                            result.forEach(x => {
+                                element +=`<option value="${x.id}">${x.name_eng}</option>`;
+                            });
+
+                            $("#product_category_id").empty();
+                            $("#product_category_id").append(element);
+                        
+                        }
+                    });
+            });
+
+        
+
         $("#product_category_id").on('change',function(e){
             let id = $("#product_category_id").val();
                 $.ajax({
@@ -390,11 +514,8 @@
 
                         $("#product_sub_category_id").empty();
                         $("#product_sub_category_id").append(element);
-                       
                     }
                 });
-           
-
         });
 
         $("#u-product_category_id").on('change',function(e){
@@ -439,7 +560,6 @@
             });
 
         })
-
         $("#u-dropdown-menu li").on('click',function(e){
             $("#u-manufacturer").val($(this).text());
             $("#u-dropdown-menu").hide();
@@ -447,7 +567,6 @@
         $("#u-manufacturer").on('focusout',function(){
             $("#u-dropdown-menu").fadeOut()
         })
-
         $("#u-manufacturer").on('focusin',function(){
             var value = $(this).val().toLowerCase();
             let result = false;

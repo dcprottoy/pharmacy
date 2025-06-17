@@ -51,6 +51,7 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
 
 
 
+    Route::put('/stock_locations',[StoreLocationController::class,'search'])->name('store_locations.search');
 
     Route::resource('/storelocation',StoreLocationController::class)->names([
         'index'=>'storelocation.home',

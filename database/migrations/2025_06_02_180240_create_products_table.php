@@ -40,6 +40,8 @@ return new class extends Migration
             $table->integer('product_category_id')->default(0);
             $table->integer('product_sub_category_id')->default(0);
             $table->integer('medicine_use_for_id')->default(0);
+            $table->integer('stock_location_id')->default(0);
+
 
             $table->timestamps();
         });

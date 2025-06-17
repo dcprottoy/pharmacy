@@ -26,6 +26,12 @@ class ProductTypeController extends Controller
 
     }
 
+
+      public function subList(string $id)
+    {
+        $data = ProductType::where('product_type_id','=',(int)$id)->get();
+        return $data;
+    }
     /**
      * Store a newly created resource in storage.
      */

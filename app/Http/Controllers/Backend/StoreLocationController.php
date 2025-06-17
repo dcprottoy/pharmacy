@@ -60,6 +60,12 @@ class StoreLocationController extends Controller
         return $lastid;
     }
 
+
+    public function search(Request $request){
+        $lastid = StoreLocation::where('name_eng', 'like', '%'.$request->q.'%')->get();
+        return response()->json($lastid);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

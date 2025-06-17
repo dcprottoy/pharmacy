@@ -13,6 +13,8 @@ use App\Models\Backend\ProductSubCategory;
 use App\Models\Backend\MedecineUsage;
 use App\Models\Backend\ExpireDateMedecines;
 use App\Models\Backend\Medecine;
+use App\Models\Backend\StoreLocation;
+
 
 
 class MedecineController extends Controller
@@ -22,11 +24,13 @@ class MedecineController extends Controller
      */
     public function index()
     {
-        $data['medecines'] = Product::where('product_type_id',1)->paginate(50);
+        $data['medecines'] = Product::paginate(50);
         $data['manufacturers'] = Manufacturer::all();
-        $data['product_categories'] = ProductCategory::where('product_type_id',1)->get();
-        $data['product_types'] = ProductSubCategory::where('product_type_id',1)->get();
+        $data['product_types'] = ProductType::get();
+        $data['product_categories'] = ProductCategory::get();
+        $data['product_sub_categories'] = ProductSubCategory::get();
         $data['medecineusages'] = MedecineUsage::all();
+        $data['store_locations'] = StoreLocation::all();
         return view('backend.medecine.index',$data);
     }
 
@@ -47,29 +51,57 @@ class MedecineController extends Controller
             'name' => 'required',
         ]);
         // return response()->json($request->all());
+
+
+
         if($validated->fails()){
             return back()->with('error','Something went wrong !!')->withInput();
             // return back()->withErrors($validated)->withInput();
         }else{
+
             $isExists = Product::where('name','=',$request->name)->first();
             if($isExists){
                 return response()->json(['existed'=>$isExists]);
             }
             $inputs = $request->all();
-            $manufacturer = Manufacturer::where('name_eng','=',$inputs['manufacturer'])->first();
-            if($manufacturer){
-               $inputs['manufacturer_id'] = $manufacturer->id;
-            }else{
-                $manufacturer = new Manufacturer();
-                $manufacturer->name_eng = $inputs['manufacturer'];
-                $manufacturer->save();
+
+            if($request->has('manufacturer') && $request->has('manufacturer') != 'null')
+            {
+                $manufacturer = Manufacturer::where('name_eng','=',$inputs['manufacturer'])->first();
+                if($manufacturer){
                 $inputs['manufacturer_id'] = $manufacturer->id;
+                }else{
+                    $manufacturer = new Manufacturer();
+                    $manufacturer->name_eng = $inputs['manufacturer'];
+                    $manufacturer->save();
+                    $inputs['manufacturer_id'] = $manufacturer->id;
+                }
             }
-            $inputs['product_type_id'] = 1;
-            $inputs['product_type'] = ProductType::find(1)->name_eng;
-            $inputs['product_category'] = ProductCategory::find($inputs['product_category_id'])->name_eng;
-            $inputs['product_sub_category'] = ProductSubCategory::find($inputs['product_sub_category_id'])->name_eng;
-            $inputs['use_for'] = MedecineUsage::find($inputs['medicine_use_for_id'])->name_eng;
+
+            if($request->has('product_type_id') && $request->has('product_type_id')!= 'null')
+            {
+                $inputs['product_type'] = ProductType::find($inputs['product_category_id'])->name_eng;
+            }
+
+            if($request->has('product_category_id') && $request->has('product_category_id')!= 'null')
+            {
+                $inputs['product_category'] = ProductCategory::find($inputs['product_category_id'])->name_eng;
+            }
+
+            if($request->has('product_sub_category_id') && $request->has('product_sub_category_id')!= 'null')
+            {
+                $inputs['product_sub_category'] = ProductSubCategory::find($inputs['product_sub_category_id'])->name_eng;
+            }
+
+            if($request->has('medicine_use_for_id') && $request->has('medicine_use_for_id')!= 'null')
+            {
+                $inputs['medicine_use_for'] = MedecineUsage::find($inputs['medicine_use_for_id'])->name_eng;
+            }
+
+            if($request->has('stock_location_id') && $request->has('stock_location_id')!= 'null')
+            {
+                $inputs['stock_location'] = StoreLocation::find($inputs['stock_location_id'])->name_eng;
+            }
            
             // return $inputs;
             $advice = new Product();
