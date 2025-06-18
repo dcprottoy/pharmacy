@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Backend\ExpireDateMedecines;
 use App\Models\Backend\StockEntryLog;
 use App\Models\Backend\Manufacturer;
-use App\Models\Backend\Medecine;
+use App\Models\Backend\StoreLocation;
 use App\Models\Backend\Product;
 use App\Models\Backend\Supplier;
 use App\Models\Backend\Mrr;
@@ -64,19 +64,22 @@ class StockEntryController extends Controller
 
         $item_id = (int)$request->item_id;
         $mrr_status = Mrr::where('mrr_id','=',$request->mrr_id)->first();
-        if($mrr_status->status == 1){
+        if($mrr_status->approved == 1){
             return response()->json(['error'=>'Mrr already approved !!']);
         }
         try {
             DB::beginTransaction();
             $medecine = Product::find($item_id);
             // return $medecine;
-
+            if($request->has('stock_location_id') && $request->stock_location_id != null)
+            {
+                $medecine->stock_location = StoreLocation::find((int)$request->stock_location_id)->name_eng;
+            }
             $medecine->last_stock = $request->current_stock;
             $medecine->current_stock = $request->current_stock;
             $medecine->mrp_rate = $request->mrp_rate;
             $medecine->tp_rate = $request->tp_rate;
-            $medecine->stock_location = $request->stock_location;
+            $medecine->stock_location_id = $request->stock_location_id;
             $medecine->stock_per = ceil(((int)$medecine->current_stock/(int)$medecine->last_stock)*100);
             // $medecine->stock_date = $date;
             $medecine->total_stock = $medecine->total_stock + $request->stock_quantity;
@@ -144,6 +147,10 @@ class StockEntryController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $mrr_status = Mrr::where('mrr_id','=',$request->mrr_id)->first();
+        if($mrr_status->approved == 1){
+            return response()->json(['error'=>'Mrr already approved !!']);
+        }
 
         try {
 

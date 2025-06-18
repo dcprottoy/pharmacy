@@ -65,7 +65,7 @@ class MedecineController extends Controller
             }
             $inputs = $request->all();
 
-            if($request->has('manufacturer') && $request->has('manufacturer') != 'null')
+            if($request->has('manufacturer') && $request->manufacturer != 'null')
             {
                 $manufacturer = Manufacturer::where('name_eng','=',$inputs['manufacturer'])->first();
                 if($manufacturer){
@@ -78,27 +78,27 @@ class MedecineController extends Controller
                 }
             }
 
-            if($request->has('product_type_id') && $request->has('product_type_id')!= 'null')
+            if($request->has('product_type_id') && $request->product_type_id != null)
             {
-                $inputs['product_type'] = ProductType::find($inputs['product_category_id'])->name_eng;
+                $inputs['product_type'] = ProductType::find($inputs['product_type_id'])->name_eng;
             }
 
-            if($request->has('product_category_id') && $request->has('product_category_id')!= 'null')
+            if($request->has('product_category_id') && $request->product_category_id != null)
             {
                 $inputs['product_category'] = ProductCategory::find($inputs['product_category_id'])->name_eng;
             }
 
-            if($request->has('product_sub_category_id') && $request->has('product_sub_category_id')!= 'null')
+            if($request->has('product_sub_category_id') && $request->product_sub_category_id != null)
             {
                 $inputs['product_sub_category'] = ProductSubCategory::find($inputs['product_sub_category_id'])->name_eng;
             }
 
-            if($request->has('medicine_use_for_id') && $request->has('medicine_use_for_id')!= 'null')
+            if($request->has('medicine_use_for_id') && $request->medicine_use_for_id != null)
             {
-                $inputs['medicine_use_for'] = MedecineUsage::find($inputs['medicine_use_for_id'])->name_eng;
+                $inputs['use_for'] = MedecineUsage::find($inputs['medicine_use_for_id'])->name_eng;
             }
 
-            if($request->has('stock_location_id') && $request->has('stock_location_id')!= 'null')
+            if($request->has('stock_location_id') && $request->stock_location_id != null)
             {
                 $inputs['stock_location'] = StoreLocation::find($inputs['stock_location_id'])->name_eng;
             }
@@ -167,19 +167,43 @@ class MedecineController extends Controller
             $advice = Product::findOrFail($id);
             $inputs = $request->all();
             $manufacturer = Manufacturer::where('name_eng','=',$inputs['manufacturer'])->first();
-            if($manufacturer){
-               $inputs['manufacturer_id'] = $manufacturer->id;
-            }else{
-                $manufacturer = new Manufacturer();
-                $manufacturer->name_eng = $inputs['manufacturer'];
-                $manufacturer->save();
+            if($request->has('manufacturer') && $request->manufacturer != 'null')
+            {
+                $manufacturer = Manufacturer::where('name_eng','=',$inputs['manufacturer'])->first();
+                if($manufacturer){
                 $inputs['manufacturer_id'] = $manufacturer->id;
+                }else{
+                    $manufacturer = new Manufacturer();
+                    $manufacturer->name_eng = $inputs['manufacturer'];
+                    $manufacturer->save();
+                    $inputs['manufacturer_id'] = $manufacturer->id;
+                }
             }
-            $inputs['product_type_id'] = 1;
-            $inputs['category'] = ProductCategory::find($inputs['product_category_id'])->name_eng;
-            $inputs['medicine_type'] = ProductSubCategory::find($inputs['product_sub_category_id'])->name_eng;
-            $inputs['use_for'] = MedecineUsage::find($inputs['medicine_use_for_id'])->name_eng;
-           
+
+            if($request->has('product_type_id') && $request->product_type_id != null)
+            {
+                $inputs['product_type'] = ProductType::find($inputs['product_type_id'])->name_eng;
+            }
+
+            if($request->has('product_category_id') && $request->product_category_id != null)
+            {
+                $inputs['product_category'] = ProductCategory::find($inputs['product_category_id'])->name_eng;
+            }
+
+            if($request->has('product_sub_category_id') && $request->product_sub_category_id != null)
+            {
+                $inputs['product_sub_category'] = ProductSubCategory::find($inputs['product_sub_category_id'])->name_eng;
+            }
+
+            if($request->has('medicine_use_for_id') && $request->medicine_use_for_id != null)
+            {
+                $inputs['use_for'] = MedecineUsage::find($inputs['medicine_use_for_id'])->name_eng;
+            }
+
+            if($request->has('stock_location_id') && $request->stock_location_id != null)
+            {
+                $inputs['stock_location'] = StoreLocation::find($inputs['stock_location_id'])->name_eng;
+            }
             // return $inputs;
            
             $advice->fill($inputs)->save();

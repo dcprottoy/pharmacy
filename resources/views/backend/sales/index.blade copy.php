@@ -56,6 +56,11 @@ overflow-y: scroll;
                                     </div>
                                 </div>
                             </div>
+                            <div class="text-right">
+                                <button type="reset" class="btn btn-sm btn-info" id="invoice_create_new">&nbsp;Create New&nbsp;</button>
+                                <button type="submit" class="btn btn-sm btn-success" id="add-new-invoice">&nbsp;Save&nbsp;</button>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -105,96 +110,20 @@ overflow-y: scroll;
         <div class="container-fluid">
             <div class="card">
                 <div class="card-body">
-                    <form action="" method="post" enctype="multipart/form-data" id="new_item_add">
-                    @csrf
-                        <div class="row">
-                            <div class="col-sm-2">
-                                <div class="form-group">
-                                    <label>Medicine Name</label>
-                                    <input type="text" class="form-control form-control-sm" name='name' id="name" placeholder="Product Name" readonly>
-                                    <input type="hidden" id="item-id" name="item_id" value="">
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <div class="form-group">
-                                    <label>Type</label>
-                                    <input type="text" class="form-control form-control-sm" id="product_sub_category" name="product_sub_category" value="" readonly>
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <div class="form-group">
-                                    <label>MRP Rate</label>
-                                    <input type="text" class="form-control form-control-sm" id="mrp-rate" name="mrp_rate" value="" readonly>
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <div class="form-group">
-                                    <label>TP Rate</label>
-                                    <input type="text" class="form-control form-control-sm" id="tp-rate" name="tp_rate" value="" readonly>
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <div class="form-group">
-                                    <label>Current Stock</label>
-                                    <input type="text" class="form-control form-control-sm" id="current-stock" name="current_stock" value=""  readonly>
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <div class="form-group">
-                                    <label>Sale Quantity</label>
-                                    <input class="form-control form-control-sm w-100" type="text" id="sale-quantity" name="sale_quantity" value="0">
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <div class="form-group">
-                                    <label>Total Amount</label>
-                                    <input class="form-control form-control-sm w-100" type="text" id="total-amount" name="total_amount" value="0" readonly>
-                                </div>
-                            </div>
-                            <div class="col-sm-1">
-                                <div class="form-group">
-                                    <label>Discount Per</label>
-                                    <input class="form-control form-control-sm w-100" type="text" id="disc-per" name="disc_per" value="0">
-                                </div>
-                            </div><div class="col-sm-1">
-                                <div class="form-group">
-                                    <label>Discount Amount</label>
-                                    <input class="form-control form-control-sm w-100" type="text" id="disc-amt" name="disc_amt" value="0">
-                                </div>
-                            </div><div class="col-sm-1">
-                                <div class="form-group">
-                                    <label>Payable Amount</label>
-                                    <input class="form-control form-control-sm w-100" type="text" id="payable-amount" name="payable_amount" value="0" readonly>
-                                </div>
-                            </div>
-                            <div class="col-sm-1 p-2">
-                                <br>
-                                <button type="submit" class="btn btn-sm btn-success float-left" id="add-btn">&nbsp;Add&nbsp;</button>
-
-                                <button type="reset" class="btn btn-sm btn-danger float-right">&nbsp;Clear&nbsp;</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="card">
-                <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-9">
                              <div class="search-list" style="font-size:14px;">
                                 <table class="table table-sm">
                                     <thead>
                                         <th style="width:20%;">Product Name</th>
-                                        <th style="width:10%;">Product Type</th>
+                                        <th style="width:10%;">Expire Date</th>
                                         <th style="width:10%;">MRP Price</th>
                                         <th style="width:10%;">Quantity</th>
                                         <th style="width:10%;">Total Price</th>
                                         <th style="width:10%;">Discount Percent</th>
                                         <th style="width:10%;">Discount Amount</th>
                                         <th style="width:10%;">Final Price</th>
-                                        <th style="width:10%; text-align: center;">Action</th>
+                                        <th style="width:10%;">Action</th>
                                     </thead>
                                     <tbody class="bill-item-list-cl" id="medecine-item-list">
                                         
@@ -228,6 +157,97 @@ overflow-y: scroll;
                                 </div>
                             </div>
                         </div>
+                        <div class="col-sm-3">
+                            <table  class="table table-sm" class="w-100">
+                                <thead>
+                                    <th style="width:30%;padding:5px;">Attribute</th>
+                                    <th style="width:70%;padding:5px;">Value</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="width:30%;">Name</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="name" name="name" value="" disabled>
+                                            <input type="hidden" id="item-id" name="item_id" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Cell</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="stock-location" name="stock_location" value="" disabled>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Expire Date</td>
+                                        <td style="width:70%;">
+                                            <div class="form-group">
+                                                <select class="form-control form-control-sm"  name="expire_date" id="expire-date">
+                                                  <option value="" disabled>Please select</option>
+                                                </select>
+                                              </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">MRP Price</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="mrp-rate" name="mrp_rate" value="">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Trade Price</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="tp-rate" name="tp_rate" value="" disabled>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Stock Percentage</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="stock_per" name="stock_per" value=""  disabled>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Current Stock</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="current-stock" data-current-stock="" name="current_stock" value="" disabled>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Sale Quantity</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="sale-quantity" name="sale_quantity" value="0">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Total Amount</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="total-amount" name="total_amount" value="0">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Discount Per</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="disc-per" name="disc_per" value="0">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Discount Amount</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="disc-amt" name="disc_amt" value="0">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width:30%;">Payable Amount</td>
+                                        <td style="width:70%;">
+                                            <input class="form-control form-control-md w-100" type="text" id="payable-amount" name="payable_amount" value="0">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="card-footer text-right pl-0 pr-0">
+                                <button type="reset" class="btn btn-sm btn-danger float-left">&nbsp;Clear&nbsp;</button>
+                                <button type="submit" class="btn btn-sm btn-success" id="add-btn">&nbsp;Add&nbsp;</button>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -239,46 +259,6 @@ overflow-y: scroll;
 @push('scripts')
 <script>
     $(document).ready(function(){
-
-        var countAdd = 0;
-        $('#search_data').focus();
-        //Calculate Final Bill
-         function finalBillCalculation(){
-          let billAmount =  $("#bill-amount").val();
-          let discountAmount =  $("#bill-dis-amt").val();
-          let discountPer =  $("#bill-in-per").val();
-          let finalAmount =  $("#bill-total-amount").val();
-          let paidAmount =  $("#bill-paid-amount").val();
-          let dueAmount =  $("#bill-due-amount").val();
-          let newFinalAmount = billAmount;
-          if((!isNaN(discountAmount)) && discountAmount != 0){
-            newFinalAmount = (Number(billAmount)-Number(discountAmount)).toFixed(2);
-          }
-          if(!isNaN(paidAmount)){
-            let newDueAmount = (Number(newFinalAmount)-Number(paidAmount)).toFixed(2);
-            $("#bill-due-amount").val(newDueAmount);
-          }
-          $("#bill-total-amount").val(newFinalAmount);
-
-
-        }
-
-        //Calculate bill
-        function calculateBill(){
-            let amtResult = 0;
-            let discResult = 0;
-                $(".billing-item-amount").each(function(){
-                    amtResult += Number($(this).val());
-                });
-                console.log(amtResult);
-                $(".billing-item-dis-amt").each(function(){
-
-                    discResult += Number($(this).val());
-                });
-                $("#bill-amount").val(amtResult);
-                $("#bill-dis-amt").val(discResult);
-                finalBillCalculation();
-        }
 
         //Add New Invoice No.
         $("#invoice_create_new").on('click',function(){
@@ -489,19 +469,33 @@ overflow-y: scroll;
                         }else{
                             $("#item-id").val(result.item.id);
                         $("#name").val(result.item.name);
-                        $("#product_sub_category").val(result.item.product_sub_category);
                         $("#stock-location").val(result.item.stock_location);
                         $("#mrp-rate").val(result.item.mrp_rate);
                         $("#tp-rate").val(result.item.tp_rate);
                         $("#stock_per").val(result.item.stock_per);
                         $("#current-stock").val(result.item.current_stock);
                         $("#current-stock").attr("data-current-stock",result.item.current_stock);
-                        $("#sale-quantity").val("");
+                        $("#sale-quantity").val(0);
                         $("#total-amount").val(0);
                         $("#disc-per").val(0);
                         $("#disc-amt").val(0);
                         $("#payable-amount").val(0);
-                        $("#sale-quantity").focus();
+                        if(result.expiryDates){
+                            let element=`<option value="" disabled selected>Please select</option>`;
+                            result.expiryDates.map(x=>{
+                                element+=`<option value="${x.expiry_date}" data-current-qty="${x.current_qty}">${x.expiry_date}</option>`;
+                            });
+                            $("#expire-date").empty();
+                            $("#expire-date").append(element);
+
+                            $("#expire-date").on('change',function(e){
+                                let currentStock = $('#expire-date option:selected').attr('data-current-qty');
+                                $("#current-stock").val(Number(currentStock).toFixed(2));
+                                $("#current-stock").attr("data-current-stock",Number(currentStock).toFixed(2));
+                                $("#sale-quantity").val(0);
+                                $("#total-amount").val(0);
+                            });
+                        }
                         }
                         console.log(result);
                         
@@ -593,7 +587,6 @@ overflow-y: scroll;
             let payableAmount = (totalAmount - Number(discAmt)).toFixed(2);
 
             $('#payable-amount').val(payableAmount);
-            calculateBill()
         }
 
         $('#mrp-rate').on('keyup',function(e){
@@ -628,31 +621,48 @@ overflow-y: scroll;
 
         //Invoice Details Bill Calculation
         function calculateInvoiceDetails(id){
+
             console.log(id);
+
+            // mrp_price
+            // quantity
+            // price
+            // discount_percent
+            // discount_amount
+            // final_price
+
             let mrpRate = $('#mrp_price'+id).val();
             let saleQuantity = $('#quantity'+id).val();
+
             let totalAmount = (Number(mrpRate)*Number(saleQuantity)).toFixed(2);
             $('#price'+id).val(totalAmount);
+
             let discAmt = $('#discount_amount'+id).val();
+
             let payableAmount = (totalAmount - Number(discAmt)).toFixed(2);
+
             $('#final_price'+id).val(payableAmount);
-            calculateBill();
         }
 
+        
         function InvDetailsDisAmtCalc(id){
+
             let percent =  $('#discount_percent'+id).val();
             let totalAmount =  $('#price'+id).val();
             let discAmount = ((Number(percent)*Number(totalAmount))/100).toFixed(2);
             $('#discount_amount'+id).val(discAmount);
             calculateInvoiceDetails(id);
+            
         }
 
         function InvDetailsDisPerCalc(id){
+
             let amt =  $('#discount_amount'+id).val();
             let totalAmount =  $('#price'+id).val();
             let discPercent = ((Number(amt)/Number(totalAmount))*100).toFixed(2);
             $('#discount_percent'+id).val(discPercent);
             calculateInvoiceDetails(id);
+
         }
 
         $("#bill-final-save").on('click',function(e){
@@ -690,78 +700,107 @@ overflow-y: scroll;
        
 
         //Sale Entry
-        $("#new_item_add").on('submit',function(e){
-            e.preventDefault();
-            
+        $("#add-btn").on('click',function(e){
+            let invoice_no = $('#invoice_no').val();
             let product_name = $('#name').val();
             let product_id = $('#item-id').val();
-            let product_sub_category = $('#product_sub_category').val();
+            let expire_date = $('#expire-date').val();
             let mrp_rate = $('#mrp-rate').val();
             let quantity = $('#sale-quantity').val();
             let price = $('#total-amount').val();
             let discount_percent = $('#disc-per').val();
             let discount_amount = $('#disc-amt').val();
             let final_price = $('#payable-amount').val();
-            
-            if(quantity == "" || quantity == null || quantity == undefined || quantity == 0){
+            if(expire_date == "" || expire_date == null || expire_date == undefined){
+                toastr.error('Please Select Expire Date');
+            }else if(invoice_no == "" || invoice_no == null || invoice_no == undefined){
+                toastr.error('Please Enter Invoice No');
+            }else if(quantity == "" || quantity == null || quantity == undefined || quantity == 0){
                 toastr.error('Please Enter Quantity');
             }else{
-                let id = ++countAdd;
-                let element = `<tr class="item-select" data-id="${id}">
-                        <td>${product_name}</td>
-                        <td>
-                            <input class="form-control form-control-sm w-100" type="text" id="product_sub_category${id}" name="product_sub_category[${id}]" value="${product_sub_category}" readonly>
-                        </td>
-                        <td>
-                            <input class="form-control form-control-sm w-100" type="text" id="mrp_price${id}" name="mrp_price[${id}]" value="${mrp_rate}" readonly>
-                        </td>
-                        <td>
-                            <input class="form-control form-control-sm w-100 inv_dtls_qnty" type="text" id="quantity${id}" name="quantity[${id}]" value="${quantity}">
-                        </td>
-                        <td>
-                            <input class="form-control form-control-sm w-100 billing-item-amount" type="text" id="price${id}" name="price[${id}]" value="${price}" readonly>
-                        </td><td>
-                            <input class="form-control form-control-sm w-100 disc-cal-per" type="text" id="discount_percent${id}" name="discount_percent[${id}]" value="${discount_percent}">
-                        </td><td>
-                            <input class="form-control form-control-sm w-100 disc-cal-amt billing-item-dis-amt " type="text" id="discount_amount${id}" name="discount_amount[${id}]" value="${discount_amount}">
-                        </td><td>
-                            <input class="form-control form-control-sm w-100" type="text" id="final_price${id}" name="final_price[${id}]" value="${final_price}" readonly>
-                        </td>
-                        <td class="project-actions text-center">
-                            <a class="btn btn-danger btn-sm delete" href="#" data-id="${id}" data-toggle="modal" data-target="#modal-default">
-                                <i style="font-size:10px;" class="fas fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>`
-                $("#medecine-item-list").append(element);
-                        
-            }
-            $("#new_item_add")[0].reset();
-            $("#search_data").val('');
-            $("#search_data").focus();
-            $("#search_dropdown-menu").empty();
-            $(".inv_dtls_qnty").off('keyup').on('keyup',function(e){ 
-                let id = $(this).closest("tr").attr('data-id');
-                calculateInvoiceDetails(id);
-            });
-            $(".disc-cal-per").off('keyup').on('keyup',function(e){
-                let id = $(this).closest("tr").attr('data-id');
-                InvDetailsDisAmtCalc(id);
-            });
-            $(".disc-cal-amt").off('keyup').on('keyup',function(e){
-                let id = $(this).closest("tr").attr('data-id');
-                InvDetailsDisPerCalc(id);
-            });
-            $('.delete').off('click').on('click',function(e){
-                $(this).closest("tr").remove();
-                calculateBill();
+                $.ajax({
+                    type: 'post',
+                    dataType: "json",
+                    url: "{{url('sales')}}",
+                    data:{
+                        'invoice_id':invoice_no,
+                        'product_name':product_name,
+                        'product_id':product_id,
+                        'expire_date':expire_date,
+                        'quantity':quantity,
+                        'mrp_rate':mrp_rate,
+                        'price':price,
+                        'discount_percent':discount_percent,
+                        'discount_amount':discount_amount,
+                        'final_price':final_price,
+                        '_token': '{{ csrf_token() }}',
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        $("#bill-dis-amt").val(response.invoice.discount_amount);
+                        $("#bill-amount").val(response.invoice.total_amount);
+                        $("#bill-paid-amount").val(response.invoice.paid_amount);
+                        $("#bill-in-per").val(response.invoice.discount_percent);
+                        $("#bill-total-amount").val(response.invoice.payable_amount);
+                        $("#bill-due-amount").val(response.invoice.due_amount);
+                        // toastr.success('Item Updated Successfully for '+response.success.name);
+                          
+                        let element = `<tr class="item-select" data-id="${response.invoice_details.id}">
+                                <td>${response.invoice_details.product_name}</td>
+                                <td>${response.invoice_details.expire_date}</td>
+                                <td>
+                                    <input class="form-control form-control-sm w-100" type="text" id="mrp_price${response.invoice_details.id}" name="mrp_price" value="${response.invoice_details.mrp_price}" readonly>
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm w-100 inv_dtls_qnty" type="text" id="quantity${response.invoice_details.id}" name="quantity" value="${response.invoice_details.quantity}">
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm w-100" type="text" id="price${response.invoice_details.id}" name="price" value="${response.invoice_details.price}" readonly>
+                                </td><td>
+                                    <input class="form-control form-control-sm w-100 disc-cal-per" type="text" id="discount_percent${response.invoice_details.id}" name="discount_percent" value="${response.invoice_details.discount_percent}">
+                                </td><td>
+                                    <input class="form-control form-control-sm w-100 disc-cal-amt" type="text" id="discount_amount${response.invoice_details.id}" name="discount_amount" value="${response.invoice_details.discount_amount}">
+                                </td><td>
+                                    <input class="form-control form-control-sm w-100" type="text" id="final_price${response.invoice_details.id}" name="final_price" value="${response.invoice_details.final_price}" readonly>
+                                </td>
+                                <td class="project-actions text-center">
+                                    <a class="btn btn-info btn-sm update" data-id="${response.invoice_details.id}">
+                                        <i style="font-size:10px;" class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a class="btn btn-danger btn-sm delete" href="#" data-id="${response.invoice_details.id}" data-toggle="modal" data-target="#modal-default">
+                                        <i style="font-size:10px;" class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>`
+                            $("#medecine-item-list").append(element);
+                            $('.delete').off('click').on('click',function(e){
+                                let id = $(this).attr('data-id');
+                                deleteSaleEntry(id);
+                            });
+                            $('.update').off('click').on('click',function(e){
+                                let id = $(this).attr('data-id');
+                                updateSaleEntry(id);
+                            });
+                            $(".inv_dtls_qnty").off('keyup').on('keyup',function(e){ 
+                                let id = $(this).closest("tr").attr('data-id');
+                                calculateInvoiceDetails(id);
+                            });
+                            $(".disc-cal-per").off('keyup').on('keyup',function(e){
+                                let id = $(this).closest("tr").attr('data-id');
+                                InvDetailsDisAmtCalc(id);
+                            });
+                            $(".disc-cal-amt").off('keyup').on('keyup',function(e){
+                                let id = $(this).closest("tr").attr('data-id');
+                                InvDetailsDisPerCalc(id);
+                            });
 
-                
-            });
-            calculateBill();
+                    }
+                });
+            }
             console.log({
                 'product_name':product_name,
                 'product_id':product_id,
+                'expire_date':expire_date,
                 'quantity':quantity,
                 'mrp_rate':mrp_rate,
                 'price':price,

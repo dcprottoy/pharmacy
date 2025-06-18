@@ -249,9 +249,15 @@ overflow-y: scroll;
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="width:30%;">Cell</td>
+                                        <td style="width:30%;">Store Location</td>
                                         <td style="width:70%;">
-                                            <input class="form-control form-control-md w-100" type="text" id="stock-location" name="stock_location" value="">
+                                            {{-- <input class="form-control form-control-md w-100" type="text" id="stock-location" name="stock_location" value=""> --}}
+                                            <select class="form-control form-control-sm"  name="stock_location_id" id="stock_location">
+                                            <option value="" selected disabled>Please select</option>
+                                            {{-- @foreach ($store_locations as $item )
+                                                <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                            @endforeach --}}
+                                            </select>
                                         </td>
                                     </tr>
                                     <tr>
@@ -275,7 +281,7 @@ overflow-y: scroll;
                                     <tr>
                                         <td style="width:30%;">Current Stock</td>
                                         <td style="width:70%;">
-                                            <input class="form-control form-control-md w-100" type="text" id="current-stock" data-current-stock="" name="current_stock" value="">
+                                            <input class="form-control form-control-md w-100" type="text" id="current-stock" data-current-stock="" name="current_stock" value="" readonly>
                                         </td>
                                     </tr>
                                     <tr>
@@ -328,6 +334,42 @@ overflow-y: scroll;
 @push('scripts')
 <script>
     $(document).ready(function(){
+
+
+        $('#stock_location').select2({
+            placeholder: 'Search for a Product',
+            minimumInputLength: 2, // API call triggers after 2 characters
+            ajax: {
+                type: 'put',
+                url: 'stock_locations', // Your API endpoint
+                dataType: 'json',
+                cache: true, // Enable caching
+                delay: 250, // delay in ms before request
+                data: function (params) {
+                    return {
+                        'q': params.term,
+                        '_token': "{{ csrf_token() }}" // search term
+                    };
+                },
+                processResults: function (data) {
+                    // Map your API response to { id, text }
+                    return {
+                        results: data.map(item => ({
+                            id: item.id,
+                            text: item.name_eng
+                        }))
+                    };
+                },
+                cache: true
+            }
+        });
+        $('#stock_location').on('select2:open', function () {
+            let searchField = document.querySelector('.select2-container--open .select2-search__field');
+            if (searchField) {
+                searchField.focus();
+            }
+        });
+
 
         //Add New Mrr No.
         $("#mrr_create_new").on('click',function(){
@@ -553,14 +595,25 @@ overflow-y: scroll;
                         console.log(result);
                         $("#item-id").val(result.id);
                         $("#name").val(result.name);
-                        $("#stock-location").val(result.stock_location);
                         $("#mrp-rate").val(result.mrp_rate);
                         $("#tp-rate").val(result.tp_rate);
                         $("#stock_per").val(result.stock_per);
                         $("#current-stock").val(result.current_stock);
                         $("#current-stock").attr("data-current-stock",result.current_stock);
-                        $("#stock-quantity").val(0);
                         $("#expire-date").val("");
+                        $("#stock-quantity").focus();
+                        // Step 1: Set default value from response
+                        let defaultMedicine = {
+                            'id': result.stock_location_id,       // e.g., 5
+                            'text': result.stock_location         // e.g., "Main Store"
+                        };
+
+                        // Step 2: Create and add the option dynamically
+                        let newOption = new Option(defaultMedicine.text, defaultMedicine.id, true, true);
+                        $('#stock_location').append(newOption).trigger('change');
+                        // console.log($('#stock_location'));
+
+
                     }
                 });
 
@@ -862,7 +915,7 @@ overflow-y: scroll;
             if(mrrId != null & mrrId != undefined && mrrId != ""){
                 let itemId = $("#item-id").val();
                 let name = $("#name").val();
-                let stockCell = $("#stock-location").val();
+                let stockCell = $("#stock_location").val();
                 let mrpRate = $("#mrp-rate").val();
                 let tpRate = $("#tp-rate").val();
                 let stockPer = $("#stock_per").val();
@@ -888,7 +941,7 @@ overflow-y: scroll;
                             'item_id':itemId,
                             'mrr_id':mrrId,
                             'name':name,
-                            'stock_location':stockCell,
+                            'stock_location_id':stockCell,
                             'mrp_rate':mrpRate,
                             'tp_rate':tpRate,
                             'stock_per':stockPer,
@@ -900,10 +953,13 @@ overflow-y: scroll;
                         },
                         success: function (response) {
                             console.log(response);
-                            toastr.success('Item Updated Successfully for '+response.success.name);
+                            if('error' in response){
+                                toastr.error(response.error);
+                            }else{
+                                let stock_loc_element = `<option value="${response.success.stock_location_id}">${response.success.stock_location}</option>`
+                                toastr.success('Item Updated Successfully for '+response.success.name);
                                 $("#item-id").val(response.success.id);
                                 $("#name").val(response.success.name);
-                                $("#stock-location").val(response.success.stock_location);
                                 $("#mrp-rate").val(response.success.mrp_rate);
                                 $("#tp-rate").val(response.success.tp_rate);
                                 $("#stock_per").val(response.success.stock_per);
@@ -912,6 +968,18 @@ overflow-y: scroll;
                                 $("#stock-quantity").val(0);
                                 $("#expire-date").val("");
                                 $("#manufacture-date").val("");
+
+                                // Step 1: Set default value from response
+                                let defaultMedicine = {
+                                    'id': response.success.stock_location_id,       // e.g., 5
+                                    'text': response.success.stock_location         // e.g., "Main Store"
+                                };
+
+                                // Step 2: Create and add the option dynamically
+                                let newOption = new Option(defaultMedicine.text, defaultMedicine.id, true, true);
+                                $('#stock_location').append(newOption).trigger('change');
+                                // console.log($('#stock_location'));
+
                                 let element = `<tr class="item-select" data-medicine-id="${response.expiry_log.medecine_id}" data-id="${response.expiry_log.id}">
                                             <td>${response.success.name}</td>
                                             <td>${response.expiry_log.manufacture_date}</td>
@@ -937,6 +1005,8 @@ overflow-y: scroll;
                                     let id = $(this).attr('data-id');
                                     deleteStockEntry(id);
                                 })
+                            }
+                            
 
                         }
                     });

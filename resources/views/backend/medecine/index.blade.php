@@ -102,7 +102,7 @@
                             <div class="col-sm-4 show-hide" style="display: none;">
                                 <div class="form-group">
                                   <label>Use For</label>
-                                  <select class="form-control form-control-sm"  name="medicine_use_for_id" id="use_for">
+                                  <select class="form-control form-control-sm"  name="medicine_use_for_id" id="medicine_use_for_id">
                                         <option value="" selected disabled>Please select</option>
                                         @foreach ($medecineusages as $item )
                                             <option value="{{$item->id}}">{{$item->name_eng}}</option>
@@ -135,32 +135,23 @@
                         <thead>
                             <tr>
                             <th style="width: 25%" class="text-center">
-                                Mdecine Name
+                                Mdecine Name<br>Manufacturer
                             </th>
                             <th style="width: 10%" class="text-center">
-                                Generic
+                                Product Type<br>Category
                             </th>
                             <th style="width: 10%" class="text-center">
-                                Strength
+                                Sub Category<br>Generic
                             </th>
                             <th style="width: 10%" class="text-center">
-                                Type
-                            </th>
-                            <th style="width: 10%" class="text-center">
-                               Use For
+                               Stock Location<br>Use For
                             </th>
                             </th>
                             <th style="width: 10%" class="text-center">
-                               Category
+                               Stock Quantity <br> Stock Percentage
                             </th>
                             <th style="width: 10%" class="text-center">
-                                MRP Rate
-                            </th>
-                            <th style="width: 10%" class="text-center">
-                                TP Rate
-                            </th>
-                            <th style="width: 10%" class="text-center">
-                                Store Location
+                               MRP Rate <br> TP Rate
                             </th>
                             <th class="text-center" style="width: 10%">
                                 Action
@@ -171,34 +162,25 @@
                         @foreach($medecines as $item)
                             <tr>
                                 <td class="text-center" style="font-weight:bold;">
-                                    <blockquote class="blockquote m-0">
+                                    <blockquote class="blockquote  m-0">
                                         <p class="mb-0">{!! $item->name !!}</p>
                                         <footer class="blockquote-footer">{!! $item->manufacturer !!}</footer>
                                     </blockquote>
                                 </td>
-                                <td class="text-center align-middle " style="font-weight:bold;">
-                                    {!! $item->generic !!}
+                                <td class="text-center align-middle ">
+                                    {!! $item->product_type !!}<br>{!! $item->product_category !!}
+                                </td>
+                                <td class="text-center align-middle ">
+                                    <span style="font-weight:bold;">{!! $item->product_sub_category !!}</span><br>{!! $item->generic !!}
+                                </td>
+                                <td class="text-center align-middle " >
+                                   <span class="badge badge-secondary" style="font-size:18px;">{!! $item->stock_location!!}</span><br>{!! $item->use_for !!}
                                 </td>
                                 <td class="text-center align-middle " style="font-weight:bold;">
-                                    {!! $item->strength !!}
+                                    <span class="badge {{$item->stock_per >= 50?'badge-success':( $item->stock_per >= 30 ?'badge-warning':'badge-danger')}}" style="font-size:18px;">{!! $item->current_stock !!}</span><br>{!! $item->stock_per !!}%
                                 </td>
                                 <td class="text-center align-middle " style="font-weight:bold;">
-                                    {!! $item->product_sub_category !!}
-                                </td>
-                                <td class="text-center align-middle " style="font-weight:bold;">
-                                    {!! $item->use_for !!}
-                                </td>
-                                <td class="text-center align-middle " style="font-weight:bold;">
-                                    {!! $item->product_category !!}
-                                </td>
-                                <td class="text-center align-middle " style="font-weight:bold;">
-                                    {!! $item->mrp_rate !!}
-                                </td>
-                                <td class="text-center align-middle " style="font-weight:bold;">
-                                    {!! $item->tp_rate !!}
-                                </td>
-                                <td class="text-center align-middle " style="font-weight:bold;">
-                                    {!! $item->stock_location !!}
+                                    <span class="badge badge-primary" style="font-size:18px;">{!! $item->mrp_rate !!}</span> <br> {!! $item->tp_rate !!}
                                 </td>
                                 <td class="project-actions text-center align-middle ">
                                     <a class="btn btn-info btn-sm update p-1" data-id="{{$item->id}}">
@@ -263,7 +245,7 @@
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label>Medecine Name</label>
-                                                <input type="text" class="form-control form-control-sm" name='name' id="u-name" placeholder="Medecine Name">
+                                                <input type="text" class="form-control form-control-sm" name='name' id="u-name" placeholder="Medecine Name" >
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
@@ -279,22 +261,21 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-2">
                                             <div class="form-group">
-                                                <label>Generic Name</label>
-                                                <input type="text" class="form-control form-control-sm" name='generic' id='u-generic'  placeholder="Generic Name">
+                                            <label>Product Type</label>
+                                            <select class="form-control form-control-sm"  name="product_type_id" id="u-product_type_id" >
+                                                <option value="" selected disabled>Please select</option>
+                                                    @foreach ($product_types as $item )
+                                                        <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                                    @endforeach
+                                            </select>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4">
-                                            <div class="form-group">
-                                                <label>Strength Name</label>
-                                                <input type="text" class="form-control form-control-sm" name='strength' id='u-strength' placeholder="Strength">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-2">
                                             <div class="form-group">
                                             <label>Category</label>
-                                            <select class="form-control form-control-sm"  name="product_category_id" id="u-product_category_id">
+                                            <select class="form-control form-control-sm"  name="product_category_id" id="u-product_category_id" >
                                                     <option value="" selected disabled>Please select</option>
                                                     @foreach ($product_categories as $item )
                                                         <option value="{{$item->id}}">{{$item->name_eng}}</option>
@@ -304,16 +285,51 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                            <label>Medicine Type</label>
-                                            <select class="form-control form-control-sm"  name="product_sub_category_id" id="u-product_sub_category_id">
-                                                <option value="" selected disabled>Please select</option>
-                                                    @foreach ($product_types as $item )
+                                            <label>Sub Category</label>
+                                            <select class="form-control form-control-sm"  name="product_sub_category_id" id="u-product_sub_category_id" >
+                                                    <option value="" selected disabled>Please select</option>
+                                                    @foreach ($product_sub_categories as $item )
                                                         <option value="{{$item->id}}">{{$item->name_eng}}</option>
                                                     @endforeach
                                             </select>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
+                                            <div class="form-group">
+                                            <label>Store Location</label>
+                                            <select class="form-control form-control-sm"  name="stock_location_id" id="u-stock_location_id">
+                                                    <option value="" selected disabled>Please select</option>
+                                                    @foreach ($store_locations as $item )
+                                                        <option value="{{$item->id}}">{{$item->name_eng}}</option>
+                                                    @endforeach
+                                            </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label>MRP Rate</label>
+                                                <input type="text" class="form-control form-control-sm" name='mrp_rate' id="u-mrp_rate" placeholder="MRP Rate" >
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-group">
+                                                <label>TP Rate</label>
+                                                <input type="text" class="form-control form-control-sm" name='tp_rate' id="u-tp_rate" placeholder="TP Rate" >
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 show-hide" style="display: none;">
+                                            <div class="form-group">
+                                                <label>Generic Name</label>
+                                                <input type="text" class="form-control form-control-sm" name='generic' id='u-generic' placeholder="Generic Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4  show-hide" style="display: none;">
+                                            <div class="form-group">
+                                                <label>Strength Name</label>
+                                                <input type="text" class="form-control form-control-sm" name='strength' id='u-strength' placeholder="Strength">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 show-hide" style="display: none;">
                                             <div class="form-group">
                                             <label>Use For</label>
                                             <select class="form-control form-control-sm"  name="medicine_use_for_id" id="u-medicine_use_for_id">
@@ -412,9 +428,16 @@
                         $('#u-manufacturer').val(result.manufacturer)
                         $('#u-generic').val(result.generic)
                         $('#u-strength').val(result.strength)
+                        $('#u-mrp_rate').val(result.mrp_rate)
+                        $('#u-tp_rate').val(result.tp_rate)
+                        $('#u-stock_location_id').val(result.stock_location_id)
                         $('#u-product_sub_category_id').val(result.product_sub_category_id)
                         $('#u-medicine_use_for_id').val(result.medicine_use_for_id)
                         $('#u-product_category_id').val(result.product_category_id)
+                        $('#u-product_type_id').val(result.product_type_id)
+                        if(result.product_type_id==1){
+                            $('.show-hide').toggle();
+                        }
 
                     }
                 });
@@ -481,22 +504,20 @@
                 }else{
                     $('.show-hide').hide();
                 }
-                    
-               
-                    $.ajax({
-                        url: "{{url('productcategory/listbytype/')}}/"+id,
-                        success: function (result) {
-                            let element = `<option value="" selected disabled>Please select</option>`;
-                            console.log(result);
-                            result.forEach(x => {
-                                element +=`<option value="${x.id}">${x.name_eng}</option>`;
-                            });
+                $.ajax({
+                    url: "{{url('productcategory/listbytype/')}}/"+id,
+                    success: function (result) {
+                        let element = `<option value="" selected disabled>Please select</option>`;
+                        console.log(result);
+                        result.forEach(x => {
+                            element +=`<option value="${x.id}">${x.name_eng}</option>`;
+                        });
 
-                            $("#product_category_id").empty();
-                            $("#product_category_id").append(element);
-                        
-                        }
-                    });
+                        $("#product_category_id").empty();
+                        $("#product_category_id").append(element);
+                    
+                    }
+                });
             });
 
         

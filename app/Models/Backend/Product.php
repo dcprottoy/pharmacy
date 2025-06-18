@@ -23,6 +23,7 @@ class Product extends Model
         'mrp_rate',
         'tp_rate',
         'stock_location',
+        'stock_location_id',
         'stock_per',
         'total_stock',
         'total_sale',
