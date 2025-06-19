@@ -239,7 +239,6 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                @csrf
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-4">

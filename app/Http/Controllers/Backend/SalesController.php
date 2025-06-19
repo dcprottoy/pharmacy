@@ -60,11 +60,34 @@ class SalesController extends Controller
         $validated = Validator::make($request->all(),[
             'product_id' => 'required',
         ]);
-        // return response()->json($request->all());
+        return response()->json($request->all());
 
         if($validated->fails()){
             return back()->withErrors($validated)->withInput();
         }
+         $checkingID = (int)strval($date->year).str_pad(strval($date->month),2,'0',STR_PAD_LEFT).'0000';
+        $lastid = Invoice::where('invoice_id','>',$checkingID)->orderBy('invoice_id', 'desc')->first();
+        if($lastid){
+            $invoice_id = $lastid->invoice_id+1;
+        }else{
+            $invoice_id = strval($date->year).str_pad(strval($date->month),2,'0',STR_PAD_LEFT).'0001';
+        }
+
+        if($request->has('customer_name') && $request->customer_name != null){
+            $customer_name = $request->customer_name;
+        }else{
+            $customer_name = 'Customer';
+        }
+
+        if($request->has('contact_no	') && $request->contact_no	 != null){
+            $contact_no	 = $request->contact_no	;
+        }else{
+            $contact_no	 = '';
+        }
+
+
+
+
 
         $item_id = (int)$request->product_id;
 
@@ -72,8 +95,8 @@ class SalesController extends Controller
         try {
 
                 $medecine = Product::find($item_id);
-                $expire_wise = ExpireDateMedecines::where('medecine_id','=',$medecine->id)->where('expiry_date','=',$request->expire_date)->first();
-                $invoice = Invoice::where('invoice_id','=',$request->invoice_id)->first();
+                // $expire_wise = ExpireDateMedecines::where('medecine_id','=',$medecine->id)->where('expiry_date','=',$request->expire_date)->first();
+                $invoice = new Invoice();
                 if($expire_wise->current_qty - $request->quantity < 0){
                     return response()->json(['error'=>'Stock not available !!']);
                 }
@@ -98,9 +121,9 @@ class SalesController extends Controller
                 $invoice_details->save();
 
                 
-                $expire_wise->current_qty = $expire_wise->current_qty - $request->quantity;
-                $expire_wise->sell_qty = $expire_wise->sell_qty + $request->quantity;
-                $expire_wise->save();
+                // $expire_wise->current_qty = $expire_wise->current_qty - $request->quantity;
+                // $expire_wise->sell_qty = $expire_wise->sell_qty + $request->quantity;
+                // $expire_wise->save();
                 
                 $medecine->current_stock = $medecine->current_stock - $request->quantity;
                 $medecine->total_sale = $medecine->total_sale + $request->quantity;
