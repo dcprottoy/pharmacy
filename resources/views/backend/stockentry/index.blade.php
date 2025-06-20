@@ -488,9 +488,17 @@ overflow-y: scroll;
                                     $("#supplier_name").val(result.mrr.supplier_name);
                                     $("#challan_no").val(result.mrr.challan_no);
                                     $("#medecine-item-list").empty();
-
+                                    
                                     let element = "";
                                     result.stock.forEach(x=>{
+                                        let Changable = (result.mrr.done == 1) ? ("<td>Not Changeable</td>"):(`<td class="project-actions text-center">
+                                                        <a class="btn btn-info btn-sm update" data-id="${x.id}">
+                                                            <i style="font-size:10px;" class="fas fa-pencil-alt"></i>
+                                                        </a>
+                                                        <a class="btn btn-danger btn-sm delete" href="#" data-id="${x.id}" data-toggle="modal" data-target="#modal-default">
+                                                            <i style="font-size:10px;" class="fas fa-trash"></i>
+                                                        </a>
+                                                    </td>`);
                                             element += `<tr class="item-select" data-medicine-id="${x.medecine_id}" data-id="${x.id}">
                                                     <td>${x.name}</td>
                                                     <td>${x.manufacture_date}</td>
@@ -498,14 +506,7 @@ overflow-y: scroll;
                                                     <td>
                                                         <input class="form-control form-control-sm w-100" type="text" id="stock_qty${x.id}"" name="stock_per" value="${x.stock_qty}">
                                                     </td>
-                                                    <td class="project-actions text-center">
-                                                        <a class="btn btn-info btn-sm update" data-id="${x.id}">
-                                                            <i style="font-size:10px;" class="fas fa-pencil-alt"></i>
-                                                        </a>
-                                                        <a class="btn btn-danger btn-sm delete" href="#" data-id="${x.id}" data-toggle="modal" data-target="#modal-default">
-                                                            <i style="font-size:10px;" class="fas fa-trash"></i>
-                                                        </a>
-                                                    </td>
+                                                ${Changable}
                                                 </tr>`
                                         
                                         })
@@ -705,7 +706,7 @@ overflow-y: scroll;
                         result.forEach(x =>{
                                 element += `<li class="dropdown-item grid-container text-left">
                                                 <b data-id="${x.id}">${x.name}</b>
-                                                <span>${x.product_category}</span>
+                                                <span>${x.product_sub_category}</span>
                                                 <span>${x.manufacturer}</span>
                                                 <span>${x.strength}</span>
                                             </li>`;
@@ -849,22 +850,26 @@ overflow-y: scroll;
                     '_token': "{{ csrf_token() }}",
                 },
                 success: function (response) {
-                    console.log(response);
-                    toastr.success('Item Updated Successfully for '+response.success.name);
-                    $("#item-id").val(response.success.id);
-                    $("#name").val(response.success.name);
-                    $("#stock-location").val(response.success.stock_location);
-                    $("#mrp-rate").val(response.success.mrp_rate);
-                    $("#tp-rate").val(response.success.tp_rate);
-                    $("#stock_per").val(response.success.stock_per);
-                    $("#current-stock").val(response.success.current_stock);
-                    $("#current-stock").attr("data-current-stock",response.success.current_stock);
-                    $("#stock-quantity").val(0);
-                    $("#expire-date").val("");
-                    $("#manufacture-date").val("");
-                    $("#stock_qty"+id).val(response.expiry_log.stock_qty);
-                    $("mfg_date"+id).val(response.expiry_log.manufacture_date);
-                    $("#expire_date"+id).val(response.expiry_log.expiry_date);
+                    if('error' in response){
+                            toastr.error(response.error);
+                        }else{
+                        console.log(response);
+                        toastr.success('Item Updated Successfully for '+response.success.name);
+                        $("#item-id").val(response.success.id);
+                        $("#name").val(response.success.name);
+                        $("#stock-location").val(response.success.stock_location);
+                        $("#mrp-rate").val(response.success.mrp_rate);
+                        $("#tp-rate").val(response.success.tp_rate);
+                        $("#stock_per").val(response.success.stock_per);
+                        $("#current-stock").val(response.success.current_stock);
+                        $("#current-stock").attr("data-current-stock",response.success.current_stock);
+                        $("#stock-quantity").val(0);
+                        $("#expire-date").val("");
+                        $("#manufacture-date").val("");
+                        $("#stock_qty"+id).val(response.expiry_log.stock_qty);
+                        $("mfg_date"+id).val(response.expiry_log.manufacture_date);
+                        $("#expire_date"+id).val(response.expiry_log.expiry_date);
+                    }
                 }
             });
         }
@@ -881,7 +886,7 @@ overflow-y: scroll;
                     success: function (response) {
                         console.log(response);
                         if('error' in response){
-                            toastr.warning(response.message);
+                            toastr.error(response.error);
                         }else{
                             toastr.success('Item Deleted Successfully for ' + response.success.name);
 

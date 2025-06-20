@@ -67,6 +67,9 @@ class StockEntryController extends Controller
         if($mrr_status->approved == 1){
             return response()->json(['error'=>'Mrr already approved !!']);
         }
+        if($mrr_status->done == 1){
+            return response()->json(['error'=>'Mrr already Completed !!']);
+        }
         try {
             DB::beginTransaction();
             $medecine = Product::find($item_id);
@@ -147,14 +150,18 @@ class StockEntryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $mrr_status = Mrr::where('mrr_id','=',$request->mrr_id)->first();
+
+        $stock_log = StockEntryLog::find($id);
+        $mrr_status = Mrr::where('mrr_id','=', $stock_log->mrr_id)->first();
         if($mrr_status->approved == 1){
             return response()->json(['error'=>'Mrr already approved !!']);
+        }
+        if($mrr_status->done == 1){
+            return response()->json(['error'=>'Mrr already Completed !!']);
         }
 
         try {
 
-            $stock_log = StockEntryLog::find($id);
 
             $expiry_wise = ExpireDateMedecines::where('medecine_id','=',$stock_log->medecine_id)->where('expiry_date','=',$stock_log->expiry_date)->first();
 
@@ -202,6 +209,13 @@ class StockEntryController extends Controller
     public function destroy(string $id)
     {
         $stock_log = StockEntryLog::find($id);
+        $mrr_status = Mrr::where('mrr_id','=', $stock_log->mrr_id)->first();
+        if($mrr_status->approved == 1){
+            return response()->json(['error'=>'Mrr already approved !!']);
+        }
+        if($mrr_status->done == 1){
+            return response()->json(['error'=>'Mrr already Completed !!']);
+        }
         // return response()->json([$stock_log]);
         $expiry_wise = ExpireDateMedecines::where('medecine_id','=',$stock_log->medecine_id)->where('expiry_date','=',$stock_log->expiry_date)->first();
 

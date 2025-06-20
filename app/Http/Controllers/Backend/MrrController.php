@@ -95,7 +95,7 @@ class MrrController extends Controller
         $stock_entries = StockEntryLog::join('products','stock_entry_logs.medecine_id','=','products.id')
                     ->select('stock_entry_logs.*','products.name')
                     ->where('mrr_id','=',$id)->get();
-        $lastid->approved = true;
+        $lastid->done = true;
         $lastid->save();  
         return response()->json(['mrr'=>$lastid,'stock'=>$stock_entries]);
     }

@@ -243,12 +243,37 @@ overflow-y: scroll;
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="modal-default-print">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <form action="" method="post" id="print-modal">
+                            @csrf
+                            @method('DELETE')
+                            <div class="modal-header">
+                                <h4 class="modal-title">Delete manufacturer</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>One fine body&hellip;</p>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">No, Don't Print</button>
+                                <button type="submit" class="btn btn-warning">Yes, Do Print</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
     </div>
 </div>
 @endsection
 @push('scripts')
     <script>
         $(document).ready(function(){
+                var countNo = 0;
+
                 $('#search_data').select2({
                         placeholder: 'Search for a Product',
                         minimumInputLength: 2,
@@ -306,6 +331,16 @@ overflow-y: scroll;
                         searchField.focus();
                     }
                 });
+
+
+                function focusSearchField() {
+                    $('#search_data').select2('open');
+                    $("#search_data").val('').trigger('change');
+                    let searchField = document.querySelector('.select2-container--open .select2-search__field');
+                    if (searchField) {
+                        searchField.focus();
+                    }
+                }
 
             // setTimeout(() => {
             //     $('#search_data').select2('close');
@@ -366,6 +401,7 @@ overflow-y: scroll;
                     success: function (result) {
                         if(result.item.current_stock == 0){
                             toastr.error('Stock Not Available');
+                            focusSearchField();
                         }else{
                         $("#item-id").val(result.item.id);
                         $("#name").val(result.item.name);
@@ -414,7 +450,14 @@ overflow-y: scroll;
         });
 
         $('#sale-quantity').on('keyup',function(e){
+           let cur_qty = $("#current-stock").val();
+           let sale_qty = $("#sale-quantity").val();
+           if(Number(cur_qty) < Number(sale_qty)){
+            toastr.error('Stock Not Available');
+            $("#sale-quantity").val(0);
+           }
             calculatePrice();
+          
         });
 
         $('#disc-per').on('keyup',function(e){
@@ -442,8 +485,15 @@ overflow-y: scroll;
         //Invoice Details Bill Calculation
         function calculateInvoiceDetails(id){
             console.log(id);
+            let currentStock =  Number($('#quantity'+id).attr("data-current-stock"));
             let mrpRate = $('#mrp_price'+id).val();
-            let saleQuantity = $('#quantity'+id).val();
+            let saleQuantity = Number($('#quantity'+id).val());
+            if(currentStock - saleQuantity < 0){
+                toastr.error('Stock Not Available');
+                saleQuantity = saleQuantity + (currentStock - saleQuantity);
+                $('#quantity'+id).val(saleQuantity);
+                
+            }
             let totalAmount = (Number(mrpRate)*Number(saleQuantity)).toFixed(2);
             $('#price'+id).val(totalAmount);
             let discAmt = $('#discount_amount'+id).val();
@@ -471,6 +521,7 @@ overflow-y: scroll;
         $("#final_bill_submit").on('submit',function(e){
             e.preventDefault();
             let formData = $(this).serialize();
+            formData += '&invoice_no=' + encodeURIComponent($('#invoice_no').val());
             formData += '&customer_name=' + encodeURIComponent($('#customer_name').val());
             formData += '&contact_no=' + encodeURIComponent($('#contact_no').val());
             $.ajax({
@@ -480,6 +531,17 @@ overflow-y: scroll;
                 data: formData,
                 success: function (data) {
                     console.log(data);
+                    if('success' in data){
+                        toastr.success(data.success);
+                        $('#invoice_no').val(data.invoice.invoice_id);
+                        $('#customer_name').val(data.invoice.customer_name);
+                        $('#icontact_no').val(data.invoice.icontact_no);
+                        $('.delete').remove();
+                        $('#modal-default-print').modal('show');
+                    }
+                    if('error' in data){
+                        toastr.error(data.error);
+                    }
                 }
             });
         })
@@ -491,6 +553,7 @@ overflow-y: scroll;
         //Sale Entry
         $("#new_item_add").on('submit',function(e){
             e.preventDefault();
+            let existedId= 0;
             let product_name = $('#name').val();
             let product_id = $('#item-id').val();
             let product_sub_category = $('#product_sub_category').val();
@@ -499,50 +562,69 @@ overflow-y: scroll;
             let price = $('#total-amount').val();
             let discount_percent = $('#disc-per').val();
             let discount_amount = $('#disc-amt').val();
+            let currentQty = Number($("#current-stock").val());
             let final_price = $('#payable-amount').val();
             if(quantity == "" || quantity == null || quantity == undefined || quantity == 0){
                 toastr.error('Please Enter Quantity');
             }else{
-                let id = product_id;
-                let element = `<tr class="item-select" data-id="${id}">
-                        <td>
-                            ${product_name}
-                            <input type="hidden" id="item-id${id}" name="item_id[]" value="${id}">
-                        </td>
-                        <td>
-                            <input class="form-control form-control-sm w-100" type="text" id="product_sub_category${id}" name="product_sub_category[${id}]" value="${product_sub_category}" readonly>
-                        </td>
-                        <td>
-                            <input class="form-control form-control-sm w-100" type="text" id="mrp_price${id}" name="mrp_price[${id}]" value="${mrp_rate}" readonly>
-                        </td>
-                        <td>
-                            <input class="form-control form-control-sm w-100 inv_dtls_qnty" type="text" id="quantity${id}" name="quantity[${id}]" value="${quantity}">
-                        </td>
-                        <td>
-                            <input class="form-control form-control-sm w-100 billing-item-amount" type="text" id="price${id}" name="price[${id}]" value="${price}" readonly>
-                        </td><td>
-                            <input class="form-control form-control-sm w-100 disc-cal-per" type="text" id="discount_percent${id}" name="discount_percent[${id}]" value="${discount_percent}">
-                        </td><td>
-                            <input class="form-control form-control-sm w-100 disc-cal-amt billing-item-dis-amt " type="text" id="discount_amount${id}" name="discount_amount[${id}]" value="${discount_amount}">
-                        </td><td>
-                            <input class="form-control form-control-sm w-100" type="text" id="final_price${id}" name="final_price[${id}]" value="${final_price}" readonly>
-                        </td>
-                        <td class="project-actions text-center">
-                            <a class="btn btn-danger btn-sm delete" href="#" data-id="${id}" data-toggle="modal" data-target="#modal-default">
-                                <i style="font-size:10px;" class="fas fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>`
-                $("#medecine-item-list").append(element);
+                $(".product_id").each(function(){
+                   if(product_id == $(this).val()){
+                        existedId = $(this).attr('data-id');
+                   }
+                });
+                if(existedId){
+                    let saleQty = Number($('#quantity'+existedId).val());
+                    let newSaleQty = saleQty+Number(quantity);
+                    
+                    if((currentQty - newSaleQty) >= 0){
+                        console.log('New Sale Quantity',newSaleQty);
+                        $('#quantity'+existedId).val(newSaleQty);
+                        InvDetailsDisPerCalc(existedId);
+                        $("#new_item_add")[0].reset();
+                        focusSearchField();
+                    }else{
+                        toastr.error("Over Quantity than Stock");
+                    }
+
+                }else{
+                    let id = ++countNo;
+                    let element = `<tr class="item-select" data-id="${id}">
+                            <td>
+                                ${product_name}
+                                <input type="hidden" id="item-id${id}" name="item_id[]" value="${id}">
+                                <input type="hidden" class="product_id" id="item-id${id}" data-id="${id}" name="product_id[${id}]" value="${product_id}">
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm w-100" type="text" id="product_sub_category${id}" name="product_sub_category[${id}]" value="${product_sub_category}" readonly>
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm w-100" type="text" id="mrp_price${id}" name="mrp_price[${id}]" value="${mrp_rate}" readonly>
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm w-100 inv_dtls_qnty" type="text" id="quantity${id}" data-current-stock="${currentQty}" name="quantity[${id}]" value="${quantity}">
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm w-100 billing-item-amount" type="text" id="price${id}" name="price[${id}]" value="${price}" readonly>
+                            </td><td>
+                                <input class="form-control form-control-sm w-100 disc-cal-per" type="text" id="discount_percent${id}" name="discount_percent[${id}]" value="${discount_percent}">
+                            </td><td>
+                                <input class="form-control form-control-sm w-100 disc-cal-amt billing-item-dis-amt " type="text" id="discount_amount${id}" name="discount_amount[${id}]" value="${discount_amount}">
+                            </td><td>
+                                <input class="form-control form-control-sm w-100" type="text" id="final_price${id}" name="final_price[${id}]" value="${final_price}" readonly>
+                            </td>
+                            <td class="project-actions text-center">
+                                <a class="btn btn-danger btn-sm delete" href="#" data-id="${id}" data-toggle="modal" data-target="#modal-default">
+                                    <i style="font-size:10px;" class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>`
+                    $("#medecine-item-list").append(element);
+                    $("#new_item_add")[0].reset();
+                    focusSearchField();
+                }
                         
             }
-            $("#new_item_add")[0].reset();
-            $('#search_data').select2('open');
-            $("#search_data").val('').trigger('change');
-            let searchField = document.querySelector('.select2-container--open .select2-search__field');
-            if (searchField) {
-                searchField.focus();
-            }
+            
             $(".inv_dtls_qnty").off('keyup').on('keyup',function(e){ 
                 let id = $(this).closest("tr").attr('data-id');
                 calculateInvoiceDetails(id);
@@ -596,17 +678,20 @@ overflow-y: scroll;
                 if (e.ctrlKey && e.key.toLowerCase() === 'p') {
                     e.preventDefault();
                     $('#bill-paid-amount').val("");
+                    $('#search_data').select2('close');
                     $('#bill-paid-amount').focus();
                 }
 
                 if (e.ctrlKey && e.key.toLowerCase() === 'd') {
                     e.preventDefault();
                     $('#bill-dis-amt').val("");
+                    $('#search_data').select2('close');
                     $('#bill-dis-amt').focus();
                 }
 
                 if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'c') {
                     e.preventDefault();
+                    $('#search_data').select2('close');
                     $('#customer_name').focus();
                 }
             });

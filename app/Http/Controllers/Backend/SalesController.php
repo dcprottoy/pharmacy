@@ -56,16 +56,18 @@ class SalesController extends Controller
     public function store(Request $request)
     {
 
-        $date = Carbon::now()->format('Y-m-d');
+        $date = Carbon::now();
         $validated = Validator::make($request->all(),[
-            'product_id' => 'required',
+            'item_id' => 'required',
         ]);
-        return response()->json($request->all());
-
+        // return response()->json($request->all());
         if($validated->fails()){
             return back()->withErrors($validated)->withInput();
         }
-         $checkingID = (int)strval($date->year).str_pad(strval($date->month),2,'0',STR_PAD_LEFT).'0000';
+        if($request->has('invoice_no') && $request->invoice_no != null){
+            return response()->json(['error'=>'Invoice already exists !!']);
+        }
+        $checkingID = (int)strval($date->year).str_pad(strval($date->month),2,'0',STR_PAD_LEFT).'0000';
         $lastid = Invoice::where('invoice_id','>',$checkingID)->orderBy('invoice_id', 'desc')->first();
         if($lastid){
             $invoice_id = $lastid->invoice_id+1;
@@ -79,69 +81,60 @@ class SalesController extends Controller
             $customer_name = 'Customer';
         }
 
-        if($request->has('contact_no	') && $request->contact_no	 != null){
+        if($request->has('contact_no') && $request->contact_no != null){
             $contact_no	 = $request->contact_no	;
         }else{
             $contact_no	 = '';
         }
+try {
 
 
+        DB::beginTransaction();
+        $invoice = new Invoice();
+        $invoice->invoice_id = $invoice_id;
+        $invoice->bill_date = $date->format('Y-m-d');
+        $invoice->discount_amount = $request->bill_dis_amt;
+        $invoice->total_amount = $request->bill_amount;
+        $invoice->paid_amount = $request->bill_paid_amount;
+        $invoice->discount_percent = $request->bill_in_per;
+        $invoice->payable_amount = $request->bill_total_amount;
+        $invoice->due_amount = $request->bill_due_amount;
+        $invoice->customer_name = $customer_name;
+        $invoice->contact_no = $contact_no;
+        $invoice->save();
 
-
-
-        $item_id = (int)$request->product_id;
-
-
-        try {
-
-                $medecine = Product::find($item_id);
-                // $expire_wise = ExpireDateMedecines::where('medecine_id','=',$medecine->id)->where('expiry_date','=',$request->expire_date)->first();
-                $invoice = new Invoice();
-                if($expire_wise->current_qty - $request->quantity < 0){
-                    return response()->json(['error'=>'Stock not available !!']);
-                }
-
-                DB::beginTransaction();
-
+        foreach($request->item_id as $key => $id){
+            $product_id = $request->product_id[$id];
+            $product = Product::find($product_id);
+            // return $product;
+            if(((int)$product->current_stock - (int)$request->quantity[$id]) >= 0 && $request->final_price[$id] > 0){
                 
                 $invoice_details = new InvoiceDetails();
-                
                 $invoice_details->invoice_id = $invoice->invoice_id;
-                $invoice_details->product_id = $medecine->id;
-                $invoice_details->product_name =$medecine->name;
-                $invoice_details->expire_date = $request->expire_date;
+                $invoice_details->product_id = $product->id;
+                $invoice_details->product_name =$product->name;
                 $invoice_details->bill_date = $date;
-                $invoice_details->mrp_price = $request->mrp_rate;
-                $invoice_details->price = $request->price;
-                $invoice_details->quantity = $request->quantity;
-                $invoice_details->final_price = $request->final_price;
-                $invoice_details->discount_percent = $request->discount_percent;
-                $invoice_details->discount_amount = $request->discount_amount;
-
+                $invoice_details->mrp_price = $request->mrp_price[$id];
+                $invoice_details->price = $request->price[$id];
+                $invoice_details->quantity = $request->quantity[$id];
+                $invoice_details->final_price = $request->final_price[$id];
+                $invoice_details->discount_percent = $request->discount_percent[$id];
+                $invoice_details->discount_amount = $request->discount_amount[$id];
                 $invoice_details->save();
-
                 
-                // $expire_wise->current_qty = $expire_wise->current_qty - $request->quantity;
-                // $expire_wise->sell_qty = $expire_wise->sell_qty + $request->quantity;
-                // $expire_wise->save();
-                
-                $medecine->current_stock = $medecine->current_stock - $request->quantity;
-                $medecine->total_sale = $medecine->total_sale + $request->quantity;
-                $medecine->stock_per =  ceil(((int)$medecine->current_stock/(int)$medecine->last_stock)*100);
-                $medecine->save();
+            }else{
+                $invoice->delete();
+            }
 
-                $invoice->total_amount = (int)$invoice->total_amount + (int)$request->price;
-                $invoice->discount_amount = (int)$invoice->discount_amount + (int)$request->discount_amount;
-                $invoice->discount_percent = ceil(((int)$invoice->discount_amount / (int)$invoice->total_amount)*100);
-                $invoice->payable_amount = (int)$invoice->total_amount - (int)$invoice->discount_amount;
-                $invoice->due_amount = $invoice->payable_amount - $invoice->paid_amount;
-                $invoice->save();
-                
+            $product->current_stock = $product->current_stock - $request->quantity[$id];
+            $product->total_sale = $product->total_sale + $request->quantity[$id];
+            $product->stock_per =  ceil(((int)$product->current_stock/(int)$product->last_stock)*100);
+            $product->save();
 
-                DB::commit();
+        }
 
-                return response()->json(["invoice_details" => $invoice_details,"invoice" => $invoice]);
-
+        DB::commit();
+            return response()->json(['success'=>'Item Added Successfully !!','invoice'=>$invoice]);
 
         }catch (Exception $e) {
             DB::rollBack(); 
@@ -149,7 +142,7 @@ class SalesController extends Controller
             return response()->json(['error' => 'Transaction failed.', 'message' => $e->getMessage()], 500);
         }
         
-
+        
     }
 
     /**
@@ -182,55 +175,55 @@ class SalesController extends Controller
     public function update(Request $request, string $id)
     {    
         
-        try {
-                $invoice_details = InvoiceDetails::find($id);
-                $medecine = Product::find($invoice_details->product_id);
-                $expire_wise = ExpireDateMedecines::where('medecine_id','=',$medecine->id)->where('expiry_date','=',$invoice_details->expire_date)->first();
-                $invoice = Invoice::where('invoice_id','=',$invoice_details->invoice_id)->first();
+        // try {
+        //         $invoice_details = InvoiceDetails::find($id);
+        //         $medecine = Product::find($invoice_details->product_id);
+        //         $expire_wise = ExpireDateMedecines::where('medecine_id','=',$medecine->id)->where('expiry_date','=',$invoice_details->expire_date)->first();
+        //         $invoice = Invoice::where('invoice_id','=',$invoice_details->invoice_id)->first();
 
-                if(((int)$expire_wise->current_qty + (int)$invoice_details->quantity ) - (int)$request->quantity < 0){
-                        return response()->json(['error'=>'Stock not available !!']);
-                }
+        //         if(((int)$expire_wise->current_qty + (int)$invoice_details->quantity ) - (int)$request->quantity < 0){
+        //                 return response()->json(['error'=>'Stock not available !!']);
+        //         }
 
-                DB::beginTransaction();
+        //         DB::beginTransaction();
 
                
 
 
-                $expire_wise->current_qty = ($expire_wise->current_qty + $invoice_details->quantity ) - $request->quantity;
-                $expire_wise->sell_qty = ($expire_wise->sell_qty - $invoice_details->quantity) + $request->quantity;
-                $expire_wise->save();
+        //         $expire_wise->current_qty = ($expire_wise->current_qty + $invoice_details->quantity ) - $request->quantity;
+        //         $expire_wise->sell_qty = ($expire_wise->sell_qty - $invoice_details->quantity) + $request->quantity;
+        //         $expire_wise->save();
                 
-                $medecine->current_stock = ( $medecine->current_stock + $invoice_details->quantity ) - $request->quantity;
-                $medecine->total_sale = ($medecine->total_sale - $invoice_details->quantity) + $request->quantity;
-                $medecine->stock_per =  ceil(((int)$medecine->current_stock/(int)$medecine->last_stock)*100);
-                $medecine->save();
+        //         $medecine->current_stock = ( $medecine->current_stock + $invoice_details->quantity ) - $request->quantity;
+        //         $medecine->total_sale = ($medecine->total_sale - $invoice_details->quantity) + $request->quantity;
+        //         $medecine->stock_per =  ceil(((int)$medecine->current_stock/(int)$medecine->last_stock)*100);
+        //         $medecine->save();
 
-                $invoice->total_amount = ((int)$invoice->total_amount - (int)$invoice_details->price) + (int)$request->price;
-                $invoice->discount_amount = ((int)$invoice->discount_amount - (int)$invoice_details->discount_amount) + (int)$request->discount_amount;
-                $invoice->discount_percent = ceil(((int)$invoice->discount_amount / (int)$invoice->total_amount)*100);
-                $invoice->payable_amount = (int)$invoice->total_amount - (int)$invoice->discount_amount;
-                $invoice->due_amount = $invoice->payable_amount - $invoice->paid_amount;
-                $invoice->save();
+        //         $invoice->total_amount = ((int)$invoice->total_amount - (int)$invoice_details->price) + (int)$request->price;
+        //         $invoice->discount_amount = ((int)$invoice->discount_amount - (int)$invoice_details->discount_amount) + (int)$request->discount_amount;
+        //         $invoice->discount_percent = ceil(((int)$invoice->discount_amount / (int)$invoice->total_amount)*100);
+        //         $invoice->payable_amount = (int)$invoice->total_amount - (int)$invoice->discount_amount;
+        //         $invoice->due_amount = $invoice->payable_amount - $invoice->paid_amount;
+        //         $invoice->save();
 
-                $invoice_details->price = $request->price;
-                $invoice_details->quantity = $request->quantity;
-                $invoice_details->final_price = $request->final_price;
-                $invoice_details->discount_percent = $request->discount_percent;
-                $invoice_details->discount_amount = $request->discount_amount;
-                $invoice_details->save();
+        //         $invoice_details->price = $request->price;
+        //         $invoice_details->quantity = $request->quantity;
+        //         $invoice_details->final_price = $request->final_price;
+        //         $invoice_details->discount_percent = $request->discount_percent;
+        //         $invoice_details->discount_amount = $request->discount_amount;
+        //         $invoice_details->save();
                 
 
-                DB::commit();
+        //         DB::commit();
 
-                return response()->json(["invoice_details" => $invoice_details,"invoice" => $invoice]);
+        //         return response()->json(["invoice_details" => $invoice_details,"invoice" => $invoice]);
 
 
-        }catch (Exception $e) {
-            DB::rollBack(); 
+        // }catch (Exception $e) {
+        //     DB::rollBack(); 
 
-            return response()->json(['error' => 'Transaction failed.', 'message' => $e->getMessage()], 500);
-        }
+        //     return response()->json(['error' => 'Transaction failed.', 'message' => $e->getMessage()], 500);
+        // }
     }
 
     /**
@@ -238,50 +231,50 @@ class SalesController extends Controller
      */
     public function destroy(string $id)
     {
-        try {
-            DB::beginTransaction();
+        // try {
+        //     DB::beginTransaction();
 
-                $invoice_details = InvoiceDetails::find($id);
-                $medecine = Product::find($invoice_details->product_id);
-                $expire_wise = ExpireDateMedecines::where('medecine_id','=',$medecine->id)->where('expiry_date','=',$invoice_details->expire_date)->first();
-                $invoice = Invoice::where('invoice_id','=',$invoice_details->invoice_id)->first();
+        //         $invoice_details = InvoiceDetails::find($id);
+        //         $medecine = Product::find($invoice_details->product_id);
+        //         $expire_wise = ExpireDateMedecines::where('medecine_id','=',$medecine->id)->where('expiry_date','=',$invoice_details->expire_date)->first();
+        //         $invoice = Invoice::where('invoice_id','=',$invoice_details->invoice_id)->first();
 
 
-                $expire_wise->current_qty = ($expire_wise->current_qty + $invoice_details->quantity );
-                $expire_wise->sell_qty = ($expire_wise->sell_qty - $invoice_details->quantity);
-                $expire_wise->save();
+        //         $expire_wise->current_qty = ($expire_wise->current_qty + $invoice_details->quantity );
+        //         $expire_wise->sell_qty = ($expire_wise->sell_qty - $invoice_details->quantity);
+        //         $expire_wise->save();
                 
-                $medecine->current_stock = ( $medecine->current_stock + $invoice_details->quantity );
-                $medecine->total_sale = ($medecine->total_sale - $invoice_details->quantity);
-                $medecine->stock_per =  ceil(((int)$medecine->current_stock/(int)$medecine->last_stock)*100);
-                $medecine->save();
+        //         $medecine->current_stock = ( $medecine->current_stock + $invoice_details->quantity );
+        //         $medecine->total_sale = ($medecine->total_sale - $invoice_details->quantity);
+        //         $medecine->stock_per =  ceil(((int)$medecine->current_stock/(int)$medecine->last_stock)*100);
+        //         $medecine->save();
 
-                $invoice->total_amount = ((int)$invoice->total_amount - (int)$invoice_details->price);
-                $invoice->discount_amount = ((int)$invoice->discount_amount - (int)$invoice_details->discount_amount);
-                if($invoice->total_amount !=0 ){
-                    $invoice->discount_percent = ceil(((int)$invoice->discount_amount / (int)$invoice->total_amount)*100);
-                }
-                else{
-                    $invoice->discount_percent = 0;
-                }
-                $invoice->payable_amount = (int)$invoice->total_amount - (int)$invoice->discount_amount;
-                $invoice->due_amount = $invoice->payable_amount - $invoice->paid_amount;
-                $invoice->save();
+        //         $invoice->total_amount = ((int)$invoice->total_amount - (int)$invoice_details->price);
+        //         $invoice->discount_amount = ((int)$invoice->discount_amount - (int)$invoice_details->discount_amount);
+        //         if($invoice->total_amount !=0 ){
+        //             $invoice->discount_percent = ceil(((int)$invoice->discount_amount / (int)$invoice->total_amount)*100);
+        //         }
+        //         else{
+        //             $invoice->discount_percent = 0;
+        //         }
+        //         $invoice->payable_amount = (int)$invoice->total_amount - (int)$invoice->discount_amount;
+        //         $invoice->due_amount = $invoice->payable_amount - $invoice->paid_amount;
+        //         $invoice->save();
 
                
-                $invoice_details->delete();
+        //         $invoice_details->delete();
                 
 
-                DB::commit();
+        //         DB::commit();
 
-                return response()->json(["invoice_details" => $invoice_details,"invoice" => $invoice]);
+        //         return response()->json(["invoice_details" => $invoice_details,"invoice" => $invoice]);
 
 
-        }catch (Exception $e) {
-            DB::rollBack(); 
+        // }catch (Exception $e) {
+        //     DB::rollBack(); 
 
-            return response()->json(['error' => 'Transaction failed.', 'message' => $e->getMessage()], 500);
-        }
+        //     return response()->json(['error' => 'Transaction failed.', 'message' => $e->getMessage()], 500);
+        // }
     }
 
     /**

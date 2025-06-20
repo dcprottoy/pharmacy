@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('invoice_id');
             $table->integer('product_id');
             $table->string('product_name');
-            $table->date('expire_date');
+            $table->date('expire_date')->nullable();;
             $table->date('bill_date');
             $table->double('mrp_price');
             $table->double('price');
