@@ -246,23 +246,20 @@ overflow-y: scroll;
         <div class="modal fade" id="modal-default-print">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
-                        <form action="" method="post" id="print-modal">
-                            @csrf
-                            @method('DELETE')
-                            <div class="modal-header">
-                                <h4 class="modal-title">Delete manufacturer</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>One fine body&hellip;</p>
-                                </div>
-                                <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">No, Don't Print</button>
-                                <button type="submit" class="btn btn-warning">Yes, Do Print</button>
-                            </div>
-                        </form>
+                        <input type="hidden" name="invoice_id" id="invoice-id-print">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Print Invoice</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            
+                                <p>Invoice No : <span id="print-invoice-id"></span></p>
+                            <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" id="print-cancel" data-dismiss="modal">No, Don't Print</button>
+                            <button type="submit" class="btn btn-warning" id="print-ok">Yes, Do Print</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -273,6 +270,24 @@ overflow-y: scroll;
     <script>
         $(document).ready(function(){
                 var countNo = 0;
+
+                $("#print-ok").on('click',function(e){
+                    e.preventDefault();
+                    let invoiceId = $("#invoice-id-print").val();
+                    let url = "{{url('print-invoice/')}}/"+invoiceId;
+                    window.open(url,'_blank');
+                    $('#modal-default-print').modal('hide');
+                    $('#search_data').select2('open');
+                });
+
+                $("#print-cancel").on('click',function(e){
+                    e.preventDefault();
+                    $("#invoice-id-print").val("");
+                    $("#print-invoice-id").text("");
+                    $('#modal-default-print').modal('hide');
+                    $('#search_data').select2('open');
+                });
+
 
                 $('#search_data').select2({
                         placeholder: 'Search for a Product',
@@ -533,11 +548,15 @@ overflow-y: scroll;
                     console.log(data);
                     if('success' in data){
                         toastr.success(data.success);
-                        $('#invoice_no').val(data.invoice.invoice_id);
-                        $('#customer_name').val(data.invoice.customer_name);
-                        $('#icontact_no').val(data.invoice.icontact_no);
-                        $('.delete').remove();
+                        $('#invoice_no').val("");
+                        $('#customer_name').val("");
+                        $('#contact_no').val("");
+                        $("#final_bill_submit")[0].reset();
+                        $("#medecine-item-list").empty();
+                        $("#print-invoice-id").text(data.invoice.invoice_id);
+                        $("#invoice-id-print").val(data.invoice.invoice_id);
                         $('#modal-default-print').modal('show');
+                        
                     }
                     if('error' in data){
                         toastr.error(data.error);
@@ -553,7 +572,7 @@ overflow-y: scroll;
         //Sale Entry
         $("#new_item_add").on('submit',function(e){
             e.preventDefault();
-            let existedId= 0;
+            let existedId = 0;
             let product_name = $('#name').val();
             let product_id = $('#item-id').val();
             let product_sub_category = $('#product_sub_category').val();

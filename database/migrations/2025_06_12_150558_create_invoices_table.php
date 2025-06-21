@@ -26,6 +26,7 @@ return new class extends Migration
             $table->double('return_amount')->nullable();
             $table->char('returned_status',1)->nullable();
             $table->boolean('paid_status')->nullable()->default(false);
+            $table->boolean('approve')->nullable()->default(false);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();

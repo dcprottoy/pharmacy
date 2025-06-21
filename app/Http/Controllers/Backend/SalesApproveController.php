@@ -23,24 +23,16 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use PDF;
-
-
-
-class SalesController extends Controller
+class SalesApproveController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data['medecineList'] = Product::orderBy('name','asc')->get();
-        $data['mrrs'] = Mrr::orderBy('mrr_id','desc')->select('mrr_id')->take(10)->get();
-        $data['suppliers'] = Supplier::orderBy('name_eng','asc')->select('name_eng')->get();
-        $data['manufacturers'] = Manufacturer::orderBy('name_eng','asc')->select('name_eng')->get();
-        $data['product_categories'] = ProductCategory::all();
-        $data['product_types'] = ProductSubCategory::where('product_type_id',1)->get();
-        $data['medecineusages'] = MedecineUsage::all();
-        return view('backend.sales.index',$data);
+        $data['invoices'] = Invoice::orderBy('invoice_id','desc')->take(50)->get();
+       
+        return view('backend.salesapprove.index',$data);
     }
 
     /**

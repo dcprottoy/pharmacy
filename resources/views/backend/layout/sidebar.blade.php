@@ -81,15 +81,15 @@
                     <li class="nav-item " >
                         <a href="{{route('medecine.home')}}" class="nav-link {{ Route::currentRouteName() == 'medecine.home'||Route::currentRouteName() == 'medecine.create'||Route::currentRouteName() == 'medecine.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
-                            <p>Medecines</p>
+                            <p>Products</p>
                         </a>
                     </li>
-                    <li class="nav-item " >
+                    {{-- <li class="nav-item " >
                         <a href="{{route('otherproducts.home')}}" class="nav-link {{ Route::currentRouteName() == 'otherproducts.home'||Route::currentRouteName() == 'otherproducts.create'||Route::currentRouteName() == 'otherproducts.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Other Products</p>
                         </a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
              <!-- Demand Note Management -->
@@ -119,9 +119,15 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item " >
-                        <a href="{{route('stockentry.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockentry.home'||Route::currentRouteName() == 'stockentry.create'||Route::currentRouteName() == 'stockentry.edit' ? 'active' : ''}}" >
+                        <a href="{{route('stockapprove.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockentry.home'||Route::currentRouteName() == 'stockentry.create'||Route::currentRouteName() == 'stockentry.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Stock Entry</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
+                        <a href="{{route('stockapprove.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockapprove.home'||Route::currentRouteName() == 'stockapprove.create'||Route::currentRouteName() == 'stockapprove.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Stock Entry Approve</p>
                         </a>
                     </li>
                 </ul>

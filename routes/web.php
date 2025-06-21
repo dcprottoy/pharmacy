@@ -7,7 +7,7 @@ use App\Http\Controllers\Backend\ProductTypeController;
 use App\Http\Controllers\Backend\ProductCategoryController;
 use App\Http\Controllers\Backend\ProductSubCategoriesController;
 use App\Http\Controllers\Backend\MedicineUsageController;
-use App\Http\Controllers\Backend\MedicineTypeController;
+use App\Http\Controllers\Backend\StockApproveController;
 use App\Http\Controllers\Backend\ManufacturerController;
 use App\Http\Controllers\Backend\MedecineController;
 use App\Http\Controllers\Backend\OtherProductsController;
@@ -15,8 +15,8 @@ use App\Http\Controllers\Backend\StockEntryController;
 use App\Http\Controllers\Backend\MrrController;
 use App\Http\Controllers\Backend\InvoiceController;
 use App\Http\Controllers\Backend\SupplierController;
-use App\Http\Controllers\Backend\MedecineStockController;
-use App\Http\Controllers\Backend\StockMedecineController;
+use App\Http\Controllers\Backend\SalesApproveController;
+use App\Http\Controllers\Backend\StockEntryReportController;
 use App\Http\Controllers\Backend\SalesController;
 use App\Http\Controllers\Auth\AuthenticationController;
 
@@ -134,6 +134,9 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
     ]);
 
 
+   Route::get('/print-invoice/{id}',[SalesController::class,'printinvoice'])->name('print-invoice');
+
+
 
     Route::resource('/sales',SalesController::class)->names([
         'index'=>'sales.home',
@@ -189,5 +192,33 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF']);
 
 
 
+    Route::resource('/stockapprove',StockApproveController::class)->names([
+        'index'=>'stockapprove.home',
+        'create'=>'stockapprove.create',
+        'store'=>'stockapprove.save',
+        'edit'=>'stockapprove.edit',
+        'update'=>'stockapprove.update',
+        'destroy'=>'stockapprove.delete'
+    ]);
+
+    Route::resource('/salesapprove',SalesApproveController::class)->names([
+        'index'=>'salesapprove.home',
+        'create'=>'salesapprove.create',
+        'store'=>'salesapprove.save',
+        'edit'=>'salesapprove.edit',
+        'update'=>'salesapprove.update',
+        'destroy'=>'salesapprove.delete'
+    ]);
+
+    Route::resource('/stockentryreport',StockEntryReportController::class)->names([
+        'index'=>'stockentryreport.home',
+        'create'=>'stockentryreport.create',
+        'store'=>'stockentryreport.save',
+        'edit'=>'stockentryreport.edit',
+        'update'=>'stockentryreport.update',
+        'destroy'=>'stockentryreport.delete'
+    ]);
+
+    
     });
 
