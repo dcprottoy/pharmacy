@@ -15,7 +15,7 @@ class StockEntryReportController extends Controller
      */
     public function index()
     {
-        $date = Carbon::now()->format('Y-m-d');
+        $date = Carbon::now()->subDay(1)->format('Y-m-d');
         $data['mrrs'] = Mrr::where('purchase_date','=',$date)->get();
         $data['stock_entry_logs'] = StockEntryLog::join('products','stock_entry_logs.medecine_id','=','products.id')->whereIn('mrr_id',$data['mrrs']->pluck('mrr_id'))->select('stock_entry_logs.*','products.name','products.product_sub_category','products.generic')->get();
         // return $data;
@@ -35,7 +35,12 @@ class StockEntryReportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data['mrrs'] = Mrr::whereBetween('purchase_date',[$request->from_date,$request->to_date])->get();
+        $data['stock_entry_logs'] = StockEntryLog::join('products','stock_entry_logs.medecine_id','=','products.id')->whereIn('mrr_id',$data['mrrs']->pluck('mrr_id'))->select('stock_entry_logs.*','products.name','products.product_sub_category','products.generic')->get();
+        $data['from_date'] = $request->from_date;
+        $data['to_date'] = $request->to_date;
+        // return $data;
+        return view('backend.stockentryreport.index',$data);
     }
 
     /**

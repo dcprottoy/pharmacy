@@ -119,7 +119,7 @@
                 </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item " >
-                        <a href="{{route('stockapprove.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockentry.home'||Route::currentRouteName() == 'stockentry.create'||Route::currentRouteName() == 'stockentry.edit' ? 'active' : ''}}" >
+                        <a href="{{route('stockentry.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockentry.home'||Route::currentRouteName() == 'stockentry.create'||Route::currentRouteName() == 'stockentry.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Stock Entry</p>
                         </a>
@@ -128,6 +128,12 @@
                         <a href="{{route('stockapprove.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockapprove.home'||Route::currentRouteName() == 'stockapprove.create'||Route::currentRouteName() == 'stockapprove.edit' ? 'active' : ''}}" >
                             <i class="nav-icon fas fa-angle-double-right"></i>
                             <p>Stock Entry Approve</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " >
+                        <a href="{{route('stockentryreport.home')}}" class="nav-link {{ Route::currentRouteName() == 'stockentryreport.home'||Route::currentRouteName() == 'stockentryreport.create'||Route::currentRouteName() == 'stockentryreport.edit' ? 'active' : ''}}" >
+                            <i class="nav-icon fas fa-angle-double-right"></i>
+                            <p>Stock Entry Report</p>
                         </a>
                     </li>
                 </ul>

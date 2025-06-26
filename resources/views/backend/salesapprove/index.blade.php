@@ -53,7 +53,7 @@
                                         {!! $item->invoice_id !!}
                                         </td>
                                         <td class="text-center">
-                                        {!! $item->Customer_name !!}
+                                        {!! $item->customer_name !!}
                                         </td>
                                         <td class="text-center">
                                         {!! @$item->contact_no !!}
