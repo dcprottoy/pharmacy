@@ -141,14 +141,12 @@ try {
      */
     public function show(string $id)
     {
-        $stock = Product::find((int)$id);
-        $expiryDate = ExpireDateMedecines::where('medecine_id','=',(int)$id)
-                        ->where('medecine_id','=',(int)$id)
-                        ->where('current_qty','>',0)
-                        ->select('expiry_date','current_qty')
-                        ->get();
 
-        return response()->json(['item'=>$stock,'expiryDates'=>$expiryDate]);
+        $data['invoice'] =Invoice::find($id);
+        $data['invoice_detals'] = InvoiceDetails::where('invoice_id','=',$data['invoice']->invoice_id)->get();
+
+        return view('backend.salesapprove.show',$data);
+        
     }
 
     public function printinvoice(string $id){

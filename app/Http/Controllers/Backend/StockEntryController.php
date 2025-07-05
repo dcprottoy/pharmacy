@@ -74,8 +74,9 @@ class StockEntryController extends Controller
             DB::beginTransaction();
             $medecine = Product::find($item_id);
             // return $medecine;
-            if($request->has('stock_location_id') && $request->stock_location_id != null)
+            if($request->has('stock_location_id') && $request->stock_location_id != null && $request->stock_location_id != 0)
             {
+                
                 $medecine->stock_location = StoreLocation::find((int)$request->stock_location_id)->name_eng;
             }
             $medecine->last_stock = $request->current_stock;

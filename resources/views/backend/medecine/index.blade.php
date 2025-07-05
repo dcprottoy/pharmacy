@@ -1,12 +1,12 @@
 @extends('backend.layout.main')
 @section('body-part')
 <div class="content-wrapper">
-    <x-breadcumb title="Medecine"/>
+    <x-breadcumb title="Product"/>
     <div class="content">
         <div class="container-fluid">
             <div class="card card-info">
                 <div class="card-header">
-                    <h3 class="card-title">Medecine</h3>
+                    <h3 class="card-title">Product</h3>
                 </div>
                 <form action="{{route('medecine.save')}}" method="post" enctype="multipart/form-data">
                     @csrf
@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label>Medecine Name</label>
+                                    <label>Product Name</label>
                                     <input type="text" class="form-control form-control-sm" name='name' placeholder="Medecine Name" >
                                 </div>
                             </div>
@@ -135,7 +135,7 @@
                         <thead>
                             <tr>
                             <th style="width: 25%" class="text-center">
-                                Mdecine Name<br>Manufacturer
+                                Product Name<br>Manufacturer
                             </th>
                             <th style="width: 10%" class="text-center">
                                 Product Type<br>Category
@@ -233,7 +233,7 @@
                             @csrf
                             @method('PUT')
                             <div class="modal-header">
-                                <h4 class="modal-title">Update Medecine Information</h4>
+                                <h4 class="modal-title">Update Product Information</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -243,7 +243,7 @@
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label>Medecine Name</label>
+                                                <label>Product Name</label>
                                                 <input type="text" class="form-control form-control-sm" name='name' id="u-name" placeholder="Medecine Name" >
                                             </div>
                                         </div>

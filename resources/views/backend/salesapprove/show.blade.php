@@ -29,7 +29,7 @@ overflow-y: scroll;
 
 </style>
 <div class="content-wrapper">
-    <x-breadcumb title="Stock Entry Approve"/>
+    <x-breadcumb title="Sales Entry Approve"/>
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -39,62 +39,25 @@ overflow-y: scroll;
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>MRR NO.</label>
-                                        <input type="text" class="form-control form-control-sm" name='mrr_no' id="mrr_no" value="{{$mrrs->mrr_id}}" placeholder="MRR NO" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="dropdown">
-                                        <div class="form-group">
-                                            <label>Supplier </label>
-                                            <input type="text" class="form-control form-control-sm" name='supplier_name' id="supplier_name" value="{{$mrrs->supplier_name}}" placeholder="Supplier Name">
-                                        </div>
-                                        <div class="dropdown-menu w-100" style="max-height:350px;overflow-y:scroll;" id="suuplier-dropdown-menu" aria-labelledby="dLabel">
-                                            @foreach($suppliers as $item)
-                                                <li class="dropdown-item" >{{$item->name_eng}}</li>
-                                            @endforeach
-                                        </div>
+                                        <label>Invoice NO.</label>
+                                        <input type="text" class="form-control form-control-sm" name='invoice_no' id="invoice_no" placeholder="Invoice No" value="{{$invoice->invoice_no}}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Challan No.</label>
-                                        <input type="text" class="form-control form-control-sm" name='challan_no' id="challan_no" value="{{$mrrs->challan_no}}" placeholder="Challan No">
+                                        <label>Customer </label>
+                                        <input type="text" class="form-control form-control-sm" name='customer_name' id="customer_name" value="{{@$invoice->customer_name}}" placeholder="Customer Name">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Bill Amount</label>
-                                        <input type="text" class="form-control form-control-sm" name='bill_amount' id="bill_amount" value="{{$mrrs->bill_amount}}" placeholder="Challan No">
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Paid Amount</label>
-                                        <input type="text" class="form-control form-control-sm" name='paid_amount' id="paid_amount" value="{{$mrrs->paid_amount}}" placeholder="Challan No">
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Due Amount</label>
-                                        <input type="text" class="form-control form-control-sm" name='due_amount' id="due_amount" value="{{$mrrs->due_amount}}" placeholder="Challan No">
+                                        <label>Contact No.</label>
+                                        <input type="text" class="form-control form-control-sm" name='contact_no' id="contact_no" value="{{@$invoice->contact_no}}" placeholder="Contact No">
                                     </div>
                                 </div>
                             </div>
                             <div class="text-right">
-                                @if($mrrs->approved)
-                                    <button type="submit" class="btn btn-sm btn-info" id="not_approve_mrr">&nbsp;Not Approve&nbsp;</button>
-                                @else
-                                    <button type="submit" class="btn btn-sm btn-info" id="approve_mrr">&nbsp;Approve&nbsp;</button>
-                                    
-                                @endif
-                                    <button type="submit" class="btn btn-sm btn-success" id="update-mrr">&nbsp;Update&nbsp;</button>
-                                @if($mrrs->done)
-                                    <button type="submit" class="btn btn-sm btn-warning" id="not_done_mrr">&nbsp;Not Done&nbsp;</button>
-                                @else
-                                    <button type="submit" class="btn btn-sm btn-warning" id="done_mrr">&nbsp;Done&nbsp;</button>
-                                @endif
-
+                               
                             </div>
                             
                         </div>
@@ -104,10 +67,10 @@ overflow-y: scroll;
                     <div class="card">
                         <div class="card-header">
                             <div class="form-group">
-                                <label>Search MRR NO.</label>
-                                <input type="text" class="form-control form-control-sm" name='mrr_no_search' id="mrr_no_search" placeholder="MRR NO">
+                                <label>Search Invoice NO.</label>
+                                <input type="text" class="form-control form-control-sm" name='invoice_no_search' id="invoice_no_search" placeholder="Invoice NO">
                             </div>
-                            <div class="dropdown-menu w-100" style="max-height:350px;overflow-y:scroll;" id="mrr_dropdown-menu" aria-labelledby="dLabel">
+                            <div class="dropdown-menu w-100" style="max-height:350px;overflow-y:scroll;" id="invoice_dropdown-menu" aria-labelledby="dLabel">
                                
                             </div>
                         </div>
@@ -119,37 +82,53 @@ overflow-y: scroll;
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-12 search-list" style="font-size:14px;">
-                            <table class="table table-sm">
-                                <thead>
-                                    <th style="width:15%;">Name</th>
-                                    <th style="width:10%;">Product Type</th>
-                                    <th style="width:10%;">Stock Date</th>
-                                    <th style="width:10%;">Current Stock</th>
-                                    <th style="width:10%;">MFG Date</th>
-                                    <th style="width:10%;">Expire Date</th>
-                                    <th style="width:10%;">Stock Quantity</th>
-                                </thead>
-                                <tbody class="bill-item-list-cl" id="medecine-item-list">
-                                    @foreach($stock_details as $item)
-                                    @php
-                                    // dd($item); 
-                                    @endphp
+                        <div class="col-sm-12">
+                            <div class="search-list" style="font-size:14px;">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <th style="width:20%;">Product Name</th>
+                                        <th style="width:10%;">Product Type</th>
+                                        <th style="width:10%;">MRP Price</th>
+                                        <th style="width:10%;">Quantity</th>
+                                        <th style="width:10%;">Total Price</th>
+                                        <th style="width:10%;">Discount Percent</th>
+                                        <th style="width:10%;">Discount Amount</th>
+                                        <th style="width:10%;">Final Price</th>
+                                        <th style="width:10%; text-align: center;">Action</th>
+                                    </thead>
+                                    <tbody class="bill-item-list-cl" id="medecine-item-list">
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="table-responsive" style="font-size:14px;">
+                                <table class="table table-sm">
+                                    <tbody>
                                         <tr>
-                                            <td>{{$item->name}}</td>
-                                            <td>{{$item->product_sub_category}}</td>
-                                            <td>{{$item->stock_date}}</td>
-                                            <td>{{$item->current_stock}}</td>
-                                            <td>{{$item->manufacture_date}}</td>
-                                            <td>{{$item->expiry_date}}</td>
-                                            <td>{{$item->stock_qty}}</td>
+                                            <th style="text-align: right;">Discount in Amount :</th>
+                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_dis_amt" id="bill-dis-amt" /></td>
+                                            <th style="text-align: right;">Total Amount :</th>
+                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_amount" id="bill-amount"  readonly/></td>
+                                            <th style="text-align: right;">Total Paid :</th>
+                                            <td><input class="form-control form-control-sm final-bill-field" type="number" step="any" value="0" name="bill_paid_amount" id="bill-paid-amount"/></td>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                        <tr>
+                                            <th style="text-align: right;">Discount in Percentage :</th>
+                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_in_per" id="bill-in-per"/></td>
+                                            <th style="text-align: right;">Net Payable Amount :</th>
+                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_total_amount" id="bill-total-amount" readonly/></td>
+                                            <th style="text-align: right;">Total Due :</th>
+                                            <td><input class="form-control form-control-sm " type="number" step="any" value="0" name="bill_due_amount" id="bill-due-amount"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="card-footer text-right">
+                                    <button type="reset" class="btn btn-sm btn-danger float-left">&nbsp;Clear&nbsp;</button>
+                                    <button type="submit" class="btn btn-sm btn-success" id="bill-final-save">&nbsp;Save&nbsp;</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

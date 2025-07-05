@@ -80,7 +80,7 @@
                                             <a class="btn btn-primary btn-xs update" data-id="{{$item->id}}">
                                                 Approve
                                             </a>
-                                            <a class="btn btn-secondary btn-xs delete" href="{{url('stockapprove/'.$item->id)}}" data-id="{{$item->id}}" >
+                                            <a class="btn btn-secondary btn-xs delete" href="{{url('salesapprove/'.$item->id)}}" data-id="{{$item->id}}" >
                                                 Details
                                             </a>
                                         </td>
