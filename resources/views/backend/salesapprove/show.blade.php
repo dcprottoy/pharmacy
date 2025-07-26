@@ -86,48 +86,53 @@ overflow-y: scroll;
                             <div class="search-list" style="font-size:14px;">
                                 <table class="table table-sm">
                                     <thead>
-                                        <th style="width:20%;">Product Name</th>
-                                        <th style="width:10%;">Product Type</th>
-                                        <th style="width:10%;">MRP Price</th>
-                                        <th style="width:10%;">Quantity</th>
-                                        <th style="width:10%;">Total Price</th>
-                                        <th style="width:10%;">Discount Percent</th>
-                                        <th style="width:10%;">Discount Amount</th>
-                                        <th style="width:10%;">Final Price</th>
-                                        <th style="width:10%; text-align: center;">Action</th>
+                                        <thead>
+                                            <th style="width:20%;">Product Name</th>
+                                            <th style="width:10%;">Product Type</th>
+                                            <th style="width:10%;">MRP Price</th>
+                                            <th style="width:10%;">Quantity</th>
+                                            <th style="width:10%;">Total Price</th>
+                                            <th style="width:10%;">Discount Percent</th>
+                                            <th style="width:10%;">Discount Amount</th>
+                                            <th style="width:10%;">Final Price</th>
+                                            {{-- <th style="width:10%; text-align: center;">Action</th> --}}
+                                        </thead>
                                     </thead>
                                     <tbody class="bill-item-list-cl" id="medecine-item-list">
-                                        @continue()
-                                        <tr class="item-select" data-id="${id}">
-                                            <td>
-                                                ${product_name}
-                                                <input type="hidden" id="item-id${id}" name="item_id[]" value="${id}">
-                                                <input type="hidden" class="product_id" id="item-id${id}" data-id="${id}" name="product_id[${id}]" value="${product_id}">
-                                            </td>
-                                            <td>
-                                                <input class="form-control form-control-sm w-100" type="text" id="product_sub_category${id}" name="product_sub_category[${id}]" value="${product_sub_category}" readonly>
-                                            </td>
-                                            <td>
-                                                <input class="form-control form-control-sm w-100" type="text" id="mrp_price${id}" name="mrp_price[${id}]" value="${mrp_rate}" readonly>
-                                            </td>
-                                            <td>
-                                                <input class="form-control form-control-sm w-100 inv_dtls_qnty" type="text" id="quantity${id}" data-current-stock="${currentQty}" name="quantity[${id}]" value="${quantity}">
-                                            </td>
-                                            <td>
-                                                <input class="form-control form-control-sm w-100 billing-item-amount" type="text" id="price${id}" name="price[${id}]" value="${price}" readonly>
-                                            </td><td>
-                                                <input class="form-control form-control-sm w-100 disc-cal-per" type="text" id="discount_percent${id}" name="discount_percent[${id}]" value="${discount_percent}">
-                                            </td><td>
-                                                <input class="form-control form-control-sm w-100 disc-cal-amt billing-item-dis-amt " type="text" id="discount_amount${id}" name="discount_amount[${id}]" value="${discount_amount}">
-                                            </td><td>
-                                                <input class="form-control form-control-sm w-100" type="text" id="final_price${id}" name="final_price[${id}]" value="${final_price}" readonly>
-                                            </td>
-                                            <td class="project-actions text-center">
-                                                <a class="btn btn-danger btn-sm delete" href="#" data-id="${id}" data-toggle="modal" data-target="#modal-default">
-                                                    <i style="font-size:10px;" class="fas fa-trash"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                        @php
+                                            // dd($invoice_detals);
+                                        @endphp
+                                        @foreach ($invoice_detals as $key => $value )
+                                            <tr class="item-select" data-id="${id}">
+                                                <td>
+                                                    {{$value->product_name}}
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm w-100" type="text" id="product_sub_category${id}" name="product_sub_category[${id}]" value="${product_sub_category}" readonly>
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm w-100" type="text" id="mrp_price${id}" name="mrp_price[${id}]" value="${mrp_rate}" readonly>
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm w-100 inv_dtls_qnty" type="text" id="quantity${id}" data-current-stock="${currentQty}" name="quantity[${id}]" value="${quantity}">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm w-100 billing-item-amount" type="text" id="price${id}" name="price[${id}]" value="${price}" readonly>
+                                                </td><td>
+                                                    <input class="form-control form-control-sm w-100 disc-cal-per" type="text" id="discount_percent${id}" name="discount_percent[${id}]" value="${discount_percent}">
+                                                </td><td>
+                                                    <input class="form-control form-control-sm w-100 disc-cal-amt billing-item-dis-amt " type="text" id="discount_amount${id}" name="discount_amount[${id}]" value="${discount_amount}">
+                                                </td><td>
+                                                    <input class="form-control form-control-sm w-100" type="text" id="final_price${id}" name="final_price[${id}]" value="${final_price}" readonly>
+                                                </td>
+                                                {{-- <td class="project-actions text-center">
+                                                    <a class="btn btn-danger btn-sm delete" href="#" data-id="${id}" data-toggle="modal" data-target="#modal-default">
+                                                        <i style="font-size:10px;" class="fas fa-trash"></i>
+                                                    </a>
+                                                </td> --}}
+                                            </tr>
+                                        @endforeach
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -152,10 +157,10 @@ overflow-y: scroll;
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div class="card-footer text-right">
+                                {{-- <div class="card-footer text-right">
                                     <button type="reset" class="btn btn-sm btn-danger float-left">&nbsp;Clear&nbsp;</button>
                                     <button type="submit" class="btn btn-sm btn-success" id="bill-final-save">&nbsp;Save&nbsp;</button>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -392,7 +397,7 @@ overflow-y: scroll;
                         console.log(result);
                         let element = "";
                         result.forEach(x =>{
-                                element += `<a class="dropdown-item" href="{{url('stockapprove/'.$item->id)}}" >${x.mrr_id}</a>`;
+                                element += `<a class="dropdown-item" href="{{url('stockapprove/')}}" >${x.mrr_id}</a>`;
                         });
                         $("#mrr_dropdown-menu").empty();
                         $("#mrr_dropdown-menu").append(element);

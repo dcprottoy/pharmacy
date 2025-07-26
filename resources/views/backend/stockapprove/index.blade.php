@@ -59,7 +59,7 @@
                                         {!! $item->purchase_date !!}
                                         </td>
                                          <td class="text-center">
-                                        {!! $item->done?"<badge class='badge badge-success'>Done</badge>":"<badge class='badge badge-danger'>Pending</badge>"!!}
+                                        {!! $item->done ? "<badge class='badge badge-success'>Done</badge>":"<badge class='badge badge-danger'>Pending</badge>"!!}
                                         </td>
                                         <td class="text-center">
                                         {!! $item->bill_amount!!}

@@ -383,7 +383,7 @@ overflow-y: scroll;
                         console.log(result);
                         let element = "";
                         result.forEach(x =>{
-                                element += `<a class="dropdown-item" href="{{url('stockapprove/'.$item->id)}}" >${x.mrr_id}</a>`;
+                                element += `<a class="dropdown-item" href="{{url('stockapprove/')}}" >${x.mrr_id}</a>`;
                         });
                         $("#mrr_dropdown-menu").empty();
                         $("#mrr_dropdown-menu").append(element);
