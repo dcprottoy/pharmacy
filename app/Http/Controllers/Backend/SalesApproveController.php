@@ -79,8 +79,7 @@ class SalesApproveController extends Controller
         }else{
             $contact_no	 = '';
         }
-try {
-
+    try {
 
         DB::beginTransaction();
         $invoice = new Invoice();
@@ -143,7 +142,7 @@ try {
     {
 
         $data['invoice'] =Invoice::find($id);
-        $data['invoice_detals'] = InvoiceDetails::where('invoice_id','=',$data['invoice']->invoice_id)->get();
+        $data['invoice_detals'] = InvoiceDetails::leftJoin('products','invoice_details.product_id','=','products.id')->where('invoice_id','=',$data['invoice']->invoice_id)->select('invoice_details.*','products.product_sub_category')->get();
 
         return view('backend.salesapprove.show',$data);
         
